@@ -1,0 +1,131 @@
+# Statistics Finland PxWeb data-source defaults.
+# All variable codes must be discovered at runtime from each table's metadata;
+# nothing in this file hard-codes statistical labels.
+
+pxweb:
+  base_url: "https://pxdata.stat.fi/PxWeb/api/v1"
+  request_timeout_seconds: 120
+  retry_attempts: 3
+  retry_backoff_seconds: 2
+
+# Each table is fetched with one or more slices. KEHA tables can be huge
+# (millions of cells in their full form) and the PxWeb API rejects requests
+# above ~500k cells with HTTP 403. For each table we declare the slices we
+# want. Notebook 01 issues one POST per slice and concatenates the results.
+#
+# A "slice" is a list of {code: filter-values} pairs. If a dimension is not
+# in the slice, the API default (often "all") is used and the resulting
+# response can be too large. Always declare every dimension with an explicit
+# value list.
+#
+# All KEHA monthly series are aggregated to quarters in notebook 02 using
+# keha_monthly_to_quarter below. The default rule is "end_of_quarter" which
+# is correct for stock measures (jobseekers, vacancies at end of month).
+# A series can override this per-table.
+
+tables:
+  national_vacancies:
+    path: "StatFin/atp/11l1.px"
+    title: "Job vacancies by Information and Quarter (whole country)"
+    slices:
+      - description: "all 5 contents x all 54 quarters"
+        query:
+          contentscode: "all"
+          timeperiod_q: "all"
+
+  regional_vacancies:
+    path: "StatFin/atp/11n1.px"
+    title: "Job vacancies by Major region, Quarter and Information"
+    slices:
+      - description: "all 5 regions x all 5 contents x all 54 quarters"
+        query:
+          alue_16_20180101: "all"
+          contentscode: "all"
+          timeperiod_q: "all"
+
+  keha_jobseekers_vacancies_by_occupation:
+    path: "StatFin/tyonv/12tu.px"
+    title: "KEHA: jobseekers and vacancies by Region x Occupation x Labour market status"
+    monthly_to_quarterly:
+      rule: "end_of_quarter"
+    slices:
+      - description: "20 regions x ~17 ICT/STEM occupations x 3 statuses x 24 months x 2 contents"
+        query:
+          Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MKJO"]
+          Ammattiryhmä: ["SSS","1330","2141","2142","2143","2144","2145","2149","2152","2153","2166","2356","2511","2512","2513","2514","2519","2631","2632","3114"]
+          Työmarkkina-asema: ["SSS","1","2"]
+          timeperiod_m: "last_24"
+          contentscode: ["HAKIJAYHT","AVPAIKATYHT"]
+
+  keha_vacancies_by_industry:
+    path: "StatFin/tyonv/12tw.px"
+    title: "KEHA: vacancies by Region x Industry x Employer sector x Duration"
+    monthly_to_quarterly:
+      rule: "end_of_quarter"
+    slices:
+      - description: "20 regions x 21 industries x 3 sectors x 3 durations x months 2024M01..2024M12 x 2 contents"
+        query:
+          Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MKJO"]
+          Toimiala: "tol_broad"
+          Työnantajan sektori: ["01","02","03"]
+          Työpaikan työn kesto: ["00","01","02"]
+          timeperiod_m: ["2024M01","2024M02","2024M03","2024M04","2024M05","2024M06","2024M07","2024M08","2024M09","2024M10","2024M11","2024M12"]
+          contentscode: ["AVPAIKATLOPUSSA","ATPAVGJATKESTOT"]
+      - description: "20 regions x 21 industries x 3 sectors x 3 durations x months 2025M01..2025M08 x 2 contents"
+        query:
+          Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MKJO"]
+          Toimiala: "tol_broad"
+          Työnantajan sektori: ["01","02","03"]
+          Työpaikan työn kesto: ["00","01","02"]
+          timeperiod_m: ["2025M01","2025M02","2025M03","2025M04","2025M05","2025M06","2025M07","2025M08"]
+          contentscode: ["AVPAIKATLOPUSSA","ATPAVGJATKESTOT"]
+      - description: "20 regions x 21 industries x 3 sectors x 3 durations x months 2025M09..2026M07 x 2 contents"
+        query:
+          Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MKJO"]
+          Toimiala: "tol_broad"
+          Työnantajan sektori: ["01","02","03"]
+          Työpaikan työn kesto: ["00","01","02"]
+          timeperiod_m: ["2025M09","2025M10","2025M11","2025M12","2026M01","2026M02","2026M03","2026M04","2026M05","2026M06","2026M07"]
+          contentscode: ["AVPAIKATLOPUSSA","ATPAVGJATKESTOT"]
+
+  keha_jobseekers_by_region:
+    path: "StatFin/tyonv/12r5.px"
+    title: "KEHA: unemployed jobseekers, services, vacant jobs by Region"
+    monthly_to_quarterly:
+      rule: "end_of_quarter"
+    slices:
+      - description: "21 MK regions x 6 top info codes x 24 months"
+        query:
+          Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MK91","MKJO"]
+          timeperiod_m: "last_24"
+          contentscode: ["HAKIJALOPUSSA","TYOTTOMATLOPUSSA","TYOVOIMATK","TYOTOSUUS","TYOTTOMATMIEHET","TYOTTOMATNAISET"]
+
+# The list of tables to ingest. Order matters: national first, then regional,
+# then KEHA. Notebook 01 iterates this list.
+tables_to_ingest:
+  - national_vacancies
+  - regional_vacancies
+  - keha_jobseekers_vacancies_by_occupation
+  - keha_vacancies_by_industry
+  - keha_jobseekers_by_region
+
+# Raw output paths (relative to repo root).
+paths:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  manifests_dir: "data/manifests"
+
+# Default rule for promoting monthly KEHA series to quarterly values.
+# "end_of_quarter" uses the last month in the quarter (M03, M06, M09, M12);
+# "mean" averages the three monthly values. Stock measures (jobseekers,
+# vacancies) use end-of-quarter; flow measures should set "mean" per table.
+keha_monthly_to_quarter:
+  default_rule: "end_of_quarter"
+  rationale: "Jobseeker and vacancy stocks are end-of-period measures."
+
+# Sentinel values that mean "all" for a PxWeb dimension when querying.
+# Resolved at runtime from the table's metadata; never hardcoded.
+dimension_filter_sentinels:
+  - "all"
+  - "last_24"
+  - "tol_broad"

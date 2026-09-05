@@ -1,0 +1,92 @@
+{
+ "table_key": "keha_vacancies_by_industry",
+ "table_id": "12tw",
+ "path": "StatFin/tyonv/12tw.px",
+ "title": "Vacancies by sector in each province at the end of the month by Region, Industry, Employer sector, Duration of work in a workplace, Month and Information",
+ "fetched_at_utc": "2026-09-01T05:17:57+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/12tw__meta.json",
+  "meta_sha256": "a4a52fa44d51a2a572cbc6e9f4d0a437f6f6e99b992d9d64b68d2602a2f0c650",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/12tw__data__slice_0.json",
+    "sha256": "0dc35f854779627226b997cc68c1691b8d75c4952bb302ed25db420b3db2633c",
+    "n_cells_requested": 90720,
+    "n_values_returned": 90720,
+    "size_declared": [
+     20,
+     21,
+     3,
+     3,
+     12,
+     2
+    ],
+    "bytes": 198660,
+    "elapsed_s": 19.43,
+    "http_status": 200,
+    "ok": true,
+    "description": "20 regions x 21 TOL top-level industries x 3 sectors x 3 durations x months 2024M01..2024M12 x 2 contents",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 1,
+    "slice_path": "data/raw/12tw__data__slice_1.json",
+    "sha256": null,
+    "n_cells_requested": 143640,
+    "n_values_returned": null,
+    "size_declared": null,
+    "bytes": 1233,
+    "elapsed_s": 0.07,
+    "http_status": 403,
+    "ok": false,
+    "description": "20 regions x 21 industries x 3 sectors x 3 durations x months 2025M01..2025M12 + 2026M01..2026M07 x 2 contents",
+    "source": null,
+    "updated": null,
+    "error": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"Content-Type\" cont"
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "Alue",
+   "name": null,
+   "text": "Region",
+   "n_values": 23
+  },
+  {
+   "code": "Toimiala",
+   "name": null,
+   "text": "Industry",
+   "n_values": 113
+  },
+  {
+   "code": "Työnantajan sektori",
+   "name": null,
+   "text": "Employer sector",
+   "n_values": 9
+  },
+  {
+   "code": "Työpaikan työn kesto",
+   "name": null,
+   "text": "Duration of work in a workplace",
+   "n_values": 9
+  },
+  {
+   "code": "timeperiod_m",
+   "name": null,
+   "text": "Month",
+   "n_values": 211
+  },
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 2
+  }
+ ]
+}

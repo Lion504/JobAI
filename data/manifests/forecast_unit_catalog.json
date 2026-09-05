@@ -1,0 +1,61 @@
+{
+  "11l1": {
+    "table_key": "national_vacancies",
+    "title": "Job vacancies by Information and Quarter (whole country)",
+    "series_id_columns": [
+      "contentscode"
+    ],
+    "time_column": "timeperiod_q",
+    "n_series": 5,
+    "n_rows": 270
+  },
+  "11n1": {
+    "table_key": "regional_vacancies",
+    "title": "Job vacancies by Major region, Quarter and Information",
+    "series_id_columns": [
+      "alue_16_20180101",
+      "contentscode"
+    ],
+    "time_column": "timeperiod_q",
+    "n_series": 5,
+    "n_rows": 270
+  },
+  "12tu": {
+    "table_key": "keha_jobseekers_vacancies_by_occupation",
+    "title": "KEHA: jobseekers and vacancies by Region x Occupation x Labour market status",
+    "series_id_columns": [
+      "Alue",
+      "Ammattiryhmä",
+      "Työmarkkina-asema",
+      "contentscode"
+    ],
+    "time_column": "timeperiod_q",
+    "n_series": 2334,
+    "n_rows": 19529
+  },
+  "12tw": {
+    "table_key": "keha_vacancies_by_industry",
+    "title": "KEHA: vacancies by Region x Industry x Employer sector x Duration",
+    "series_id_columns": [
+      "Alue",
+      "Toimiala",
+      "Työnantajan sektori",
+      "Työpaikan työn kesto",
+      "contentscode"
+    ],
+    "time_column": "timeperiod_q",
+    "n_series": 7554,
+    "n_rows": 82618
+  },
+  "12r5": {
+    "table_key": "keha_jobseekers_by_region",
+    "title": "KEHA: unemployed jobseekers, services, vacant jobs by Region",
+    "series_id_columns": [
+      "Alue",
+      "contentscode"
+    ],
+    "time_column": "timeperiod_q",
+    "n_series": 126,
+    "n_rows": 1362
+  }
+}

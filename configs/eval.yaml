@@ -1,0 +1,41 @@
+# Rolling-origin evaluation cutoffs.
+# a split only when ALL of its target labels are available by the relevant cutoff.
+# With data ending 2026Q2, complete labels are available only for:
+#   1Q forecasts with origins through 2026Q1
+#   2Q forecasts with origins through 2025Q4
+#   4Q forecasts with origins through 2025Q2
+# Report sample counts separately by horizon.
+
+splits:
+  train_end: "2022Q4" # last origin quarter whose 4Q target fits
+  val_start: "2023Q1"
+  val_end: "2024Q2" # last origin whose 4Q target fits within val
+  test_start: "2024Q3"
+  test_end: "2026Q1" # last 1Q-eligible origin; 4Q reach 2025Q2 then stops
+
+# Forecast horizons, in quarters.
+horizons: [1, 2, 4]
+
+# Input feature window length, in quarters.
+feature_window_quarters: 8
+
+# Metrics to report per (series, horizon, split). All four are required.
+metrics:
+  - MAE
+  - RMSE
+  - MASE
+  - sMAPE
+
+# All four must run and persist results.
+baselines:
+  - name: "seasonal_naive"
+    description: "Value at origin+h equals value at origin+h-4."
+  - name: "last_value"
+    description: "Value at origin+h equals value at origin."
+  - name: "linear_regression"
+    description: "Ridge regression on the 8-quarter lag window."
+  - name: "prophet"
+    description: "Prophet with quarterly seasonality; only if series length justifies."
+
+# Random seed for any stochastic step in the evaluation pipeline.
+seed: 42

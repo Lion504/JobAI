@@ -1,0 +1,175 @@
+{
+ "timestamp_utc": "2026-09-01T05:19:36+00:00",
+ "n_tables": 5,
+ "n_slices": 7,
+ "n_slices_ok": 7,
+ "n_slices_failed": 0,
+ "total_bytes": 1060011,
+ "total_elapsed_s": 48.2,
+ "per_table_manifests": {
+  "national_vacancies": "data/manifests/fetch_11l1_20260901T051936Z.json",
+  "regional_vacancies": "data/manifests/fetch_11n1_20260901T051936Z.json",
+  "keha_jobseekers_vacancies_by_occupation": "data/manifests/fetch_12tu_20260901T051936Z.json",
+  "keha_vacancies_by_industry": "data/manifests/fetch_12tw_20260901T051936Z.json",
+  "keha_jobseekers_by_region": "data/manifests/fetch_12r5_20260901T051936Z.json"
+ },
+ "fetch_log": [
+  {
+   "table_key": "national_vacancies",
+   "table_id": "11l1",
+   "slice_index": 0,
+   "slice_path": "data/raw/11l1__data__slice_0.json",
+   "description": "all 5 contents x all 54 quarters",
+   "n_cells_requested": 270,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 4827,
+   "elapsed_s": 0.07,
+   "sha256": "33bfeb61ca4f0cd1ce8848357b5317845d1e6ba614221dcea7b0404223dea7e8",
+   "n_values_returned": 270,
+   "size_declared": [
+    5,
+    54
+   ],
+   "source": "Statistics Finland, job vacancy survey",
+   "updated": "2026-08-20T05:00:00Z"
+  },
+  {
+   "table_key": "regional_vacancies",
+   "table_id": "11n1",
+   "slice_index": 0,
+   "slice_path": "data/raw/11n1__data__slice_0.json",
+   "description": "all 5 regions x all 5 contents x all 54 quarters",
+   "n_cells_requested": 270,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 5024,
+   "elapsed_s": 0.06,
+   "sha256": "dfa90622cb8cc06fcdf38d1fc514a02fa390c327503993623a2779cffeaa249c",
+   "n_values_returned": 270,
+   "size_declared": [
+    5,
+    54,
+    1
+   ],
+   "source": "Statistics Finland, job vacancy survey",
+   "updated": "2026-08-20T05:00:00Z"
+  },
+  {
+   "table_key": "keha_jobseekers_vacancies_by_occupation",
+   "table_id": "12tu",
+   "slice_index": 0,
+   "slice_path": "data/raw/12tu__data__slice_0.json",
+   "description": "20 regions x ~17 ICT/STEM occupations x 3 statuses x 24 months x 2 contents",
+   "n_cells_requested": 74400,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 513263,
+   "elapsed_s": 8.23,
+   "sha256": "f1541513878d2aa0e26c705bbbb9f7bdac74a2e41081bf3b45bc1fb12fe603a3",
+   "n_values_returned": 74400,
+   "size_declared": [
+    20,
+    20,
+    3,
+    31,
+    2
+   ],
+   "source": "KEHA Centre, Employment Service Statistics",
+   "updated": "2026-08-25T05:00:00Z"
+  },
+  {
+   "table_key": "keha_vacancies_by_industry",
+   "table_id": "12tw",
+   "slice_index": 0,
+   "slice_path": "data/raw/12tw__data__slice_0.json",
+   "description": "20 regions x 21 industries x 3 sectors x 3 durations x months 2024M01..2024M12 x 2 contents",
+   "n_cells_requested": 90720,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 198660,
+   "elapsed_s": 0.09,
+   "sha256": "0dc35f854779627226b997cc68c1691b8d75c4952bb302ed25db420b3db2633c",
+   "n_values_returned": 90720,
+   "size_declared": [
+    20,
+    21,
+    3,
+    3,
+    12,
+    2
+   ],
+   "source": "KEHA Centre, Employment Service Statistics",
+   "updated": "2026-08-25T05:00:00Z"
+  },
+  {
+   "table_key": "keha_vacancies_by_industry",
+   "table_id": "12tw",
+   "slice_index": 1,
+   "slice_path": "data/raw/12tw__data__slice_1.json",
+   "description": "20 regions x 21 industries x 3 sectors x 3 durations x months 2025M01..2025M08 x 2 contents",
+   "n_cells_requested": 60480,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 132659,
+   "elapsed_s": 19.47,
+   "sha256": "06e729a61d05b3b2181ba1fbc601fb472c77f4c63194e07166add9632ffe5621",
+   "n_values_returned": 60480,
+   "size_declared": [
+    20,
+    21,
+    3,
+    3,
+    8,
+    2
+   ],
+   "source": "KEHA Centre, Employment Service Statistics",
+   "updated": "2026-08-25T05:00:00Z"
+  },
+  {
+   "table_key": "keha_vacancies_by_industry",
+   "table_id": "12tw",
+   "slice_index": 2,
+   "slice_path": "data/raw/12tw__data__slice_2.json",
+   "description": "20 regions x 21 industries x 3 sectors x 3 durations x months 2025M09..2026M07 x 2 contents",
+   "n_cells_requested": 83160,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 179817,
+   "elapsed_s": 19.54,
+   "sha256": "6ccd869445bd1ef8ce9c27f4b376671ba9d5f103f76494db7bce161fced9693c",
+   "n_values_returned": 83160,
+   "size_declared": [
+    20,
+    21,
+    3,
+    3,
+    11,
+    2
+   ],
+   "source": "KEHA Centre, Employment Service Statistics",
+   "updated": "2026-08-25T05:00:00Z"
+  },
+  {
+   "table_key": "keha_jobseekers_by_region",
+   "table_id": "12r5",
+   "slice_index": 0,
+   "slice_path": "data/raw/12r5__data__slice_0.json",
+   "description": "21 MK regions x 6 top info codes x 24 months",
+   "n_cells_requested": 3906,
+   "http_status": 200,
+   "ok": true,
+   "bytes": 25761,
+   "elapsed_s": 0.74,
+   "sha256": "48f0dd27fc4e60c7e3d9b4c85603d3fa49d58903b7ac336277d4748f906f6eb5",
+   "n_values_returned": 3906,
+   "size_declared": [
+    21,
+    31,
+    6
+   ],
+   "source": "KEHA Centre, Employment Service Statistics",
+   "updated": "2026-08-25T05:00:00Z"
+  }
+ ]
+}

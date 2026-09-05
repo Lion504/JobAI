@@ -1,0 +1,63 @@
+# Base model candidates. Resolve at GPU preflight time
+# Pick the FIRST model whose QLoRA / bf16 LoRA
+# training fits free-tier Colab A100/L4 VRAM.
+#
+# Branch A: Qwen3.5, bf16 LoRA, Unsloth, 2B or 4B.
+# Branch B: Qwen3-8B or Qwen2.5-7B-Instruct, 4-bit QLoRA, transformers+peft+trl.
+#
+# Do NOT silently switch branches. Record the selected model, commit/version,
+# hardware, and package versions in the run manifest
+
+candidates:
+  - id: "Qwen/Qwen3.5-4B"
+    branch: "A"
+    expected_size_b: 4
+    training_mode: "bf16_lora_unsloth"
+  - id: "Qwen/Qwen3.5-9B"
+    branch: "B"
+    expected_size_b: 9
+    training_mode: "qlora_4bit"
+  - id: "Qwen/Qwen3-14B"
+    branch: "B"
+    expected_size_b: 14
+    training_mode: "qlora_4bit"
+
+# LoRA defaults; tune by validation metrics, not by loss.
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+  bias: "none"
+  task_type: "CAUSAL_LM"
+
+training:
+  output_dir: "models/adapters/fineye-v1"
+  num_train_epochs: 2
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  max_seq_length: 2048
+  logging_steps: 10
+  save_steps: 100
+  eval_steps: 100
+  save_total_limit: 2
+  fp16: false
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+
+# Checkpoint selection: validation forecast metrics AND parse success.
+checkpoint_selection:
+  primary_metric: "val_MAE_mean"
+  secondary_metric: "parse_success_rate"

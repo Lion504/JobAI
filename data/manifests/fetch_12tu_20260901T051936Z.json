@@ -1,0 +1,69 @@
+{
+ "table_key": "keha_jobseekers_vacancies_by_occupation",
+ "table_id": "12tu",
+ "path": "StatFin/tyonv/12tu.px",
+ "title": "Jobseekers and vacancies by occupation in each province during the month by Region, Occupation, Labour market status, Month and Information",
+ "fetched_at_utc": "2026-09-01T05:19:36+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/12tu__meta.json",
+  "meta_sha256": "d8da3157950b33d1e4ce9dba767db70732bdd8e55c679d8f8b08975bd40d4813",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/12tu__data__slice_0.json",
+    "sha256": "f1541513878d2aa0e26c705bbbb9f7bdac74a2e41081bf3b45bc1fb12fe603a3",
+    "n_cells_requested": 74400,
+    "n_values_returned": 74400,
+    "size_declared": [
+     20,
+     20,
+     3,
+     31,
+     2
+    ],
+    "bytes": 513263,
+    "elapsed_s": 8.23,
+    "http_status": 200,
+    "ok": true,
+    "description": "20 regions x ~17 ICT/STEM occupations x 3 statuses x 24 months x 2 contents",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "Alue",
+   "name": null,
+   "text": "Region",
+   "n_values": 23
+  },
+  {
+   "code": "Ammattiryhmä",
+   "name": null,
+   "text": "Occupation",
+   "n_values": 434
+  },
+  {
+   "code": "Työmarkkina-asema",
+   "name": null,
+   "text": "Labour market status",
+   "n_values": 6
+  },
+  {
+   "code": "timeperiod_m",
+   "name": null,
+   "text": "Month",
+   "n_values": 211
+  },
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 2
+  }
+ ]
+}

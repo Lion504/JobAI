@@ -1,0 +1,54 @@
+# Pin exact versions. Re-pin whenever any of transformers/trl/peft/unsloth/torch
+# is upgraded. Record actual installed versions in every run manifest.
+#
+# Install on Google Colab:
+#   !pip install --upgrade -r requirements.txt
+# Colab will provide the correct CUDA-enabled torch wheel via its own index.
+# For a local CPU-only smoke test, install torch from
+#   https://download.pytorch.org/whl/cpu
+# before running the rest of this file.
+
+# ---------- Core / data ----------
+pandas==2.2.2
+requests==2.32.3
+pyarrow==16.1.0
+numpy==1.26.4
+pydantic==2.8.2
+PyYAML==6.0.2
+jsonschema==4.23.0
+
+# ---------- Statistical baselines + EDA ----------
+scikit-learn==1.5.1
+statsmodels==0.14.2
+prophet==1.1.5
+matplotlib==3.9.1
+
+# ---------- Training stack ----------
+# Colab installs the CUDA build of torch itself; the version here is a CPU fallback
+# used only for local smoke tests.
+torch==2.4.1
+transformers==4.45.2
+peft==0.12.0
+trl==0.11.4
+datasets==3.0.1
+accelerate==1.0.1
+bitsandbytes==0.44.0
+safetensors==0.4.5
+
+# ---------- Unsloth (Branch A only) ----------
+# Pin to a release known good with the chosen Qwen3.5 model.
+# If Unsloth breaks on the chosen Qwen3.5 commit, remove and fall back to the
+# plain transformers+peft+trl+bitsandbytes stack above (Branch B).
+unsloth==2024.10.2
+
+# ---------- RAG ----------
+chromadb==0.5.5
+sentence-transformers==3.1.1
+tiktoken==0.8.0
+beautifulsoup4==4.12.3
+trafilatura==1.12.0
+feedparser==6.0.11
+
+# ---------- Notebook UX ----------
+ipykernel==6.29.5
+jupyter==1.1.1

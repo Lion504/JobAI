@@ -1,0 +1,55 @@
+{
+ "table_key": "keha_jobseekers_by_region",
+ "table_id": "12r5",
+ "path": "StatFin/tyonv/12r5.px",
+ "title": "Unemployed jobseekers, persons in services and vacant jobs at the end of the month by Region, Month and Information",
+ "fetched_at_utc": "2026-09-01T05:19:36+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/12r5__meta.json",
+  "meta_sha256": "c1ebabe01fc4fa7981f91936597eb5f0e7cc3329d90c18be751c9598ab62e6a3",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/12r5__data__slice_0.json",
+    "sha256": "48f0dd27fc4e60c7e3d9b4c85603d3fa49d58903b7ac336277d4748f906f6eb5",
+    "n_cells_requested": 3906,
+    "n_values_returned": 3906,
+    "size_declared": [
+     21,
+     31,
+     6
+    ],
+    "bytes": 25761,
+    "elapsed_s": 0.74,
+    "http_status": 200,
+    "ok": true,
+    "description": "21 MK regions x 6 top info codes x 24 months",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "Alue",
+   "name": null,
+   "text": "Region",
+   "n_values": 421
+  },
+  {
+   "code": "timeperiod_m",
+   "name": null,
+   "text": "Month",
+   "n_values": 211
+  },
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 23
+  }
+ ]
+}

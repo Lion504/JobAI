@@ -1,0 +1,81 @@
+# Per-table expectations for the 6-category data-quality summary
+# produced by notebooks/02_normalize_and_validate_data.ipynb.
+#
+# expected_dtypes: a mapping of {column_name: expected_pandas_dtype} for each
+# table. Dtype mismatches are recorded as a data-quality observation; the data
+# itself is not changed.
+#
+# redundant_variables: columns in the normalized table that are derived from
+# or duplicate another column. They are listed in the "potentially
+# irrelevant/redundant variables" observation. The list is static and must be
+# updated when a new redundant column is added.
+
+tables:
+  11l1:
+    title: "Job vacancies by Information and Quarter (whole country)"
+    expected_dtypes:
+      contentscode: "object"        # dimension code, kept as string
+      timeperiod_q: "object"        # YYYYQn, kept as string
+      value: "Int64"               # nullable integer (no missing values expected)
+    redundant_variables: []         # national single-region: no redundancy
+
+  11n1:
+    title: "Job vacancies by Major region, Quarter and Information"
+    expected_dtypes:
+      alue_16_20180101: "object"   # major region code
+      contentscode: "object"
+      timeperiod_q: "object"
+      value: "Int64"
+    redundant_variables: []
+
+  12tu:
+    title: "KEHA: jobseekers and vacancies by Region x Occupation x Labour market status"
+    expected_dtypes:
+      Alue: "object"               # region code (MK01..MK21, MKJO)
+      Ammattiryhmä: "object"       # ISCO-08 4-digit code
+      Työmarkkina-asema: "object"  # labour-market status code
+      contentscode: "object"       # HAKIJAYHT / AVPAIKATYHT
+      timeperiod_q: "object"       # YYYYQn
+      timeperiod_m: "float64"      # always NaN after end-of-quarter aggregation; pandas promotes all-NaN columns to float64
+      value: "Int64"
+    redundant_variables:
+      - "timeperiod_m"             # aggregated to timeperiod_q; column kept for provenance
+
+  12tw:
+    title: "KEHA: vacancies by Region x Industry x Employer sector x Duration"
+    expected_dtypes:
+      Alue: "object"
+      Toimiala: "object"           # TOL industry code
+      Työnantajan sektori: "int64"  # all-digit codes (01..07); pandas infers int
+      Työpaikan työn kesto: "int64" # all-digit codes (00..06); pandas infers int
+      contentscode: "object"
+      timeperiod_q: "object"
+      timeperiod_m: "float64"      # always NaN after aggregation
+      value: "Int64"
+    redundant_variables:
+      - "timeperiod_m"
+
+  12r5:
+    title: "KEHA: unemployed jobseekers, services, vacant jobs by Region"
+    expected_dtypes:
+      Alue: "object"
+      contentscode: "object"
+      timeperiod_q: "object"
+      timeperiod_m: "float64"      # always NaN after aggregation
+      value: "Int64"
+    redundant_variables:
+      - "timeperiod_m"
+
+# Outlier policy. The PxWeb API is the authoritative source for the official
+# statistics. Outliers are REPORTED, never silently capped or removed, because
+# doing so would bias the supervised-learning set. The threshold (99.5th
+# percentile) is documented here so reviewers can change it in one place.
+outlier_policy:
+  rule: "report_only"
+  threshold_percentile: 99.5
+  rationale: >
+    The PxWeb API is authoritative. Capping or removing outliers would
+    introduce a silent bias into the supervised-learning set. Detection
+    produces a count of values above the 99.5th percentile per numeric
+    column; the data itself is unchanged. Reviewers can decide to
+    investigate a specific series in a follow-up notebook.

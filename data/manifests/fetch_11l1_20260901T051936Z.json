@@ -1,0 +1,48 @@
+{
+ "table_key": "national_vacancies",
+ "table_id": "11l1",
+ "path": "StatFin/atp/11l1.px",
+ "title": "Job vacancies by Information and Quarter",
+ "fetched_at_utc": "2026-09-01T05:19:36+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/11l1__meta.json",
+  "meta_sha256": "f3c038574decc9a2fcb2e751bb03b54c194c30e2cabd3c57824d66e648d8cdff",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/11l1__data__slice_0.json",
+    "sha256": "33bfeb61ca4f0cd1ce8848357b5317845d1e6ba614221dcea7b0404223dea7e8",
+    "n_cells_requested": 270,
+    "n_values_returned": 270,
+    "size_declared": [
+     5,
+     54
+    ],
+    "bytes": 4827,
+    "elapsed_s": 0.07,
+    "http_status": 200,
+    "ok": true,
+    "description": "all 5 contents x all 54 quarters",
+    "source": "Statistics Finland, job vacancy survey",
+    "updated": "2026-08-20T05:00:00Z",
+    "error": null
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 5
+  },
+  {
+   "code": "timeperiod_q",
+   "name": null,
+   "text": "Quarter",
+   "n_values": 54
+  }
+ ]
+}

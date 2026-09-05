@@ -1,0 +1,25 @@
+{
+  "timestamp_utc": "2026-08-31T10:35:28+00:00",
+  "python": "3.13.1",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "repo": "/Users/Alan/Documents/Study/fineye",
+  "seed": 42,
+  "configs_loaded": [
+    "data",
+    "eval",
+    "model",
+    "rag"
+  ],
+  "pxweb_reachable": false,
+  "pxweb_meta_status": 200,
+  "json_schema_validator_ok": true,
+  "metrics_path_ok": true,
+  "gpu": {
+    "available": false,
+    "name": null,
+    "mem_total_gb": null,
+    "cuda_version": null,
+    "torch_version": null,
+    "error": "torch not importable: No module named 'torch'"
+  }
+}

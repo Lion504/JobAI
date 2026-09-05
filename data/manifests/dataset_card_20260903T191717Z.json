@@ -1,0 +1,40 @@
+{
+  "generated_at_utc": "2026-09-03T19:17:17+00:00",
+  "source_table": "11l1 / atp_lkm",
+  "feature_window_quarters": 8,
+  "horizons_q": [
+    1,
+    2,
+    4
+  ],
+  "splits": {
+    "train_end": "2022Q4",
+    "val_start": "2023Q1",
+    "val_end": "2024Q2",
+    "test_start": "2024Q3",
+    "test_end": "2026Q1"
+  },
+  "split_sizes": {
+    "train": 32,
+    "val": 6,
+    "test": 5
+  },
+  "files": {
+    "train": {
+      "path": "data/processed/train.jsonl",
+      "n": 32,
+      "sha256_16": "c2e7d074acac3186"
+    },
+    "val": {
+      "path": "data/processed/val.jsonl",
+      "n": 6,
+      "sha256_16": "99922c092189fe8b"
+    },
+    "test": {
+      "path": "data/processed/test.jsonl",
+      "n": 5,
+      "sha256_16": "d10edc3ee8e096fb"
+    }
+  },
+  "n_total_examples": 43
+}

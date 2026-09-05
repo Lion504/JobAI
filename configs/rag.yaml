@@ -1,0 +1,57 @@
+# RAG and citation layer configuration.
+
+# Chunking. Start at 512 tokens, small overlap, then tune on a Finnish
+# retrieval evaluation set.
+chunking:
+  chunk_size_tokens: 512
+  chunk_overlap_tokens: 64
+  splitter: "recursive"
+
+# Embedding model candidates, ordered by preference for Finnish.
+# bge-m3 is multilingual and handles Finnish; multilingual-e5-base is the
+# documented fallback. Do NOT default to all-MiniLM-L6-v2 without evaluation
+embedding_candidates:
+  - id: "BAAI/bge-m3"
+    notes: "Multilingual; strong on Finnish when paired with a Finnish retrieval set."
+  - id: "intfloat/multilingual-e5-base"
+    notes: "Documented fallback; benchmark against bge-m3 before adopting."
+
+# Vector store. ChromaDB is the default for the prototype; the store must
+# be persisted to durable storage (Drive when on Colab).
+vector_store:
+  backend: "chromadb"
+  persist_dir: "data/processed/chroma"
+  collection_name: "fineye_corpus"
+
+# Treat legacy mol.fi RSS endpoints as
+# unverified until they are explicitly added to this list by a team decision.
+sources:
+  - type: "statfin_release_page"
+    base_url: "https://stat.fi/en/releases-and-publications"
+    language: "en"
+  - type: "statfin_future_releases"
+    base_url: "https://stat.fi/en/future-releases"
+    language: "en"
+  - type: "tyomarkkinatori_employment_bulletin"
+    base_url: "https://tyomarkkinatori.fi/en/employment-and-statistics/evaluation-and-research/employment-bulletin"
+    language: "en"
+  - type: "tem_definitions"
+    base_url: "https://tem.fi/en/employment"
+    language: "en"
+  - type: "keha_bulletin_finnish"
+    base_url: "https://tyomarkkinatori.fi/fi/tyomarkkinat/tyollisyyskatsaus"
+    language: "fi"
+    notes: "Preserve Finnish; do not silently translate."
+
+# Retrieval evaluation.
+retrieval_eval:
+  metrics:
+    - "hit_at_k"
+    - "mrr"
+    - "ndcg"
+    - "citation_precision"
+    - "citation_completeness"
+    - "faithfulness"
+  k: 5
+  query_languages: ["fi", "en"]
+  eval_set_size: 30
