@@ -21,7 +21,7 @@ embedding_candidates:
 vector_store:
   backend: "chromadb"
   persist_dir: "data/processed/chroma"
-  collection_name: "fineye_corpus"
+  collection_name: "jobai_corpus"
 
 # Treat legacy mol.fi RSS endpoints as
 # unverified until they are explicitly added to this list by a team decision.

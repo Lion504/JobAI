@@ -2,14 +2,9 @@
   "timestamp_utc": "2026-08-31T10:38:09+00:00",
   "python": "3.13.1",
   "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
-  "repo": "/Users/Alan/Documents/Study/fineye",
+  "repo": "/Users/Alan/Documents/Study/jobai",
   "seed": 42,
-  "configs_loaded": [
-    "data",
-    "eval",
-    "model",
-    "rag"
-  ],
+  "configs_loaded": ["data", "eval", "model", "rag"],
   "pxweb_root_status": 404,
   "pxweb_root_expected_non_ok": true,
   "pxweb_reachable": true,

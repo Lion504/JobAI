@@ -26,7 +26,7 @@ jobai/
 
 ## Workflow
 
-1. Open a fresh Google Colab runtime, mount Drive, and `cd` to the project root. Set `FINEYE_REPO` to the root.
+1. Open a fresh Google Colab runtime, mount Drive, and `cd` to the project root. Set `JOBAI_REPO` to the root.
 2. `!pip install -r requirements.txt`. Colab provides the CUDA build of `torch`; the pinned CPU version is for local smoke tests only.
 3. Run `00_environment_and_smoke_test.ipynb` end-to-end. If it fails, stop.
 4. Continue with `01_…` through `09_…` in order. Each notebook's first cell declares purpose, and expected inputs/outputs.
