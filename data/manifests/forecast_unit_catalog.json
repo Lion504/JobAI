@@ -30,8 +30,8 @@
       "contentscode"
     ],
     "time_column": "timeperiod_q",
-    "n_series": 2334,
-    "n_rows": 19529
+    "n_series": 2400,
+    "n_rows": 99168
   },
   "12tw": {
     "table_key": "keha_vacancies_by_industry",
@@ -44,8 +44,8 @@
       "contentscode"
     ],
     "time_column": "timeperiod_q",
-    "n_series": 7554,
-    "n_rows": 82618
+    "n_series": 7560,
+    "n_rows": 411500
   },
   "12r5": {
     "table_key": "keha_jobseekers_by_region",
@@ -56,6 +56,6 @@
     ],
     "time_column": "timeperiod_q",
     "n_series": 126,
-    "n_rows": 1362
+    "n_rows": 8922
   }
 }
