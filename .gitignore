@@ -4,7 +4,7 @@ Thumbs.db
 
 # IDE
 .idea/
-# .vscode/  # Commit VS Code settings for team consistency
+.vscode/
 *.swp
 *.swo
 
