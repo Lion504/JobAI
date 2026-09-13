@@ -33,8 +33,22 @@ jobai/
 
 ## Data and models
 
-- First implementation uses `StatFin/atp/11l1.px` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
-- Regional (`atp/11n1.px`) and industry (`atp/15ia.px`, TOL2025) sources are added only after the national baseline and rolling-origin evaluation are stable.
+The pipeline draws from two tiers of sources: structured PxWeb tables for numeric inputs, and official bulletins for narrative explanation. All PxWeb queries are declared in `configs/data.yaml`; notebook `01_pxweb_metadata_and_download.ipynb` fetches them with slice-wise POST requests (each < 500k cells) and caches raw responses plus provenance manifests under `data/manifests/`.
+
+### Data catalog
+
+| Table | PxWeb path | Time range | Granularity | Raw cells | Post-agg rows |
+|-------|-----------|------------|-------------|-----------|---------------|
+| `11l1` National vacancies | `atp/11l1.px` | 2013Q1–2026Q2 | Quarterly | 270 (5 measures × 54 quarters) | 270 |
+| `11n1` Regional vacancies | `atp/11n1.px` | 2013Q1–2026Q2 | Quarterly | 1,350 (5 regions × 5 measures × 54 quarters) | 1,350 |
+| `12tu` Jobs by occupation | `tyonv/12tu.px` | 2013M01–2026M07 | Monthly → Quarterly | ~328k across 7 slices | ~54k quarterly |
+| `12tw` Vacancies by industry | `tyonv/12tw.px` | 2013M01–2026M07 | Monthly → Quarterly | ~1.2M across 7 slices | ~200k quarterly |
+| `12r5` Jobs by region | `tyonv/12r5.px` | 2013M01–2026M07 | Monthly → Quarterly | ~20k (1 slice, "all" time) | ~6k quarterly |
+
+KEHA tables are aggregated to quarters using the end-of-quarter stock rule configured in `configs/data.yaml`. The ATP tables are already quarterly and pass through unchanged.
+
+- First implementation uses `11l1` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
+- Regional (`11n1`) and KEHA context tables are available from the start; additional ATP/KEHA tables are added as needed for the forecasting dataset.
 - Fine-tuning uses either a Qwen3.5 bf16 LoRA branch (Unsloth) or a Qwen3 / Qwen2.5 4-bit QLoRA branch (transformers + peft + trl + bitsandbytes). The selected branch, base model id, commit/version, hardware, and package versions are recorded by `06_finetune_model.ipynb`.
 - RAG sources are whitelisted in `configs/rag.yaml` §10.1: StatFin release pages, Job Market Finland and KEHA bulletins, and official TEM pages. Legacy `mol.fi` references are treated as unverified.
 

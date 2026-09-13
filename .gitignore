@@ -4,7 +4,7 @@ Thumbs.db
 
 # IDE
 .idea/
-.vscode/
+# .vscode/  # Commit VS Code settings for team consistency
 *.swp
 *.swo
 
@@ -79,3 +79,5 @@ secrets.yaml
 .coverage
 htmlcov/
 .kilo
+AGENTS.md
+kilo.json
