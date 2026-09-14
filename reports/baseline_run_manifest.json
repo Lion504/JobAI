@@ -1,0 +1,37 @@
+{
+  "dataset": "Dataset B: selected KEHA occupation and industry panel targets",
+  "series_count": 1679,
+  "horizons_q": [
+    1,
+    2,
+    4
+  ],
+  "feature_window_quarters": 8,
+  "models": [
+    "seasonal_naive",
+    "last_value",
+    "ridge"
+  ],
+  "splits": {
+    "train_end": "2022Q4",
+    "val_start": "2023Q1",
+    "val_end": "2024Q2",
+    "test_start": "2024Q3",
+    "test_end": "2026Q1"
+  },
+  "information_cutoff_assertion": "passed",
+  "outputs": {
+    "reports/baseline_predictions.csv": {
+      "rows": 126519,
+      "sha256": "c20d8e4cc88c99623ebeaca0eb039f12c44b9c44579eeed23a69d3f6314ce961"
+    },
+    "reports/baseline_metrics_by_series.csv": {
+      "rows": 24651,
+      "sha256": "95382bb65ade04ba9bfb8d7e0da88a635065ced25c22aa3341780c1946585ed2"
+    },
+    "reports/baselines.csv": {
+      "rows": 18,
+      "sha256": "02b7ea1dac741b29efccf86793b05d839b14ace96c03fcd431677af2f3d728e5"
+    }
+  }
+}

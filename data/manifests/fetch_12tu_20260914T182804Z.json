@@ -1,0 +1,157 @@
+{
+ "table_key": "keha_jobseekers_vacancies_by_occupation",
+ "table_id": "12tu",
+ "path": "StatFin/tyonv/12tu.px",
+ "title": "Jobseekers and vacancies by occupation in each province during the month by Region, Occupation, Labour market status, Month and Information",
+ "fetched_at_utc": "2026-09-14T18:28:04+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/12tu__meta.json",
+  "meta_sha256": "d8da3157950b33d1e4ce9dba767db70732bdd8e55c679d8f8b08975bd40d4813",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/12tu__data__slice_0.json",
+    "sha256": "56bc86895da5451d455963c0480caf2554372c190a09cf85904f482435848a2c",
+    "n_cells_requested": 98952,
+    "n_values_returned": 98952,
+    "size_declared": [
+     19,
+     434,
+     1,
+     12,
+     1
+    ],
+    "bytes": 610962,
+    "elapsed_s": 8.13,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all occupations x quarter ends (2013Q1–2015Q4)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 1,
+    "slice_path": "data/raw/12tu__data__slice_1.json",
+    "sha256": "a107f5b7d6dca4c83de9fac938aaffda6e04329a809d62f0452c451c0ebfd93b",
+    "n_cells_requested": 98952,
+    "n_values_returned": 98952,
+    "size_declared": [
+     19,
+     434,
+     1,
+     12,
+     1
+    ],
+    "bytes": 642494,
+    "elapsed_s": 8.04,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all occupations x quarter ends (2016Q1–2018Q4)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 2,
+    "slice_path": "data/raw/12tu__data__slice_2.json",
+    "sha256": "79076148f2021fc91285afc9f8cf81bf5f82b3a37a221e95cd7af328ce7a43ae",
+    "n_cells_requested": 98952,
+    "n_values_returned": 98952,
+    "size_declared": [
+     19,
+     434,
+     1,
+     12,
+     1
+    ],
+    "bytes": 645587,
+    "elapsed_s": 7.86,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all occupations x quarter ends (2019Q1–2021Q4)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 3,
+    "slice_path": "data/raw/12tu__data__slice_3.json",
+    "sha256": "1214219d7ee88c77c37cbdf1e725ff720a3efacccb1394ac2e35d21ae307c70d",
+    "n_cells_requested": 98952,
+    "n_values_returned": 98952,
+    "size_declared": [
+     19,
+     434,
+     1,
+     12,
+     1
+    ],
+    "bytes": 631559,
+    "elapsed_s": 7.81,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all occupations x quarter ends (2022Q1–2024Q4)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 4,
+    "slice_path": "data/raw/12tu__data__slice_4.json",
+    "sha256": "73732699f835fee173f738608470a0650e57d740761e03251f2a383eec5fa588",
+    "n_cells_requested": 49476,
+    "n_values_returned": 49476,
+    "size_declared": [
+     19,
+     434,
+     1,
+     6,
+     1
+    ],
+    "bytes": 302074,
+    "elapsed_s": 7.9,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all occupations x quarter ends (2025Q1–2026Q2)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "Alue",
+   "name": null,
+   "text": "Region",
+   "n_values": 23
+  },
+  {
+   "code": "Ammattiryhmä",
+   "name": null,
+   "text": "Occupation",
+   "n_values": 434
+  },
+  {
+   "code": "Työmarkkina-asema",
+   "name": null,
+   "text": "Labour market status",
+   "n_values": 6
+  },
+  {
+   "code": "timeperiod_m",
+   "name": null,
+   "text": "Month",
+   "n_values": 211
+  },
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 2
+  }
+ ]
+}

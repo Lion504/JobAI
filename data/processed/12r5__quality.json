@@ -1,0 +1,28 @@
+{
+  "table_id": "12r5",
+  "n_rows": 58940,
+  "dimensions": [
+    "Alue",
+    "timeperiod_m",
+    "contentscode",
+    "timeperiod_q"
+  ],
+  "n_null_values": 6664,
+  "n_str_values": 0,
+  "negative_values": 0,
+  "n_duplicate_key_combos": 0,
+  "n_unique_key_combos": 58940,
+  "time_first": "2009Q1",
+  "time_last": "2026Q2",
+  "n_time_periods": 70,
+  "source": "KEHA Centre, Employment Service Statistics",
+  "updated": "2026-08-25T05:00:00Z",
+  "categories": {
+    "missing_values": "6,664 missing numeric values out of 58,940 normalized rows",
+    "inconsistent_categories": "0 missing labels across 2 normalized label columns",
+    "duplicate_observations": "0 duplicate normalized series-period keys",
+    "incorrect_unexpected_dtypes": "all expected dtypes match",
+    "potential_outliers": "261 normalized values above p99.5=17,004 (REPORT ONLY - no action)",
+    "irrelevant_redundant_variables": "declared: timeperiod_m"
+  }
+}
