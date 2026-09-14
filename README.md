@@ -33,7 +33,7 @@ jobai/
 
 ## Data and models
 
-The pipeline draws from two tiers of sources: structured PxWeb tables for numeric inputs, and official bulletins for narrative explanation. All PxWeb queries are declared in `configs/data.yaml`; notebook `01_pxweb_metadata_and_download.ipynb` fetches them with slice-wise POST requests (each < 500k cells) and caches raw responses plus provenance manifests under `data/manifests/`.
+The pipeline draws from two tiers of sources: structured PxWeb tables for numeric inputs, and official bulletins for narrative explanation. All PxWeb queries are declared in `configs/data.yaml`; notebook `01_pxweb_metadata_and_download.ipynb` fetches them with API-safe slice-wise POST requests and caches raw responses plus provenance manifests under `data/manifests/`.
 
 ### Data catalog
 
@@ -41,20 +41,22 @@ The pipeline draws from two tiers of sources: structured PxWeb tables for numeri
 |-------|-----------|------------|-------------|-----------|---------------|
 | `11l1` National vacancies | `atp/11l1.px` | 2013Q1–2026Q2 | Quarterly | 270 (5 measures × 54 quarters) | 270 |
 | `11n1` Regional vacancies | `atp/11n1.px` | 2013Q1–2026Q2 | Quarterly | 270 (5 regions × 1 current measure × 54 quarters) | 270 |
-| `12tu` Jobs by occupation | `tyonv/12tu.px` | 2013M01–2026M07 | Monthly → Quarterly | 391,200 across 7 slices | 129,600 quarterly-grid rows |
-| `12tw` Vacancies by industry | `tyonv/12tw.px` | 2013M01–2026M07 | Monthly → Quarterly | 1,232,280 across 14 slices | 408,240 quarterly-grid rows |
-| `12r5` Jobs by region | `tyonv/12r5.px` | 2009M01–2026M07 | Monthly → Quarterly | 26,586 (1 slice, "all" time) | 8,820 quarterly-grid rows |
+| `12tu` Vacancies by occupation and province | `tyonv/12tu.px` | 2013Q1–2026Q2 | Quarter-end monthly observations | 445,284 across 5 slices (19 provinces × all 434 occupations × 54 quarter ends) | 445,284 quarterly-grid rows |
+| `12tw` Vacancies by industry and province | `tyonv/12tw.px` | 2009M01–2026M07 | Monthly → Quarterly | 453,017 across 18 slices (19 provinces × all 113 industries × 211 months) | 150,290 quarterly-grid rows |
+| `12r5` Vacancy measures by geography | `tyonv/12r5.px` | 2009Q1–2026Q2 | Quarter-end monthly observations | 58,940 (all 421 official geographies × 2 vacancy measures × 70 quarter ends) | 58,940 quarterly-grid rows |
+
+**Overall configured data volume:** 957,781 downloaded value cells across all five tables, producing 655,054 normalized quarterly rows before quality-based series selection and forecasting-window construction.
 
 KEHA tables retain the M03/M06/M09/M12 quarter-end observations using the stock rule configured in `configs/data.yaml`. Missing source values remain explicit nulls so coverage can be audited. Notebook 02 hard-fails on wrong source months, duplicate keys, quarter-grid gaps, or a normalized quarter later than the latest complete source quarter. ATP tables are already quarterly and pass through unchanged.
 
-Notebook 03 selects the official ATP benchmark targets and quality-filtered KEHA panel targets. Notebook 04 evaluates required baselines on the ATP benchmark. Notebook 05 only creates panel train/validation/test examples; LLM fine-tuning starts in notebook 06 and is gated on the baseline and panel reports.
+Notebook 03 selects the official ATP reference targets and quality-filtered KEHA panel targets. Notebook 04 evaluates the required baselines on the selected KEHA panel using common complete rolling-origin windows. Notebook 05 creates panel train/validation/test examples; LLM fine-tuning starts in notebook 06 and is gated on the panel baseline and dataset reports.
 
 ### Current forecasting readiness
 
-- Dataset A contains five benchmark targets: one `11l1` national series and four non-total `11n1` regional series.
-- The current panel quality rules select 44 `12tu` vacancy series and no `12tw` series. Most fetched `12tw` top-level industry × selected employer-sector × selected duration combinations are structurally zero and are not duplicated into the training set.
-- Notebook 05 currently produces 4,896 boundary-safe panel examples: 3,898 train, 465 validation, and 533 test.
-- Fine-tuning is intentionally blocked by `data/manifests/panel_dataset_card.json` until both configured panel-size gates pass. Expanding or revising the `12tw` query is preferable to weakening the quality thresholds.
+- Dataset A remains a compact reference set with five ATP targets: one `11l1` national series and four non-total `11n1` major-region series.
+- Dataset B contains 1,679 quality-selected KEHA panel targets from `12tu` occupation series and `12tw` industry series. The selection keeps total category codes for labour-market status, employer sector, and duration to avoid duplicated hierarchical combinations.
+- Notebook 05 currently produces 185,465 boundary-safe panel examples: 151,727 train, 15,929 validation, and 17,809 test across 1-, 2-, and 4-quarter horizons.
+- The fine-tuning gate passes: 1,679 selected panel series exceeds the configured minimum of 100, and 151,727 training examples exceeds the configured minimum of 10,000. Notebook 06 may proceed only after the updated panel baseline report from notebook 04 is present.
 
 - First implementation uses `11l1` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
 - Regional (`11n1`) and KEHA context tables are available from the start; additional ATP/KEHA tables are added as needed for the forecasting dataset.
