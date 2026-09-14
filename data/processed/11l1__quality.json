@@ -1,0 +1,26 @@
+{
+  "table_id": "11l1",
+  "n_rows": 270,
+  "dimensions": [
+    "contentscode",
+    "timeperiod_q"
+  ],
+  "n_null_values": 0,
+  "n_str_values": 0,
+  "negative_values": 0,
+  "n_duplicate_key_combos": 0,
+  "n_unique_key_combos": 270,
+  "time_first": "2013Q1",
+  "time_last": "2026Q2",
+  "n_time_periods": 54,
+  "source": "Statistics Finland, job vacancy survey",
+  "updated": "2026-08-20T05:00:00Z",
+  "categories": {
+    "missing_values": "0 missing numeric values out of 270 normalized rows",
+    "inconsistent_categories": "0 missing labels across 1 normalized label columns",
+    "duplicate_observations": "0 duplicate normalized series-period keys",
+    "incorrect_unexpected_dtypes": "all expected dtypes match",
+    "potential_outliers": "2 normalized values above p99.5=77,867 (REPORT ONLY - no action)",
+    "irrelevant_redundant_variables": "none declared"
+  }
+}

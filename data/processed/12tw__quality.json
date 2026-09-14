@@ -1,0 +1,31 @@
+{
+  "table_id": "12tw",
+  "n_rows": 408240,
+  "dimensions": [
+    "Alue",
+    "Toimiala",
+    "Työnantajan sektori",
+    "Työpaikan työn kesto",
+    "timeperiod_m",
+    "contentscode",
+    "timeperiod_q"
+  ],
+  "n_null_values": 4206,
+  "n_str_values": 0,
+  "negative_values": 0,
+  "n_duplicate_key_combos": 0,
+  "n_unique_key_combos": 408240,
+  "time_first": "2013Q1",
+  "time_last": "2026Q2",
+  "n_time_periods": 54,
+  "source": "KEHA Centre, Employment Service Statistics",
+  "updated": "2026-08-25T05:00:00Z",
+  "categories": {
+    "missing_values": "4,206 missing numeric values out of 408,240 normalized rows",
+    "inconsistent_categories": "0 missing labels across 5 normalized label columns",
+    "duplicate_observations": "0 duplicate normalized series-period keys",
+    "incorrect_unexpected_dtypes": "all expected dtypes match",
+    "potential_outliers": "1544 normalized values above p99.5=0 (REPORT ONLY - no action)",
+    "irrelevant_redundant_variables": "declared: timeperiod_m"
+  }
+}
