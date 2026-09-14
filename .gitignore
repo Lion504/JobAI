@@ -53,9 +53,6 @@ mlruns/
 mlartifacts/
 
 # Reports & logs
-reports/figures/*.png
-reports/figures/*.jpg
-reports/figures/*.pdf
 *.log
 logs/
 

@@ -1,6 +1,6 @@
 {
-  "dataset": "Dataset A: 11l1 national + four non-total 11n1 regions",
-  "series_count": 5,
+  "dataset": "Dataset B: selected KEHA occupation and industry panel targets",
+  "series_count": 1679,
   "horizons_q": [
     1,
     2,
@@ -22,16 +22,16 @@
   "information_cutoff_assertion": "passed",
   "outputs": {
     "reports/baseline_predictions.csv": {
-      "rows": 525,
-      "sha256": "edce076048190617a58f7187477a466302b66d452324df1a75f3fef3a1ba1289"
+      "rows": 126519,
+      "sha256": "c20d8e4cc88c99623ebeaca0eb039f12c44b9c44579eeed23a69d3f6314ce961"
     },
     "reports/baseline_metrics_by_series.csv": {
-      "rows": 90,
-      "sha256": "da9ec3f79cbff258181fa1e28905863b893e64272b664db052e6e0b69898afa0"
+      "rows": 24651,
+      "sha256": "95382bb65ade04ba9bfb8d7e0da88a635065ced25c22aa3341780c1946585ed2"
     },
     "reports/baselines.csv": {
       "rows": 18,
-      "sha256": "8a24848fe09a9bcbd3aac48855457558de7f4da420c9c400a7fdd79ec186e897"
+      "sha256": "02b7ea1dac741b29efccf86793b05d839b14ace96c03fcd431677af2f3d728e5"
     }
   }
 }
