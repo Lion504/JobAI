@@ -17,10 +17,10 @@ jobai/
 ├── requirements.txt              # pinned Colab environment
 ├── notebooks/                    # ordered executable Python work
 ├── configs/                      # data.yaml, eval.yaml, model.yaml, rag.yaml
-├── data/raw/                     # ignored; raw PxWeb responses
-├── data/processed/               # ignored; normalized data, splits, JSONL
+├── data/raw/                     # raw PxWeb responses
+├── data/processed/               # normalized data, splits, JSONL
 ├── data/manifests/               # provenance and run manifests
-├── reports/                      # ignored; generated evaluation outputs
+├── reports/                      # generated evaluation outputs
 └── models/                       # ignored; local adapters and checkpoints
 ```
 
@@ -37,13 +37,13 @@ The pipeline draws from two tiers of sources: structured PxWeb tables for numeri
 
 ### Data catalog
 
-| Table | PxWeb path | Time range | Granularity | Raw cells | Post-agg rows |
-|-------|-----------|------------|-------------|-----------|---------------|
-| `11l1` National vacancies | `atp/11l1.px` | 2013Q1–2026Q2 | Quarterly | 270 (5 measures × 54 quarters) | 270 |
-| `11n1` Regional vacancies | `atp/11n1.px` | 2013Q1–2026Q2 | Quarterly | 270 (5 regions × 1 current measure × 54 quarters) | 270 |
-| `12tu` Vacancies by occupation and province | `tyonv/12tu.px` | 2013Q1–2026Q2 | Quarter-end monthly observations | 445,284 across 5 slices (19 provinces × all 434 occupations × 54 quarter ends) | 445,284 quarterly-grid rows |
-| `12tw` Vacancies by industry and province | `tyonv/12tw.px` | 2009M01–2026M07 | Monthly → Quarterly | 453,017 across 18 slices (19 provinces × all 113 industries × 211 months) | 150,290 quarterly-grid rows |
-| `12r5` Vacancy measures by geography | `tyonv/12r5.px` | 2009Q1–2026Q2 | Quarter-end monthly observations | 58,940 (all 421 official geographies × 2 vacancy measures × 70 quarter ends) | 58,940 quarterly-grid rows |
+| Table                                       | PxWeb path      | Time range      | Granularity                      | Raw cells                                                                      | Post-agg rows               |
+| ------------------------------------------- | --------------- | --------------- | -------------------------------- | ------------------------------------------------------------------------------ | --------------------------- |
+| `11l1` National vacancies                   | `atp/11l1.px`   | 2013Q1–2026Q2   | Quarterly                        | 270 (5 measures × 54 quarters)                                                 | 270                         |
+| `11n1` Regional vacancies                   | `atp/11n1.px`   | 2013Q1–2026Q2   | Quarterly                        | 270 (5 regions × 1 current measure × 54 quarters)                              | 270                         |
+| `12tu` Vacancies by occupation and province | `tyonv/12tu.px` | 2013Q1–2026Q2   | Quarter-end monthly observations | 445,284 across 5 slices (19 provinces × all 434 occupations × 54 quarter ends) | 445,284 quarterly-grid rows |
+| `12tw` Vacancies by industry and province   | `tyonv/12tw.px` | 2009M01–2026M07 | Monthly → Quarterly              | 453,017 across 18 slices (19 provinces × all 113 industries × 211 months)      | 150,290 quarterly-grid rows |
+| `12r5` Vacancy measures by geography        | `tyonv/12r5.px` | 2009Q1–2026Q2   | Quarter-end monthly observations | 58,940 (all 421 official geographies × 2 vacancy measures × 70 quarter ends)   | 58,940 quarterly-grid rows  |
 
 **Overall configured data volume:** 957,781 downloaded value cells across all five tables, producing 655,054 normalized quarterly rows before quality-based series selection and forecasting-window construction.
 
