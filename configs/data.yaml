@@ -28,8 +28,8 @@ pxweb:
 # -----------------------------------------------------------------------------
 #
 # PxWeb API cell limits:
-#   - ATP tables (11l1, 11n1) are small (270 rows each) and fetched fully
-#     using `contentscode: "all"` + `timeperiod_q: "all"`.
+#   - ATP tables (11l1, 11n1) are small (270 rows each with the current
+#     metadata) and fetched fully using `contentscode: "all"` and time="all".
 #   - KEHA tables (12tu, 12tw, 12r5) are massive in their full form — millions
 #     of cells. The PxWeb API rejects requests above ~500k cells with HTTP 403.
 #     These tables MUST be sliced with explicit dimension filters.
@@ -43,8 +43,7 @@ pxweb:
 #       - 12r5: 1 slice with `"all"` time (163 months, ~20k cells — fits easily)
 #   - Region: Only 20-21 MK major regions (excludes SSS national total) —
 #     matches the regional panel we model in notebook 05.
-#   - Occupation (12tu): Only ICT/STEM occupations — the project's focus per
-#     plan.md §4.1. Full list has ~80 occupations; we use 17.
+#   - Occupation (12tu): selected ICT/STEM occupations plus the SSS total.
 #   - Industry (12tw): Uses `"tol_broad"` sentinel = top-level TOL 1-letter
 #     codes (A–U), excluding X/NO/SSS/Other. Collapses ~100 detailed
 #     industries into 21 broad sectors, cutting cell count ~5x.
@@ -52,7 +51,7 @@ pxweb:
 #     jobseeker counts), not the full ~20 contents available.
 #
 # Cell-count verification (notebook 01 prints n_cells per slice):
-#   - 12tu: 20×17×3×24×2 = 489,600 per 24-month slice (under 500k)
+#   - 12tu: 20×20×3×24×2 = 57,600 per 24-month slice
 #   - 12tw: 20×21×3×3×24×2 = 445,440 per 24-month slice (under 500k)
 #           → 6 historical slices of 24 months + 1 recent slice = 163 months total
 #   - 12r5: 21×6×163 = ~20,574 for full range (single slice with "all")
@@ -75,7 +74,7 @@ tables:
     path: "StatFin/atp/11n1.px"
     title: "Job vacancies by Major region, Quarter and Information"
     slices:
-      - description: "all 5 regions x all 5 contents x all 54 quarters (2013Q1–2026Q2)"
+      - description: "all 5 regions x all current contents x all 54 quarters (currently 270 cells)"
         query:
           alue_16_20180101: "all"
           contentscode: "all"
@@ -88,7 +87,7 @@ tables:
       rule: "end_of_quarter"
     slices:
       # --- Historical: 2013M01–2023M12 (144 months, 6 slices × 24 months)
-      - description: "20 regions x 17 ICT/STEM occupations x 3 statuses x 24 months (2013M01–2014M12)"
+      - description: "20 regions x 20 selected occupations (including SSS) x 3 statuses x 24 months (2013M01–2014M12)"
         query:
           Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MKJO"]
           Ammattiryhmä: ["SSS","1330","2141","2142","2143","2144","2145","2149","2152","2153","2166","2356","2511","2512","2513","2514","2519","2631","2632","3114"]
@@ -265,7 +264,7 @@ tables:
     monthly_to_quarterly:
       rule: "end_of_quarter"
     slices:
-      - description: "21 MK regions x 6 info codes x all months (2013M01–2026M07)"
+      - description: "21 MK regions x 6 info codes x all available months (currently 2009M01–2026M07)"
         query:
           Alue: ["MK01","MK02","MK04","MK05","MK06","MK07","MK08","MK09","MK10","MK11","MK12","MK13","MK14","MK15","MK16","MK17","MK18","MK19","MK21","MK91","MKJO"]
           timeperiod_m: "all"
