@@ -1,0 +1,467 @@
+{
+ "table_key": "keha_vacancies_by_industry",
+ "table_id": "12tw",
+ "path": "StatFin/tyonv/12tw.px",
+ "title": "Vacancies by sector in each province at the end of the month by Region, Industry, Employer sector, Duration of work in a workplace, Month and Information",
+ "fetched_at_utc": "2026-09-14T18:28:04+00:00",
+ "pxweb_base_url": "https://pxdata.stat.fi/PxWeb/api/v1",
+ "response_format": "JSON-STAT2",
+ "raw": {
+  "meta_path": "data/raw/12tw__meta.json",
+  "meta_sha256": "a4a52fa44d51a2a572cbc6e9f4d0a437f6f6e99b992d9d64b68d2602a2f0c650",
+  "slices": [
+   {
+    "slice_index": 0,
+    "slice_path": "data/raw/12tw__data__slice_0.json",
+    "sha256": "ed368346ddeda76aadc8df820f338d49ce839450534f9d306ddbe281f7f9138e",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 141800,
+    "elapsed_s": 17.42,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2009M01..2009M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 1,
+    "slice_path": "data/raw/12tw__data__slice_1.json",
+    "sha256": "39883cf52cfb682a920df74bbca2676f718c979c367e09b5e211be749f2f2a7c",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 153971,
+    "elapsed_s": 17.56,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2010M01..2010M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 2,
+    "slice_path": "data/raw/12tw__data__slice_2.json",
+    "sha256": "bc503793d139333b10452dcab30455946b8db8dba792669eddf434634f654f1b",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 158048,
+    "elapsed_s": 17.63,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2011M01..2011M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 3,
+    "slice_path": "data/raw/12tw__data__slice_3.json",
+    "sha256": "ad71899695c84490e51eeddad47a2ca8446762450661931cba9ed9620b8b3972",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 162044,
+    "elapsed_s": 17.4,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2012M01..2012M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 4,
+    "slice_path": "data/raw/12tw__data__slice_4.json",
+    "sha256": "a7d170d4691878cbf5e8ac924c9485e891b1d0cad5149c253c428d7de8f1200e",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 166252,
+    "elapsed_s": 19.01,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2013M01..2013M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 5,
+    "slice_path": "data/raw/12tw__data__slice_5.json",
+    "sha256": "b7da70a8ef66445ebff4468fcddc35b5e9e7110d09f378f6930f651a6550e3ed",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 166960,
+    "elapsed_s": 17.79,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2014M01..2014M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 6,
+    "slice_path": "data/raw/12tw__data__slice_6.json",
+    "sha256": "636bd36a05ebc4711d78d7074634936a27e4d9c80a90588908509d3504711798",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 162480,
+    "elapsed_s": 18.19,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2015M01..2015M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 7,
+    "slice_path": "data/raw/12tw__data__slice_7.json",
+    "sha256": "654f0a596fa2df393c6e29bee33c099e5dc96873ef8a301d07beaeecf0297b86",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 163891,
+    "elapsed_s": 19.43,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2016M01..2016M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 8,
+    "slice_path": "data/raw/12tw__data__slice_8.json",
+    "sha256": "4e1dba6999112c5c26a0a4a237c67f60bb3ad9d0c08cf67c792c8e289897be09",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 157711,
+    "elapsed_s": 18.15,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2017M01..2017M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 9,
+    "slice_path": "data/raw/12tw__data__slice_9.json",
+    "sha256": "cee4a194ed37a9ff9e6468ca98228552cd58c333fcee0a286d843ca1877bf807",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 159731,
+    "elapsed_s": 17.59,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2018M01..2018M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 10,
+    "slice_path": "data/raw/12tw__data__slice_10.json",
+    "sha256": "734cd255eda075d25d879eacae9d7a8f3210f96020dba72b12300319c5fac6d4",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 158451,
+    "elapsed_s": 17.94,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2019M01..2019M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 11,
+    "slice_path": "data/raw/12tw__data__slice_11.json",
+    "sha256": "273428d6893a4145662fd59346125837a245e5bed5aeb1a2c3a0e3514ecb77ed",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 160687,
+    "elapsed_s": 17.75,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2020M01..2020M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 12,
+    "slice_path": "data/raw/12tw__data__slice_12.json",
+    "sha256": "722f231d049edc6126885aac948372f077a7da665ca5be8efb8099893e87fd49",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 158687,
+    "elapsed_s": 17.34,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2021M01..2021M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 13,
+    "slice_path": "data/raw/12tw__data__slice_13.json",
+    "sha256": "87c2b229d08e0110dce3b05245bbdd3b1612cf28e07e741d496ec10afe00f946",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 159582,
+    "elapsed_s": 17.31,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2022M01..2022M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 14,
+    "slice_path": "data/raw/12tw__data__slice_14.json",
+    "sha256": "25f73dca0039731e73c5dd1e7351515cccebe349de5a0f6f2f0fc7c7b92f3201",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 160012,
+    "elapsed_s": 17.3,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2023M01..2023M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 15,
+    "slice_path": "data/raw/12tw__data__slice_15.json",
+    "sha256": "d104a0173fb3c45c9ab78041cd4f503a08d2d9b9bb2639daa5efcbf42c4600ad",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 164383,
+    "elapsed_s": 17.46,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2024M01..2024M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 16,
+    "slice_path": "data/raw/12tw__data__slice_16.json",
+    "sha256": "8c28d5a58fe6d983a049265a2d6564b7873d2a4ee0ac8e85359fddc1ac93b715",
+    "n_cells_requested": 25764,
+    "n_values_returned": 25764,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     12,
+     1
+    ],
+    "bytes": 164376,
+    "elapsed_s": 17.46,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 12 months (2025M01..2025M12)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   },
+   {
+    "slice_index": 17,
+    "slice_path": "data/raw/12tw__data__slice_17.json",
+    "sha256": "f0b9396bb8a64304dc31981236af815b67d62e71a70c421e4266db37d59ab988",
+    "n_cells_requested": 15029,
+    "n_values_returned": 15029,
+    "size_declared": [
+     19,
+     113,
+     1,
+     1,
+     7,
+     1
+    ],
+    "bytes": 100143,
+    "elapsed_s": 17.16,
+    "http_status": 200,
+    "ok": true,
+    "description": "19 provinces x all industries x total sector x total duration x 7 months (2026M01..2026M07)",
+    "source": "KEHA Centre, Employment Service Statistics",
+    "updated": "2026-08-25T05:00:00Z",
+    "error": null
+   }
+  ]
+ },
+ "variables": [
+  {
+   "code": "Alue",
+   "name": null,
+   "text": "Region",
+   "n_values": 23
+  },
+  {
+   "code": "Toimiala",
+   "name": null,
+   "text": "Industry",
+   "n_values": 113
+  },
+  {
+   "code": "Työnantajan sektori",
+   "name": null,
+   "text": "Employer sector",
+   "n_values": 9
+  },
+  {
+   "code": "Työpaikan työn kesto",
+   "name": null,
+   "text": "Duration of work in a workplace",
+   "n_values": 9
+  },
+  {
+   "code": "timeperiod_m",
+   "name": null,
+   "text": "Month",
+   "n_values": 211
+  },
+  {
+   "code": "contentscode",
+   "name": null,
+   "text": "Information",
+   "n_values": 2
+  }
+ ]
+}

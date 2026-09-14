@@ -1,6 +1,6 @@
 {
   "table_id": "12tu",
-  "n_rows": 129600,
+  "n_rows": 445284,
   "dimensions": [
     "Alue",
     "Ammattiryhmä",
@@ -9,22 +9,22 @@
     "contentscode",
     "timeperiod_q"
   ],
-  "n_null_values": 32462,
+  "n_null_values": 101912,
   "n_str_values": 0,
   "negative_values": 0,
   "n_duplicate_key_combos": 0,
-  "n_unique_key_combos": 129600,
+  "n_unique_key_combos": 445284,
   "time_first": "2013Q1",
   "time_last": "2026Q2",
   "n_time_periods": 54,
   "source": "KEHA Centre, Employment Service Statistics",
   "updated": "2026-08-25T05:00:00Z",
   "categories": {
-    "missing_values": "32,462 missing numeric values out of 129,600 normalized rows",
+    "missing_values": "101,912 missing numeric values out of 445,284 normalized rows",
     "inconsistent_categories": "0 missing labels across 4 normalized label columns",
     "duplicate_observations": "0 duplicate normalized series-period keys",
     "incorrect_unexpected_dtypes": "all expected dtypes match",
-    "potential_outliers": "486 normalized values above p99.5=32,824 (REPORT ONLY - no action)",
+    "potential_outliers": "1716 normalized values above p99.5=703 (REPORT ONLY - no action)",
     "irrelevant_redundant_variables": "declared: timeperiod_m"
   }
 }

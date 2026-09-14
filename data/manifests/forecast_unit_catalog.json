@@ -22,7 +22,7 @@
   },
   "12tu": {
     "table_key": "keha_jobseekers_vacancies_by_occupation",
-    "title": "KEHA: jobseekers and vacancies by Region x Occupation x Labour market status",
+    "title": "KEHA: vacancies by Province x Occupation",
     "series_id_columns": [
       "Alue",
       "Ammattiryhmä",
@@ -30,8 +30,8 @@
       "contentscode"
     ],
     "time_column": "timeperiod_q",
-    "n_series": 2400,
-    "n_rows": 129600
+    "n_series": 8246,
+    "n_rows": 445284
   },
   "12tw": {
     "table_key": "keha_vacancies_by_industry",
@@ -44,8 +44,8 @@
       "contentscode"
     ],
     "time_column": "timeperiod_q",
-    "n_series": 7560,
-    "n_rows": 408240
+    "n_series": 2147,
+    "n_rows": 150290
   },
   "12r5": {
     "table_key": "keha_jobseekers_by_region",
@@ -55,7 +55,7 @@
       "contentscode"
     ],
     "time_column": "timeperiod_q",
-    "n_series": 126,
-    "n_rows": 8820
+    "n_series": 842,
+    "n_rows": 58940
   }
 }
