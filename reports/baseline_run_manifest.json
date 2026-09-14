@@ -1,0 +1,37 @@
+{
+  "dataset": "Dataset A: 11l1 national + four non-total 11n1 regions",
+  "series_count": 5,
+  "horizons_q": [
+    1,
+    2,
+    4
+  ],
+  "feature_window_quarters": 8,
+  "models": [
+    "seasonal_naive",
+    "last_value",
+    "ridge"
+  ],
+  "splits": {
+    "train_end": "2022Q4",
+    "val_start": "2023Q1",
+    "val_end": "2024Q2",
+    "test_start": "2024Q3",
+    "test_end": "2026Q1"
+  },
+  "information_cutoff_assertion": "passed",
+  "outputs": {
+    "reports/baseline_predictions.csv": {
+      "rows": 525,
+      "sha256": "edce076048190617a58f7187477a466302b66d452324df1a75f3fef3a1ba1289"
+    },
+    "reports/baseline_metrics_by_series.csv": {
+      "rows": 90,
+      "sha256": "da9ec3f79cbff258181fa1e28905863b893e64272b664db052e6e0b69898afa0"
+    },
+    "reports/baselines.csv": {
+      "rows": 18,
+      "sha256": "8a24848fe09a9bcbd3aac48855457558de7f4da420c9c400a7fdd79ec186e897"
+    }
+  }
+}
