@@ -1,4 +1,4 @@
-# Pin exact versions. Re-pin whenever any of transformers/trl/peft/unsloth/torch
+# Pin exact versions. Re-pin whenever any of transformers/trl/peft/torch
 # is upgraded. Record actual installed versions in every run manifest.
 #
 # Install on Google Colab:
@@ -9,8 +9,8 @@
 # before running the rest of this file.
 
 # ---------- Core / data ----------
-pandas==2.2.2
-requests==2.32.3
+pandas==2.2.3
+requests==2.32.4
 pyarrow==16.1.0
 numpy==1.26.4
 pydantic==2.8.2
@@ -24,22 +24,9 @@ prophet==1.1.5
 matplotlib==3.9.1
 
 # ---------- Training stack ----------
-# Colab installs the CUDA build of torch itself; the version here is a CPU fallback
-# used only for local smoke tests.
-torch==2.4.1
-transformers==4.45.2
-peft==0.12.0
-trl==0.11.4
-datasets==3.0.1
-accelerate==1.0.1
-bitsandbytes==0.44.0
-safetensors==0.4.5
-
-# ---------- Unsloth (Branch A only) ----------
-# Pin to a release known good with the chosen Qwen3.5 model.
-# If Unsloth breaks on the chosen Qwen3.5 commit, remove and fall back to the
-# plain transformers+peft+trl+bitsandbytes stack above (Branch B).
-unsloth==2024.10.2
+# Notebook 06 installs the isolated Colab-compatible training stack from
+# requirements-train-colab.txt. Do not install or replace Colab's managed
+# PyTorch/CUDA packages from this general project requirements file.
 
 # ---------- RAG ----------
 chromadb==0.5.5
@@ -50,5 +37,4 @@ trafilatura==1.12.0
 feedparser==6.0.11
 
 # ---------- Notebook UX ----------
-ipykernel==6.29.5
-jupyter==1.1.1
+ipykernel==6.17.1

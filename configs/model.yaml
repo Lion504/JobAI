@@ -1,27 +1,40 @@
-# Base model candidates. Resolve at GPU preflight time
-# Pick the FIRST model whose QLoRA / bf16 LoRA
-# training fits free-tier Colab A100/L4 VRAM.
-#
-# Branch A: Qwen3.5, bf16 LoRA, Unsloth, 2B or 4B.
-# Branch B: Qwen3-8B or Qwen2.5-7B-Instruct, 4-bit QLoRA, transformers+peft+trl.
+# Preferred experiment: Qwen3.5-9B with four-bit QLoRA. Qwen3.5 is natively
+# multimodal, but this project supplies text-only examples and freezes all
+# vision parameters. Do not silently fall back when the preferred model does
+# not fit; select a different configured candidate explicitly instead.
 #
 # Do NOT silently switch branches. Record the selected model, commit/version,
 # hardware, and package versions in the run manifest
 # Notebook 06 must first read data/manifests/panel_dataset_card.json and stop
 # before loading a base model unless gate.finetuning_ready is true.
 
+candidate_to_run: "Qwen/Qwen3.5-9B"
+
 candidates:
-  - id: "Qwen/Qwen3.5-4B"
-    branch: "A"
-    expected_size_b: 4
-    training_mode: "bf16_lora_unsloth"
   - id: "Qwen/Qwen3.5-9B"
-    branch: "B"
+    branch: "A"
+    architecture: "multimodal_text_only"
     expected_size_b: 9
+    minimum_vram_gb: 22
     training_mode: "qlora_4bit"
-  - id: "Qwen/Qwen3-14B"
+    freeze_vision: true
+  - id: "Qwen/Qwen3-4B"
     branch: "B"
-    expected_size_b: 14
+    architecture: "causal_lm"
+    expected_size_b: 4
+    minimum_vram_gb: 14
+    training_mode: "qlora_4bit"
+  - id: "Qwen/Qwen2.5-7B-Instruct"
+    branch: "B"
+    architecture: "causal_lm"
+    expected_size_b: 7
+    minimum_vram_gb: 20
+    training_mode: "qlora_4bit"
+  - id: "Qwen/Qwen3-8B"
+    branch: "B"
+    architecture: "causal_lm"
+    expected_size_b: 8
+    minimum_vram_gb: 24
     training_mode: "qlora_4bit"
 
 # LoRA defaults; tune by validation metrics, not by loss.
@@ -43,13 +56,13 @@ lora:
 training:
   output_dir: "models/adapters/jobai-v1"
   num_train_epochs: 2
-  per_device_train_batch_size: 4
-  gradient_accumulation_steps: 4
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
   learning_rate: 2.0e-4
   lr_scheduler_type: "cosine"
   warmup_ratio: 0.03
   weight_decay: 0.0
-  max_seq_length: 2048
+  max_seq_length: 512
   logging_steps: 10
   save_steps: 100
   eval_steps: 100
