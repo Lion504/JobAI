@@ -37,6 +37,7 @@ ENV/
 *.feather
 *.h5
 *.hdf5
+*.jsonl
 
 # Models
 models/*.pt
