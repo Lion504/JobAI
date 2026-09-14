@@ -1,21 +1,20 @@
-# Preferred experiment: Qwen3.5-9B with four-bit QLoRA. Qwen3.5 is natively
-# multimodal, but this project supplies text-only examples and freezes all
-# vision parameters. Do not silently fall back when the preferred model does
-# not fit; select a different configured candidate explicitly instead.
+# Preferred experiment: Qwen3-8B with four-bit QLoRA using the text-only
+# causal-language-model loader. Do not silently fall back when the preferred
+# model does not fit; select a different configured candidate explicitly.
 #
 # Do NOT silently switch branches. Record the selected model, commit/version,
 # hardware, and package versions in the run manifest
 # Notebook 06 must first read data/manifests/panel_dataset_card.json and stop
 # before loading a base model unless gate.finetuning_ready is true.
 
-candidate_to_run: "Qwen/Qwen3.5-9B"
+candidate_to_run: "Qwen/Qwen3-8B"
 
 candidates:
   - id: "Qwen/Qwen3.5-9B"
     branch: "A"
     architecture: "multimodal_text_only"
     expected_size_b: 9
-    minimum_vram_gb: 22
+    minimum_vram_gb: 14
     training_mode: "qlora_4bit"
     freeze_vision: true
   - id: "Qwen/Qwen3-4B"
@@ -28,13 +27,13 @@ candidates:
     branch: "B"
     architecture: "causal_lm"
     expected_size_b: 7
-    minimum_vram_gb: 20
+    minimum_vram_gb: 14
     training_mode: "qlora_4bit"
   - id: "Qwen/Qwen3-8B"
     branch: "B"
     architecture: "causal_lm"
     expected_size_b: 8
-    minimum_vram_gb: 24
+    minimum_vram_gb: 14
     training_mode: "qlora_4bit"
 
 # LoRA defaults; tune by validation metrics, not by loss.
