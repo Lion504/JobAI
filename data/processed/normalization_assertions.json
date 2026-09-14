@@ -1,0 +1,57 @@
+{
+  "11l1": {
+    "status": "passed",
+    "n_rows": 270,
+    "n_series": 5,
+    "n_quarters": 54,
+    "time_first": "2013Q1",
+    "time_last": "2026Q2",
+    "duplicate_keys": 0,
+    "series_with_gaps": 0,
+    "bad_source_months": 0
+  },
+  "11n1": {
+    "status": "passed",
+    "n_rows": 270,
+    "n_series": 5,
+    "n_quarters": 54,
+    "time_first": "2013Q1",
+    "time_last": "2026Q2",
+    "duplicate_keys": 0,
+    "series_with_gaps": 0,
+    "bad_source_months": 0
+  },
+  "12tu": {
+    "status": "passed",
+    "n_rows": 445284,
+    "n_series": 8246,
+    "n_quarters": 54,
+    "time_first": "2013Q1",
+    "time_last": "2026Q2",
+    "duplicate_keys": 0,
+    "series_with_gaps": 0,
+    "bad_source_months": 0
+  },
+  "12tw": {
+    "status": "passed",
+    "n_rows": 150290,
+    "n_series": 2147,
+    "n_quarters": 70,
+    "time_first": "2009Q1",
+    "time_last": "2026Q2",
+    "duplicate_keys": 0,
+    "series_with_gaps": 0,
+    "bad_source_months": 0
+  },
+  "12r5": {
+    "status": "passed",
+    "n_rows": 58940,
+    "n_series": 842,
+    "n_quarters": 70,
+    "time_first": "2009Q1",
+    "time_last": "2026Q2",
+    "duplicate_keys": 0,
+    "series_with_gaps": 0,
+    "bad_source_months": 0
+  }
+}

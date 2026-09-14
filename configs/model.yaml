@@ -7,6 +7,8 @@
 #
 # Do NOT silently switch branches. Record the selected model, commit/version,
 # hardware, and package versions in the run manifest
+# Notebook 06 must first read data/manifests/panel_dataset_card.json and stop
+# before loading a base model unless gate.finetuning_ready is true.
 
 candidates:
   - id: "Qwen/Qwen3.5-4B"

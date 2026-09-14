@@ -1,0 +1,52 @@
+{
+  "name": "JobAI KEHA panel forecasting dataset",
+  "responsibility": "dataset construction only; no model training",
+  "feature_window_quarters": 8,
+  "horizons_q": [
+    1,
+    2,
+    4
+  ],
+  "splits": {
+    "train_end": "2022Q4",
+    "val_start": "2023Q1",
+    "val_end": "2024Q2",
+    "test_start": "2024Q3",
+    "test_end": "2026Q1"
+  },
+  "selected_panel_series": 1679,
+  "selection_catalog_sha256": "76098f9dc553cafd7c73b3d58ce54b0c5ae174d41fb13390ffe47b1deff8e570",
+  "gate": {
+    "normalization_assertions_passed": true,
+    "baseline_report_present": true,
+    "selected_panel_series": 1679,
+    "minimum_selected_panel_series": 100,
+    "train_examples": 151727,
+    "minimum_train_examples": 10000,
+    "series_gate_passed": true,
+    "example_gate_passed": true,
+    "finetuning_ready": true
+  },
+  "files": {
+    "combined": {
+      "path": "data/processed/panel_forecasting_dataset.parquet",
+      "rows": 185465,
+      "sha256": "04071583d834d75f82de057ba31611ef49acef88987fc1971c98ec50bf49edf4"
+    },
+    "train": {
+      "path": "data/processed/panel_train.jsonl",
+      "rows": 151727,
+      "sha256": "a333284fa7a1c7b3bc700f44d8cf35860a10b0356793a1493aa5ac7915b3ee13"
+    },
+    "validation": {
+      "path": "data/processed/panel_validation.jsonl",
+      "rows": 15929,
+      "sha256": "b812fa86e8adf96c098e61940c728936bc2b171009f1df1615c07ab80af93e35"
+    },
+    "test": {
+      "path": "data/processed/panel_test.jsonl",
+      "rows": 17809,
+      "sha256": "3cbd35f205756d2213f2449d257b5226e4dee47b836bf46bc72327615075d456"
+    }
+  }
+}

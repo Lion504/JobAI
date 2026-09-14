@@ -46,8 +46,8 @@ tables:
     expected_dtypes:
       Alue: "object"
       Toimiala: "object"           # TOL industry code
-      Työnantajan sektori: "int64"  # all-digit codes (01..07); pandas infers int
-      Työpaikan työn kesto: "int64" # all-digit codes (00..06); pandas infers int
+      Työnantajan sektori: "object"  # total category code SSS
+      Työpaikan työn kesto: "object" # total category code SSS
       contentscode: "object"
       timeperiod_q: "object"
       timeperiod_m: "float64"      # always NaN after aggregation
