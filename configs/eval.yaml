@@ -26,7 +26,7 @@ metrics:
   - MASE
   - sMAPE
 
-# All four must run and persist results.
+# All required baselines must run and persist prediction-level results.
 baselines:
   - name: "seasonal_naive"
     description: "Value at origin+h equals value at origin+h-4."
@@ -34,8 +34,23 @@ baselines:
     description: "Value at origin+h equals value at origin."
   - name: "linear_regression"
     description: "Ridge regression on the 8-quarter lag window."
-  - name: "prophet"
-    description: "Prophet with quarterly seasonality; only if series length justifies."
+
+# Deterministic selection thresholds used by notebooks 03 and 05.
+panel_selection:
+  minimum_non_null_quarters: 48
+  maximum_zero_fraction: 0.50
+  minimum_variance: 1.0e-12
+  target_tables: ["12tu", "12tw"]
+  target_contentscodes:
+    12tu: ["AVPAIKATYHT"]
+    12tw: ["AVPAIKATLOPUSSA"]
+
+# Fine-tuning is gated on the panel produced by notebook 05.
+finetuning_gate:
+  minimum_selected_panel_series: 100
+  minimum_train_examples: 10000
+  require_normalization_assertions: true
+  require_baseline_report: true
 
 # Random seed for any stochastic step in the evaluation pipeline.
 seed: 42
