@@ -14,6 +14,19 @@
     "test_start": "2024Q3",
     "test_end": "2026Q1"
   },
+  "feature_set": "enhanced_v1",
+  "engineered_features": [
+    "quarter_of_year",
+    "qoq_change_scaled",
+    "yoy_change_scaled",
+    "recent_mean_4_scaled",
+    "window_mean_scaled",
+    "recent_slope_4_scaled",
+    "window_slope_scaled",
+    "recent_std_4_scaled",
+    "window_std_scaled",
+    "zero_fraction_window"
+  ],
   "selected_panel_series": 1679,
   "selection_catalog_sha256": "76098f9dc553cafd7c73b3d58ce54b0c5ae174d41fb13390ffe47b1deff8e570",
   "gate": {
@@ -31,22 +44,22 @@
     "combined": {
       "path": "data/processed/panel_forecasting_dataset.parquet",
       "rows": 185465,
-      "sha256": "04071583d834d75f82de057ba31611ef49acef88987fc1971c98ec50bf49edf4"
+      "sha256": "6f0bc1d3ea5b4d8f219c5bf96a16168894c05e51ebde9d67a135081216c3c11b"
     },
     "train": {
       "path": "data/processed/panel_train.jsonl",
       "rows": 151727,
-      "sha256": "a333284fa7a1c7b3bc700f44d8cf35860a10b0356793a1493aa5ac7915b3ee13"
+      "sha256": "230f8301308163d92b4c7515b92074f3472b03271905743723b018e8e080e7b5"
     },
     "validation": {
       "path": "data/processed/panel_validation.jsonl",
       "rows": 15929,
-      "sha256": "b812fa86e8adf96c098e61940c728936bc2b171009f1df1615c07ab80af93e35"
+      "sha256": "8d987055261a81c4b5949a5ab98f553843616ac3a3ba0905c3ef32b0342e5c70"
     },
     "test": {
       "path": "data/processed/panel_test.jsonl",
       "rows": 17809,
-      "sha256": "3cbd35f205756d2213f2449d257b5226e4dee47b836bf46bc72327615075d456"
+      "sha256": "1a2b059e33bd4fe70ea42c16759f0b458c326d96411ef813d2f79672ef48553b"
     }
   }
 }
