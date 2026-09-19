@@ -1,13 +1,13 @@
-# Primary experiment: Qwen3-4B with four-bit QLoRA on a standard Colab GPU.
-# The larger Qwen3.8-27B experiment is preserved separately in
-# configs/model_v2_qwen38_27b.yaml and notebook 06 version 2.
+# Preferred experiment: Qwen3.8-27B with four-bit QLoRA on an 80 GB Colab GPU.
+# Qwen3.8 is multimodal, but this project uses text-only examples, disables
+# thinking output, and freezes vision parameters.
 #
 # Do NOT silently switch branches. Record the selected model, commit/version,
 # hardware, and package versions in the run manifest
 # Notebook 06 must first read data/manifests/panel_dataset_card.json and stop
 # before loading a base model unless gate.finetuning_ready is true.
 
-candidate_to_run: "Qwen/Qwen3-4B"
+candidate_to_run: "Qwen/Qwen3.8-27B"
 
 candidates:
   - id: "Qwen/Qwen3.8-27B"
@@ -66,11 +66,12 @@ training:
   # Free-Colab pilot: prove that the adapter learns and evaluate it before a
   # full-data run on faster hardware. The full source splits remain unchanged.
   num_train_epochs: 1
-
-  # Qwen3-4B four-bit QLoRA profile validated on the 15 GB Colab runtime.
-  # The short 256-token forecasting records allow a micro-batch of 40 to fit.
-  per_device_train_batch_size: 18
-  gradient_accumulation_steps: 1
+  max_train_examples: 6000
+  max_validation_examples: 1000
+  # Conservative Qwen3.8-27B profile for a 40 GB A100. Accumulation preserves
+  # an effective batch of eight without holding eight sequences in VRAM.
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
   learning_rate: 2.0e-4
   lr_scheduler_type: "cosine"
   warmup_ratio: 0.03
@@ -81,16 +82,15 @@ training:
   optim: "adamw_torch"
   max_seq_length: 256
   logging_steps: 10
-  save_steps: 2000
-  eval_steps: 2000
+  save_steps: 100
+  eval_steps: 100
   save_total_limit: 2
   fp16: false
   bf16: true
-  # Recompute activations to keep memory use stable on standard Colab GPUs.
-  gradient_checkpointing: false
+  # Recompute activations to keep the 27B model inside a 40 GB runtime.
+  gradient_checkpointing: true
   seed: 42
-  max_train_examples: null
-  max_validation_examples: 1000
+
 # Checkpoint selection: validation forecast metrics AND parse success.
 checkpoint_selection:
   primary_metric: "val_MAE_mean"
