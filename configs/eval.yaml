@@ -19,6 +19,25 @@ horizons: [1, 2, 4]
 # Input feature window length, in quarters.
 feature_window_quarters: 8
 
+# Derived only from information available at the forecast origin. Notebook 05
+# stores these with every example; notebooks 04 and 06 use the same definitions.
+engineered_feature_set: "enhanced_v1"
+engineered_features:
+  - quarter_of_year
+  - qoq_change_scaled
+  - yoy_change_scaled
+  - recent_mean_4_scaled
+  - window_mean_scaled
+  - recent_slope_4_scaled
+  - window_slope_scaled
+  - recent_std_4_scaled
+  - window_std_scaled
+  - zero_fraction_window
+
+# Future controlled experiments may change the active window to 12 or 16 and
+# rebuild notebooks 04-07. The current comparable production window remains 8.
+feature_window_candidates: [8, 12, 16]
+
 # Metrics to report per (series, horizon, split). All four are required.
 metrics:
   - MAE
@@ -34,6 +53,8 @@ baselines:
     description: "Value at origin+h equals value at origin."
   - name: "linear_regression"
     description: "Ridge regression on the 8-quarter lag window."
+  - name: "ridge_enhanced"
+    description: "Ridge regression on the same lag window plus origin-safe trend, seasonality, volatility, and zero-pattern features."
 
 # Deterministic selection thresholds used by notebooks 03 and 05.
 panel_selection:
