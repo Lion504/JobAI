@@ -10,8 +10,10 @@
   "models": [
     "seasonal_naive",
     "last_value",
-    "ridge"
+    "ridge",
+    "ridge_enhanced"
   ],
+  "engineered_feature_set": "enhanced_v1",
   "splits": {
     "train_end": "2022Q4",
     "val_start": "2023Q1",
@@ -22,16 +24,16 @@
   "information_cutoff_assertion": "passed",
   "outputs": {
     "reports/baseline_predictions.csv": {
-      "rows": 126519,
-      "sha256": "c20d8e4cc88c99623ebeaca0eb039f12c44b9c44579eeed23a69d3f6314ce961"
+      "rows": 168692,
+      "sha256": "25145781f6c6369cf170d0a39a98bbb8e9e621c84d3d47b42e6a63a66c05e564"
     },
     "reports/baseline_metrics_by_series.csv": {
-      "rows": 24651,
-      "sha256": "95382bb65ade04ba9bfb8d7e0da88a635065ced25c22aa3341780c1946585ed2"
+      "rows": 32868,
+      "sha256": "0bd1d2151365128274015ff2dfc42c8fa9447170cb192e444e2472cbfbfe0c98"
     },
     "reports/baselines.csv": {
-      "rows": 18,
-      "sha256": "02b7ea1dac741b29efccf86793b05d839b14ace96c03fcd431677af2f3d728e5"
+      "rows": 24,
+      "sha256": "5f92231aee5ed374c05558a7a5a8edfe139e06b5936edf0a6d6644b5723f9b23"
     }
   }
 }

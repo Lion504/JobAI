@@ -1,4 +1,4 @@
-# Pin exact versions. Re-pin whenever any of transformers/trl/peft/unsloth/torch
+# Pin exact versions. Re-pin whenever any of transformers/trl/peft/torch
 # is upgraded. Record actual installed versions in every run manifest.
 #
 # Install on Google Colab:
@@ -24,6 +24,9 @@ prophet>=1.1.5
 matplotlib>=3.9.1
 
 # ---------- Training stack ----------
+# Notebook 06 installs the isolated Colab-compatible training stack from
+# requirements-train-colab.txt. Do not install or replace Colab's managed
+# PyTorch/CUDA packages from this general project requirements file.
 # Colab installs the CUDA build of torch itself; the version here is a CPU fallback
 # used only for local smoke tests.
 torch>=2.4.1

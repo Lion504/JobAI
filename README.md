@@ -60,7 +60,7 @@ Notebook 03 selects the official ATP reference targets and quality-filtered KEHA
 
 - First implementation uses `11l1` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
 - Regional (`11n1`) and KEHA context tables are available from the start; additional ATP/KEHA tables are added as needed for the forecasting dataset.
-- Fine-tuning uses either a Qwen3.5 bf16 LoRA branch (Unsloth) or a Qwen3 / Qwen2.5 4-bit QLoRA branch (transformers + peft + trl + bitsandbytes). The selected branch, base model id, commit/version, hardware, and package versions are recorded by `06_finetune_model.ipynb`.
+- The configured fine-tuning experiment uses Qwen3.5-9B with 4-bit QLoRA on text-only forecasting prompts. Its vision parameters remain frozen. The base model id, commit/version, hardware, package versions, training history, adapter, and validation results are recorded by `06_finetune_model.ipynb`.
 - RAG sources are whitelisted in `configs/rag.yaml` §10.1: StatFin release pages, Job Market Finland and KEHA bulletins, and official TEM pages. Legacy `mol.fi` references are treated as unverified.
 
 ## Contribution

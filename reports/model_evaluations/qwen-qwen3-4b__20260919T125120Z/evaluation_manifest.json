@@ -1,0 +1,37 @@
+{
+  "status": "pilot_failed",
+  "run_id": "qwen-qwen3-4b__20260919T125120Z",
+  "training_manifest": "data/manifests/finetune_runs/qwen-qwen3-4b__20260919T125120Z.json",
+  "base_model": "Qwen/Qwen3-4B",
+  "adapter_path": "models/adapters/qwen-qwen3-4b__20260919T125120Z/final_adapter",
+  "train_examples": 151727,
+  "feature_set": "legacy_v1",
+  "training_horizons": [
+    1,
+    2,
+    4
+  ],
+  "test_examples_available": 17809,
+  "test_examples_used": 600,
+  "test_examples_per_horizon": 200,
+  "test_data_used_for_training": false,
+  "parse_success_rate": 1.0,
+  "minimum_parse_success_rate": 0.95,
+  "adapter_beats_best_baseline_all_horizons": false,
+  "generation_seconds": 94.01999425888062,
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "outputs": {
+    "reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/test_predictions.csv": {
+      "sha256": "539d5731dbf5674c738de64298f3ecf082d32de9448dc130996a357a45248e94"
+    },
+    "reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/metrics_by_series.csv": {
+      "sha256": "7892bb1cff3c5afcaa554cfed57558a6bc4f791bacf1fea2f29a2d9eccd1fe4e"
+    },
+    "reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/metrics_vs_baselines.csv": {
+      "sha256": "0cb3e8263356fb91915283e968433065fa930d0215daa2741f2d7496a68edca6"
+    },
+    "reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/decision_vs_best_baseline.csv": {
+      "sha256": "34d89ff9fc2e6c4f0eb3adc213bb9404368630e7eff91c41ad840d48000d4971"
+    }
+  }
+}

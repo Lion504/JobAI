@@ -1,0 +1,31 @@
+{
+  "status": "pilot_passed",
+  "evaluation_scope": "deterministic horizon-balanced untouched-test pilot sample",
+  "base_model": "Qwen/Qwen3-4B",
+  "adapter_path": "models/adapters/jobai-v1/final_adapter",
+  "test_examples_available": 17809,
+  "test_examples_used": 600,
+  "test_examples_per_horizon": 200,
+  "test_data_used_for_training": false,
+  "parse_success_rate": 1.0,
+  "minimum_parse_success_rate": 0.95,
+  "qwen_beats_best_baseline_all_horizons": true,
+  "pilot_passed": true,
+  "generation_seconds": 96.02220940589905,
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "outputs": {
+    "reports/finetuned_test_predictions.csv": {
+      "sha256": "84772efc4a71974ba8a953eb05f01045a80753c6ca0df151e4979155050ba07f"
+    },
+    "reports/model_evaluation_by_series.csv": {
+      "sha256": "e38ff4e07a6a2333fb2223bab7294fb41ca95fd1d313fcb86bdabfa75b7abb2b"
+    },
+    "reports/model_vs_baselines.csv": {
+      "sha256": "734b38ea6e224997639b0d2b2e035743115a77b957d699f9d8698afd92a6bea2"
+    },
+    "reports/model_pilot_decision.csv": {
+      "sha256": "cd82e7c737c7f3e32b7b4d545d801ce1fe8560f67519fbcb3302e3b30e683767"
+    }
+  }
+}
