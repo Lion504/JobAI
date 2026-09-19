@@ -66,6 +66,8 @@ training:
   # Free-Colab pilot: prove that the adapter learns and evaluate it before a
   # full-data run on faster hardware. The full source splits remain unchanged.
   num_train_epochs: 1
+  feature_set: "enhanced_v1"
+  training_horizons: [1, 2, 4]
   max_train_examples: 6000
   max_validation_examples: 1000
   # Conservative Qwen3.8-27B profile for a 40 GB A100. Accumulation preserves

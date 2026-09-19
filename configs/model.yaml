@@ -66,6 +66,12 @@ training:
   # Free-Colab pilot: prove that the adapter learns and evaluate it before a
   # full-data run on faster hardware. The full source splits remain unchanged.
   num_train_epochs: 1
+  # `legacy_v1` recreates the old prompt. `enhanced_v1` adds only features
+  # calculated at or before the forecast origin by notebook 05.
+  feature_set: "enhanced_v1"
+  # Use all horizons for the shared adapter. For controlled horizon-specific
+  # experiments, run notebook 06 separately with [1], [2], and [4].
+  training_horizons: [1, 2, 4]
 
   # Qwen3-4B four-bit QLoRA profile validated on the 15 GB Colab runtime.
   # The short 256-token forecasting records allow a micro-batch of 40 to fit.
@@ -89,7 +95,10 @@ training:
   # Recompute activations to keep memory use stable on standard Colab GPUs.
   gradient_checkpointing: false
   seed: 42
-  max_train_examples: null
+  # First compare enhanced_v1 directly with the existing 6,000-example
+  # legacy_v1 adapter. Change to null only after the enhanced pilot helps on
+  # the untouched test sample.
+  max_train_examples: 6000
   max_validation_examples: 1000
 # Checkpoint selection: validation forecast metrics AND parse success.
 checkpoint_selection:
