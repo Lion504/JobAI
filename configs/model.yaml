@@ -75,7 +75,9 @@ training:
 
   # Qwen3-4B four-bit QLoRA profile validated on the 15 GB Colab runtime.
   # The short 256-token forecasting records allow a micro-batch of 40 to fit.
-  per_device_train_batch_size: 18
+  # Enhanced prompts need up to 372 tokens. Batch 12 at 384 tokens has roughly
+  # the same token load as batch 18 at the previous 256-token limit.
+  per_device_train_batch_size: 12
   gradient_accumulation_steps: 1
   learning_rate: 2.0e-4
   lr_scheduler_type: "cosine"
@@ -85,7 +87,7 @@ training:
   # optimizer triggers CUDA illegal-memory-access errors on the current Colab
   # CUDA/PyTorch stack; four-bit base-model loading still uses bitsandbytes.
   optim: "adamw_torch"
-  max_seq_length: 256
+  max_seq_length: 384
   logging_steps: 10
   save_steps: 2000
   eval_steps: 2000
@@ -98,7 +100,7 @@ training:
   # First compare enhanced_v1 directly with the existing 6,000-example
   # legacy_v1 adapter. Change to null only after the enhanced pilot helps on
   # the untouched test sample.
-  max_train_examples: 6000
+  max_train_examples: 75000
   max_validation_examples: 1000
 # Checkpoint selection: validation forecast metrics AND parse success.
 checkpoint_selection:

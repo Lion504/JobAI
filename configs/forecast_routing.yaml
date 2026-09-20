@@ -1,0 +1,29 @@
+# Product-time routing contract. The question resolver first chooses the
+# requested horizon and target scope; RAG explains a forecast after the numeric
+# adapter has produced it.
+adapter_profiles:
+  1: "configs/model_qwen3_4b_h1.yaml"
+  2: "configs/model_qwen3_4b_h2.yaml"
+  4: "configs/model_qwen3_4b_h4.yaml"
+
+target_scopes:
+  national:
+    preferred_table: "11l1"
+    description: "Official whole-country Job Vacancy Survey targets."
+  broad_region:
+    preferred_table: "11n1"
+    description: "Official broad Finnish region targets."
+  province_occupation:
+    preferred_table: "12tu"
+    description: "KEHA province-by-occupation vacancy targets."
+  province_industry:
+    preferred_table: "12tw"
+    description: "KEHA province-by-industry end-of-month vacancy targets."
+  detailed_geography:
+    preferred_table: "12r5"
+    description: "KEHA national, municipality, ELY, and subregion targets."
+
+rules:
+  rag_role: "Explain the numeric forecast with definitions, current context, and citations; never invent a missing forecast."
+  ambiguous_national_question: "Use 11l1/atp_lkm unless the user explicitly asks for KEHA registered vacancies."
+  unsupported_horizon: "Ask the user to choose 1, 2, or 4 quarters, or map six months to 2 quarters and one year to 4 quarters."

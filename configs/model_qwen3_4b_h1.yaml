@@ -1,0 +1,10 @@
+# Horizon-specific pilot profile. Notebook 06 merges this file over model.yaml.
+extends: "model.yaml"
+profile_name: "qwen3_4b_h1"
+training:
+  training_horizons: [1]
+  max_train_examples: 10000
+  max_validation_examples: 1000
+  max_seq_length: 512
+  sampling_strategy: "balanced_v1"
+  always_include_tables: ["11l1", "11n1"]

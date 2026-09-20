@@ -18,7 +18,7 @@
   "parse_success_rate": 1.0,
   "minimum_parse_success_rate": 0.95,
   "adapter_beats_best_baseline_all_horizons": true,
-  "generation_seconds": 95.55357193946838,
+  "generation_seconds": 96.17709445953369,
   "gpu": "NVIDIA A100-SXM4-40GB",
   "outputs": {
     "reports/model_evaluations/qwen-qwen3-4b__20260919T083224Z/test_predictions.csv": {
