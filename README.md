@@ -49,18 +49,18 @@ The pipeline draws from two tiers of sources: structured PxWeb tables for numeri
 
 KEHA tables retain the M03/M06/M09/M12 quarter-end observations using the stock rule configured in `configs/data.yaml`. Missing source values remain explicit nulls so coverage can be audited. Notebook 02 hard-fails on wrong source months, duplicate keys, quarter-grid gaps, or a normalized quarter later than the latest complete source quarter. ATP tables are already quarterly and pass through unchanged.
 
-Notebook 03 selects the official ATP reference targets and quality-filtered KEHA panel targets. Notebook 04 evaluates the required baselines on the selected KEHA panel using common complete rolling-origin windows. Notebook 05 creates panel train/validation/test examples; LLM fine-tuning starts in notebook 06 and is gated on the panel baseline and dataset reports.
+Notebook 03 now creates one direct-target catalog across all five tables. Notebook 04 evaluates the required baselines on exactly those targets using common complete rolling-origin windows. Notebook 05 creates combined and horizon-specific train/validation/test examples; Notebook 06 is then run once for each 1Q, 2Q, and 4Q adapter profile.
 
 ### Current forecasting readiness
 
 - Dataset A remains a compact reference set with five ATP targets: one `11l1` national series and four non-total `11n1` major-region series.
-- Dataset B contains 1,679 quality-selected KEHA panel targets from `12tu` occupation series and `12tw` industry series. The selection keeps total category codes for labour-market status, employer sector, and duration to avoid duplicated hierarchical combinations.
-- Notebook 05 currently produces 185,465 boundary-safe panel examples: 151,727 train, 15,929 validation, and 17,809 test across 1-, 2-, and 4-quarter horizons.
-- The fine-tuning gate passes: 1,679 selected panel series exceeds the configured minimum of 100, and 151,727 training examples exceeds the configured minimum of 10,000. Notebook 06 may proceed only after the updated panel baseline report from notebook 04 is present.
+- Direct forecast targets now cover national (`11l1`), broad-region (`11n1`), province-by-occupation (`12tu`), province-by-industry (`12tw`), and detailed geography (`12r5`) questions. Exact `11n1`/national and `12r5`/province duplicates are explicitly excluded.
+- Notebook 05 writes separate `h1`, `h2`, and `h4` files, carries source/scope metadata, and adds compact origin-safe national or peer context. Because the target scope and history window changed, the old 1,679-series/151,727-example reports are historical and notebooks 03–05 must be rerun before new counts are quoted.
+- Three Qwen3-4B pilot profiles live in `configs/model_qwen3_4b_h1.yaml`, `configs/model_qwen3_4b_h2.yaml`, and `configs/model_qwen3_4b_h4.yaml`. Each starts with 10,000 balanced examples and retains every available ATP national and broad-region example.
 
 - First implementation uses `11l1` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
 - Regional (`11n1`) and KEHA context tables are available from the start; additional ATP/KEHA tables are added as needed for the forecasting dataset.
-- The configured fine-tuning experiment uses Qwen3.5-9B with 4-bit QLoRA on text-only forecasting prompts. Its vision parameters remain frozen. The base model id, commit/version, hardware, package versions, training history, adapter, and validation results are recorded by `06_finetune_model.ipynb`.
+- The active experiment uses one cached Qwen3-4B base model and three separate 4-bit QLoRA adapters, one per forecast horizon. Every immutable run records the profile, data checksums, sampling composition, package versions, hardware, training history, adapter, and validation results.
 - RAG sources are whitelisted in `configs/rag.yaml` §10.1: StatFin release pages, Job Market Finland and KEHA bulletins, and official TEM pages. Legacy `mol.fi` references are treated as unverified.
 
 ## Contribution
