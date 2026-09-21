@@ -6,6 +6,10 @@ chunking:
   chunk_size_tokens: 512
   chunk_overlap_tokens: 64
   splitter: "recursive"
+  # Chunks are measured in tokens of the embedding model, so sizes match what bge-m3 sees.
+  tokenizer: "BAAI/bge-m3"
+  # A trailing chunk shorter than this is merged into the previous one when it fits.
+  min_chunk_tokens: 40
 
 # Embedding model candidates, ordered by preference for Finnish.
 # bge-m3 is multilingual and handles Finnish; multilingual-e5-base is the
