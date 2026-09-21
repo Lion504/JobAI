@@ -35,9 +35,12 @@ engineered_features:
   - window_std_scaled
   - zero_fraction_window
 
-# Future controlled experiments may change the active window to 12 or 16 and
-# rebuild notebooks 04-07. The current comparable production window remains 8.
+# Historical adapters may use other windows; record those per adapter in 07.
 feature_window_candidates: [8, 12, 16]
+
+# Shared training consumes the combined files. Historical horizon exports may
+# remain on disk, but are not read by notebooks 06/07 and are never auto-deleted.
+export_horizon_files: false
 
 # Metrics to report per (series, horizon, split). All four are required.
 metrics:

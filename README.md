@@ -49,19 +49,31 @@ The pipeline draws from two tiers of sources: structured PxWeb tables for numeri
 
 KEHA tables retain the M03/M06/M09/M12 quarter-end observations using the stock rule configured in `configs/data.yaml`. Missing source values remain explicit nulls so coverage can be audited. Notebook 02 hard-fails on wrong source months, duplicate keys, quarter-grid gaps, or a normalized quarter later than the latest complete source quarter. ATP tables are already quarterly and pass through unchanged.
 
-Notebook 03 now creates one direct-target catalog across all five tables. Notebook 04 evaluates the required baselines on exactly those targets using common complete rolling-origin windows. Notebook 05 creates combined and horizon-specific train/validation/test examples; Notebook 06 is then run once for each 1Q, 2Q, and 4Q adapter profile.
+Notebook 03 creates one direct-target catalog across all five tables. Notebook 04 evaluates the required baselines on those targets using common complete rolling-origin windows. Notebook 05 creates combined train/validation/test examples. Notebook 06 runs **once**, training one shared Qwen3.5-4B adapter for 1Q, 2Q and 4Q.
 
 ### Current forecasting readiness
 
 - Dataset A remains a compact reference set with five ATP targets: one `11l1` national series and four non-total `11n1` major-region series.
 - Direct forecast targets now cover national (`11l1`), broad-region (`11n1`), province-by-occupation (`12tu`), province-by-industry (`12tw`), and detailed geography (`12r5`) questions. Exact `11n1`/national and `12r5`/province duplicates are explicitly excluded.
-- Notebook 05 writes separate `h1`, `h2`, and `h4` files, carries source/scope metadata, and adds compact origin-safe national or peer context. Because the target scope and history window changed, the old 1,679-series/151,727-example reports are historical and notebooks 03–05 must be rerun before new counts are quoted.
-- Three Qwen3-4B pilot profiles live in `configs/model_qwen3_4b_h1.yaml`, `configs/model_qwen3_4b_h2.yaml`, and `configs/model_qwen3_4b_h4.yaml`. Each starts with 10,000 balanced examples and retains every available ATP national and broad-region example.
+- Notebook 05 uses twelve-quarter histories with source/scope metadata and compact origin-safe national or peer context. Combined files are the default; optional `export_horizon_files` in `configs/eval.yaml` preserves old experiments without requiring separate training runs. The old 1,679-series/151,727-example reports remain historical; regenerate 03–05 if the preflight reports stale inputs.
+- `configs/model.yaml` selects Qwen3.5-4B with **75,000 total training examples**, 25,000 per horizon, one epoch and 1,000 validation examples. Sampling balances table/scope/size/volatility and retains ATP targets. The old Qwen3-4B horizon profiles are archived experiments, not active defaults.
 
 - First implementation uses `11l1` as the national quarterly vacancy target; all variable codes come from the table's runtime metadata. Provenance (raw response, query JSON, table metadata, retrieval date, response hash) lives in `data/manifests/`.
 - Regional (`11n1`) and KEHA context tables are available from the start; additional ATP/KEHA tables are added as needed for the forecasting dataset.
-- The active experiment uses one cached Qwen3-4B base model and three separate 4-bit QLoRA adapters, one per forecast horizon. Every immutable run records the profile, data checksums, sampling composition, package versions, hardware, training history, adapter, and validation results.
+- The active experiment uses one cached Qwen3.5-4B base model and one shared 4-bit QLoRA adapter, with frozen vision and language-only LoRA. Every run gets a unique directory and immutable manifest. Batch-size changes reuse the tokenized dataset cache; changes to prompts, tokenizer, data or sample budget invalidate it.
 - RAG sources are whitelisted in `configs/rag.yaml` §10.1: StatFin release pages, Job Market Finland and KEHA bulletins, and official TEM pages. Legacy `mol.fi` references are treated as unverified.
+
+### Run the shared experiment in Colab
+
+1. Sync the entire updated repository, including the new `jobai/` helper package and configs, not just the notebooks. Preserve your saved adapters, manifests, base caches and reports.
+2. Run 03 → 04 → 05 if their current manifests do not match the five-table/twelve-quarter design. Notebook 04 now records normalized-source hashes. Notebook 03's selection logic is unchanged.
+3. Use a fresh GPU runtime for 06. Run its dependency and fast-kernel setup, restarting the runtime after installs if requested. The notebook refuses the slow Qwen3.5 kernel fallback by default. Start with micro-batch 4, accumulation 4 and checkpointing enabled; inspect the measured speed before a long run. GPU fit and runtime are not guaranteed by the memory preflight.
+4. Run 06 once. It masks prompt tokens, never truncates a training record, evaluates once per epoch and saves a new adapter without overwriting older ones. Checkpoints permit explicit recovery via `resume_from_checkpoint` with unchanged settings. After an interrupted run, restore its config and checkpoint path before rerunning.
+5. Run 07 with the explicit roster in `configs/comparison.yaml`. It requires only one current shared adapter, compares 1,000 identical cases per horizon, loads base models sequentially and saves resumable prediction batches. Preserve cached Qwen3-4B weights for the historical comparisons; 07 does not silently download them.
+
+The main criterion is sMAPE improvement by horizon against retained adapters and baselines, with MAE/RMSE/MASE alongside it. A larger or newer model is not a guarantee of sMAPE below 10%. These repeatedly inspected test cases are a development benchmark, not fresh final deployment evidence. Some historical prompt/window settings rely on explicit compatibility declarations because original manifests are absent locally; 07 records that limitation. This compares complete saved forecasting systems, not architecture alone: older runs used different data scopes, training budgets and prompts.
+
+See [adapter retention inventory](docs/adapter_retention.md) before any cleanup. Nothing is deleted automatically. The existing 9B/27B notebooks/configs are preserved but not used by this workflow.
 
 ## Contribution
 

@@ -1,10 +1,12 @@
 # Product-time routing contract. The question resolver first chooses the
 # requested horizon and target scope; RAG explains a forecast after the numeric
 # adapter has produced it.
+adapter_mode: "shared"
+adapter_manifest: "data/manifests/finetune_run_manifest.json"
 adapter_profiles:
-  1: "configs/model_qwen3_4b_h1.yaml"
-  2: "configs/model_qwen3_4b_h2.yaml"
-  4: "configs/model_qwen3_4b_h4.yaml"
+  1: "configs/model.yaml"
+  2: "configs/model.yaml"
+  4: "configs/model.yaml"
 
 target_scopes:
   national:

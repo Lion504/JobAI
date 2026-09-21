@@ -1,4 +1,4 @@
-# Primary experiment: Qwen3-4B with four-bit QLoRA on a standard Colab GPU.
+# Primary experiment: ONE shared Qwen3.5-4B adapter for 1Q/2Q/4Q.
 # The larger Qwen3.8-27B experiment is preserved separately in
 # configs/model_v2_qwen38_27b.yaml and notebook 06 version 2.
 #
@@ -7,9 +7,18 @@
 # Notebook 06 must first read data/manifests/panel_dataset_card.json and stop
 # before loading a base model unless gate.finetuning_ready is true.
 
-candidate_to_run: "Qwen/Qwen3-4B"
+candidate_to_run: "Qwen/Qwen3.5-4B"
+profile_name: "qwen35_4b_shared"
 
 candidates:
+  - id: "Qwen/Qwen3.5-4B"
+    architecture: "multimodal_text_only"
+    expected_size_b: 4
+    # Project preflight only, not a guarantee that every batch fits.
+    minimum_vram_gb: 14
+    training_mode: "qlora_4bit"
+    freeze_vision: true
+    require_fast_kernels: true
   - id: "Qwen/Qwen3.8-27B"
     branch: "A"
     architecture: "multimodal_text_only"
@@ -63,21 +72,18 @@ training:
   # Notebook 06 creates a model-and-timestamp subfolder under this root for
   # every run. Existing adapters and checkpoints are never overwritten.
   output_root: "models/adapters"
-  # Free-Colab pilot: prove that the adapter learns and evaluate it before a
-  # full-data run on faster hardware. The full source splits remain unchanged.
+  # One complete run, not three separate horizon runs.
   num_train_epochs: 1
   # `legacy_v1` recreates the old prompt. `enhanced_v1` adds only features
   # calculated at or before the forecast origin by notebook 05.
   feature_set: "enhanced_v1"
-  # Use all horizons for the shared adapter. For controlled horizon-specific
-  # experiments, run notebook 06 separately with [1], [2], and [4].
+  prompt_schema: "five_table_shared_v1"
   training_horizons: [1, 2, 4]
-
-  # Qwen3-4B four-bit QLoRA profile validated on the 15 GB Colab runtime.
-  # The short 256-token forecasting records allow a micro-batch of 40 to fit.
-  # Enhanced prompts need up to 372 tokens. Batch 12 at 384 tokens has roughly
-  # the same token load as batch 18 at the previous 256-token limit.
+  sampling_strategy: "balanced_shared_v1"
+  always_include_tables: ["11l1", "11n1"]
+  # Conservative starting values; the notebook prints measured speed/memory.
   per_device_train_batch_size: 12
+  per_device_eval_batch_size: 12
   gradient_accumulation_steps: 1
   learning_rate: 2.0e-4
   lr_scheduler_type: "cosine"
@@ -87,22 +93,27 @@ training:
   # optimizer triggers CUDA illegal-memory-access errors on the current Colab
   # CUDA/PyTorch stack; four-bit base-model loading still uses bitsandbytes.
   optim: "adamw_torch"
-  max_seq_length: 384
+  max_seq_length: 768
   logging_steps: 10
   save_steps: 2000
   eval_steps: 2000
+  eval_strategy: "epoch"
   save_total_limit: 2
   fp16: false
   bf16: true
   # Recompute activations to keep memory use stable on standard Colab GPUs.
-  gradient_checkpointing: false
+  gradient_checkpointing: true
   seed: 42
-  # First compare enhanced_v1 directly with the existing 6,000-example
-  # legacy_v1 adapter. Change to null only after the enhanced pilot helps on
-  # the untouched test sample.
+  # TOTAL budget: 25,000 unique examples for each of 1Q, 2Q, and 4Q.
   max_train_examples: 75000
   max_validation_examples: 1000
-# Checkpoint selection: validation forecast metrics AND parse success.
+  generation_batch_size: 4
+  validation_forecasts_per_horizon: 96
+  max_new_tokens: 64
+  speed_report_step: 20
+  resume_from_checkpoint: null
+# Fixed one-epoch final adapter; checkpoints are for recovery, not test tuning.
 checkpoint_selection:
-  primary_metric: "val_MAE_mean"
+  strategy: "final_epoch"
+  primary_metric: "val_sMAPE_macro"
   secondary_metric: "parse_success_rate"
