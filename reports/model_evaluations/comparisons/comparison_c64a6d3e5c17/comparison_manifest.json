@@ -1,0 +1,149 @@
+{
+  "protocol": "shared_cross_model_v1",
+  "selected_run_ids": [
+    "qwen-qwen3-5-4b__shared_enhanced__h1-2-4__20260921T114333Z__61b09b",
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z",
+    "qwen-qwen3-4b__20260919T125120Z",
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z"
+  ],
+  "prediction_cache_keys": [
+    "13df80a9339ded0d57ec7c7433a8ae83079527534ff96c1f8c8033beecfb8c0e",
+    "ff818e2faa54d4f81c85342884bf9a1da03ad096f0b3e89fb60246f329951e16",
+    "1c98e446e22ba35e10393dcf93903c40464f516595776eb143f1d757ac946413",
+    "0ad2aa91d78c3b857575b37521e8bd5de02c7bfeb3c28b5aefcc26bc1bfce390"
+  ],
+  "panel_test_sha256": "c786d4ca6cc9dee55c1a10ec2ac4df85bc57bdbafd5c81c2e566cccba6695b30",
+  "baseline_predictions_sha256": "0b474b022fe5661a7a6a38960c9bbd61f7a08aa9745286fcf5140a3f46de16ff",
+  "sample_ids_sha256": "120a2eba7a3f522fb742efc6b69362deac53f5469063a1013cb87f2afab0ffb4",
+  "primary_metric": "sMAPE_pct",
+  "common_ids_sha256": "00f88e03bb638da795c5dad8078ae681aee0db9dfd356834667d9f979ed50e07",
+  "test_examples_per_horizon": 1000,
+  "comparison_notebook_sha256": "1794193488b6757549012b6f15fa2fd44c1bc768a9a9888474411bd82ff98147",
+  "comparison_id": "c64a6d3e5c17",
+  "comparison_status": "not_improved_on_all_horizons",
+  "primary_metric_improved_all_horizons": false,
+  "complete_parse_coverage": true,
+  "deployment_passed": false,
+  "test_status": "repeatedly_inspected_development_benchmark",
+  "historical_protocol_verified": false,
+  "output_directory": "reports/model_evaluations/comparisons/comparison_c64a6d3e5c17",
+  "generation_receipts": [
+    {
+      "run_id": "qwen-qwen3-5-4b__shared_enhanced__h1-2-4__20260921T114333Z__61b09b",
+      "cache_key": "13df80a9339ded0d57ec7c7433a8ae83079527534ff96c1f8c8033beecfb8c0e",
+      "cache_path": "data/cache/model_evaluations/qwen-qwen3-5-4b__shared_enhanced__h1-2-4__20260921T114333Z__61b09b/13df80a9339ded0d57ec7c74",
+      "new_predictions": 0,
+      "generation_seconds_this_session": 0.0025601269999242504
+    },
+    {
+      "run_id": "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z",
+      "cache_key": "ff818e2faa54d4f81c85342884bf9a1da03ad096f0b3e89fb60246f329951e16",
+      "cache_path": "data/cache/model_evaluations/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z/ff818e2faa54d4f81c853428",
+      "new_predictions": 0,
+      "generation_seconds_this_session": 0.0025048939996850095
+    },
+    {
+      "run_id": "qwen-qwen3-4b__20260919T125120Z",
+      "cache_key": "1c98e446e22ba35e10393dcf93903c40464f516595776eb143f1d757ac946413",
+      "cache_path": "data/cache/model_evaluations/qwen-qwen3-4b__20260919T125120Z/1c98e446e22ba35e10393dcf",
+      "new_predictions": 0,
+      "generation_seconds_this_session": 0.002500509000128659
+    },
+    {
+      "run_id": "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z",
+      "cache_key": "0ad2aa91d78c3b857575b37521e8bd5de02c7bfeb3c28b5aefcc26bc1bfce390",
+      "cache_path": "data/cache/model_evaluations/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z/0ad2aa91d78c3b857575b375",
+      "new_predictions": 20,
+      "generation_seconds_this_session": 10.988430925999637
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "qwen-qwen3-5-4b__shared_enhanced__h1-2-4__20260921T114333Z__61b09b",
+      "base_model": "Qwen/Qwen3.5-4B",
+      "adapter_path": "models/adapters/qwen-qwen3-5-4b__shared_enhanced__h1-2-4__20260921T114333Z__61b09b/final_adapter",
+      "prompt_schema": "five_table_shared_v1",
+      "source_manifest": "data/manifests/finetune_run_manifest.json",
+      "role": "current_shared",
+      "model_label": "qwen35_4b_shared_75000",
+      "train_count": 75000,
+      "history_quarters": 12,
+      "provenance": "training_manifest",
+      "adapter_sha256": "348402afa9d356512fc08d299726c5077370b316b7e1388187c988697495bf27"
+    },
+    {
+      "run_id": "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z",
+      "base_model": "Qwen/Qwen3-4B",
+      "adapter_path": "models/adapters/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z/final_adapter",
+      "model_label": "qwen3_4b_enhanced_75000",
+      "role": "previous_shared",
+      "train_count": 75000,
+      "history_quarters": 12,
+      "prompt_schema": "enhanced_shared_v1",
+      "source_manifest": "reports/model_evaluations/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z/evaluation_manifest.json",
+      "provenance": "explicit_historical_compatibility_declaration",
+      "adapter_sha256": "f076ef700a3c2698e7308cd57ee32864500a87b86f3b0b754b7639c509f8be91"
+    },
+    {
+      "run_id": "qwen-qwen3-4b__20260919T125120Z",
+      "base_model": "Qwen/Qwen3-4B",
+      "adapter_path": "models/adapters/qwen-qwen3-4b__20260919T125120Z/final_adapter",
+      "model_label": "qwen3_4b_legacy_151727",
+      "role": "previous_shared",
+      "train_count": 151727,
+      "history_quarters": 8,
+      "prompt_schema": "legacy_v1",
+      "source_manifest": "reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/evaluation_manifest.json",
+      "provenance": "explicit_historical_compatibility_declaration",
+      "adapter_sha256": "56460ae742f2cf11c8bfae14b021a9a5ea2cd9479384f782c1467846d5c32a0c"
+    },
+    {
+      "run_id": "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z",
+      "base_model": "Qwen/Qwen3-4B",
+      "adapter_path": "models/adapters/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z/final_adapter",
+      "model_label": "qwen3_4b_enhanced_6000",
+      "role": "previous_shared",
+      "train_count": 6000,
+      "history_quarters": 12,
+      "prompt_schema": "enhanced_shared_v1",
+      "source_manifest": "reports/model_evaluations/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z/evaluation_manifest.json",
+      "provenance": "explicit_historical_compatibility_declaration",
+      "adapter_sha256": "ecef7f6b22503ceebe9758d5b87d64fc326c9ee52aaf367fa8b7d5aff723bb73"
+    }
+  ],
+  "outputs": {
+    "adapter_and_baseline_metrics.csv": {
+      "sha256": "88e803d0334cf008ff8df058e64aeff236b1934e29d84c529d7dbe6def3b4376"
+    },
+    "adapter_test_predictions.csv": {
+      "sha256": "5d381186d6c3d49d4781452970003fb682c948b71b3ba8dfedcbdf4a6da7bfc8"
+    },
+    "metrics_by_series.csv": {
+      "sha256": "0e8d44ba9794b62133efe9f6daf4f6ab2ac46c1b8697cd21b7ec25cc375c4796"
+    },
+    "metrics_by_scope.csv": {
+      "sha256": "fb3b250850be5e1d6027c50b368bdd1b637a6ad4901329a4c35a3df76989e84a"
+    },
+    "current_vs_previous_adapters.csv": {
+      "sha256": "7c4d3464d2cf4f29098d7eec7c6901926c26ddc1e20a0b4f9abdbcbaa61a22d4"
+    },
+    "adapter_vs_baselines.csv": {
+      "sha256": "b697955db2621d2b6f64ca39462547e1126b17b540cf7df7c87ae679957d8a17"
+    },
+    "full_cohort_fallback_metrics.csv": {
+      "sha256": "24ee6a48eada56f425f98bb5a9a31da744000ee1d438cd1c84d81fabfc4dc2a8"
+    },
+    "parse_summary.csv": {
+      "sha256": "9f465fa7ffbf8683faeaaaecdd2277f16c9451822e3a55ea454ed1cc5e5f20da"
+    },
+    "error_diagnostics.csv": {
+      "sha256": "4332667c336a2675de2413aba6e0d91ebcbf2e9d9aede21dd8163dc8b3d2a42c"
+    },
+    "matched_test_keys.csv": {
+      "sha256": "6208b05c214baeb1217f71d32721786a0ecd8434545a53d8ea04a0204fc70a02"
+    },
+    "common_scored_keys.csv": {
+      "sha256": "6208b05c214baeb1217f71d32721786a0ecd8434545a53d8ea04a0204fc70a02"
+    }
+  }
+}
