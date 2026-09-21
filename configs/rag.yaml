@@ -27,7 +27,8 @@ vector_store:
 # unverified until they are explicitly added to this list by a team decision.
 sources:
   - type: "statfin_release_page"
-    base_url: "https://stat.fi/en/releases-and-publications"
+    # Corrected 2026-09-21: the previous URL (/en/releases-and-publications) returned 404.
+    base_url: "https://stat.fi/en/statistics/atp"
     language: "en"
   - type: "statfin_future_releases"
     base_url: "https://stat.fi/en/future-releases"
