@@ -24,7 +24,7 @@ embedding_candidates:
 # be persisted to durable storage (Drive when on Colab).
 vector_store:
   backend: "chromadb"
-  persist_dir: "data/processed/chroma"
+  persist_dir: "data/processed/rag/chroma"
   collection_name: "jobai_corpus"
 
 # Treat legacy mol.fi RSS endpoints as
@@ -47,6 +47,20 @@ sources:
     base_url: "https://tyomarkkinatori.fi/fi/tyomarkkinat/tyollisyyskatsaus"
     language: "fi"
     notes: "Preserve Finnish; do not silently translate."
+
+# Hybrid retrieval. Semantic (Chroma) and keyword (BM25) candidates are
+# fused with Reciprocal Rank Fusion, after each side drops its own weak
+# matches. Tune min_semantic_similarity / min_bm25_score with the
+# evaluator's retrieval evaluation set once it exists; these are starting
+# values from manual checks in notebook 11, not a tuned result.
+retrieval:
+  default_k: 5
+  candidates_per_method: 20
+  rrf_k: 60
+  min_semantic_similarity: 0.30   # Chroma cosine similarity = 1 - distance
+  min_bm25_score: 0.5             # near-zero BM25 scores are noise, not matches
+  max_chunks_per_doc: 2
+  reranker_enabled: false         # left off in v1 (notebook 08 decision)
 
 # Retrieval evaluation.
 retrieval_eval:
