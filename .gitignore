@@ -39,8 +39,9 @@ ENV/
 *.hdf5
 *.jsonl
 
-# RAG source documents (some are In Copyright; keep only manifests in git)
+# RAG source documents and derived index (some are In Copyright; keep only manifests in git)
 data/raw/rag/
+data/processed/rag/
 
 # Models
 models/*.pt

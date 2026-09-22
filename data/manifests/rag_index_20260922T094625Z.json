@@ -1,0 +1,154 @@
+{
+  "name": "JobAI RAG index v1",
+  "created_utc": "2026-09-22T09:46:25.350319+00:00",
+  "chunk_manifest": {
+    "path": "data/manifests/rag_chunks_20260921T181228Z.json",
+    "sha256": "fafc0cee970a0306b7b7b980f0d92203d5002bbb1b4a421c5e8e4634803c719a"
+  },
+  "semantic": {
+    "model_id": "BAAI/bge-m3",
+    "model_revision": null,
+    "embedding_dim": 1024,
+    "distance": "cosine",
+    "backend": "chromadb",
+    "persist_dir": "data/processed/rag/chroma",
+    "collection_name": "jobai_corpus",
+    "count": 1600,
+    "bytes": 23992034
+  },
+  "keyword": {
+    "algorithm": "bm25_okapi",
+    "stemmer": "snowball_finnish (fi only)",
+    "path": "data/processed/rag/bm25_index.pkl",
+    "sha256": "7b9447db524ef08ab923d5949657c024152f66508da98d1fdbe0586aaf850c0f",
+    "count": 1600
+  },
+  "sanity_checks": {
+    "Kuinka monta uutta avointa työpaikkaa ilmoitettiin?": {
+      "semantic": [
+        [
+          "keha_bulletin_20251121109948#009",
+          0.2983662486076355
+        ],
+        [
+          "keha_bulletin_20251021102406#008",
+          0.29876238107681274
+        ],
+        [
+          "keha_bulletin_2025092397513#008",
+          0.30358415842056274
+        ]
+      ],
+      "bm25": [
+        [
+          "tem_bulletin_2023_10#008",
+          9.28
+        ],
+        [
+          "tem_bulletin_2022_02#008",
+          9.28
+        ],
+        [
+          "tem_bulletin_2023_09#008",
+          9.2
+        ]
+      ]
+    },
+    "Uusimaa avoimet työpaikat": {
+      "semantic": [
+        [
+          "tem_bulletin_2014_03#001",
+          0.47609978914260864
+        ],
+        [
+          "tem_bulletin_2025_01#008",
+          0.4771695137023926
+        ],
+        [
+          "tem_bulletin_2024_01#008",
+          0.4807437062263489
+        ]
+      ],
+      "bm25": [
+        [
+          "tem_bulletin_2018_01#008",
+          7.35
+        ],
+        [
+          "tem_bulletin_2017_12#008",
+          7.35
+        ],
+        [
+          "tem_bulletin_2018_05#008",
+          7.33
+        ]
+      ]
+    },
+    "how many new job vacancies were reported": {
+      "semantic": [
+        [
+          "tem_bulletin_2021_07#008",
+          0.3446192741394043
+        ],
+        [
+          "tem_bulletin_2019_09#009",
+          0.3451516032218933
+        ],
+        [
+          "tem_bulletin_2016_12#009",
+          0.3453914523124695
+        ]
+      ],
+      "bm25": [
+        [
+          "keha_bulletin_2026052553107#010",
+          23.92
+        ],
+        [
+          "keha_bulletin_2025090193442#008",
+          23.52
+        ],
+        [
+          "keha_bulletin_2025090193448#009",
+          23.35
+        ]
+      ]
+    },
+    "pitkäaikaistyöttömyys": {
+      "semantic": [
+        [
+          "tem_bulletin_2014_11#004",
+          0.38200169801712036
+        ],
+        [
+          "tem_bulletin_2014_10#004",
+          0.38269639015197754
+        ],
+        [
+          "tem_bulletin_2015_08#004",
+          0.38381874561309814
+        ]
+      ],
+      "bm25": [
+        [
+          "statfin_atp_cmfxzvr0kgj1k07w3ya6x3vac#000",
+          0.0
+        ],
+        [
+          "statfin_atp_cmfxzoyr4gknl07utaizfva9c#000",
+          0.0
+        ],
+        [
+          "statfin_atp_cmfxzk126ghiz07utgwlf7ipu#000",
+          0.0
+        ]
+      ]
+    }
+  },
+  "packages": {
+    "sentence-transformers": "6.1.0",
+    "chromadb": "1.5.9",
+    "rank_bm25": "0.2.2",
+    "snowballstemmer": "3.1.1"
+  }
+}
