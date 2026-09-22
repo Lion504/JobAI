@@ -43,6 +43,8 @@ ENV/
 models/adapters/qwen-qwen3-4b__20260919T083224Z
 models/adapters/qwen-qwen3-4b__qwen3_4b_h1__enhanced_v1__h1__20260920T184401Z
 models/adapters/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z
+models/adapters/**/optimizer.pt
+
 # MLflow / experiment tracking
 mlruns/
 mlartifacts/
