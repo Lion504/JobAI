@@ -1,0 +1,20 @@
+# Default 07: both retained Qwen3-4B adapters versus matched baselines.
+model_config: configs/model_qwen3_4b_shared.yaml
+selected_model_config: configs/final_model.yaml
+test_examples_per_horizon: 1000
+generation_batch_size: 40
+max_new_tokens: 64
+primary_metric: sMAPE_pct
+minimum_parse_success: 0.99
+history_source: normalized # Recover extra past quarters for the enhanced comparator, in 07 only.
+previous_runs:
+  - run_id: qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z
+    label: qwen3_4b_enhanced_75000
+    base_model: Qwen/Qwen3-4B
+    train_examples: 75000
+    prompt_schema: enhanced_shared_v1
+    history_quarters: 12
+    max_seq_length: 768
+# Preserve the earlier comparison's declared enhanced prompt/history. Its original
+# training manifest is missing: 07 discloses this rather than treating it as verified.
+# The pinned legacy model remains selected; comparison never changes that selection.

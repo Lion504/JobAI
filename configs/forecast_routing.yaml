@@ -2,30 +2,37 @@
 # requested horizon and target scope; RAG explains a forecast after the numeric
 # adapter has produced it.
 adapter_mode: "shared"
-adapter_manifest: "data/manifests/finetune_run_manifest.json"
+# Resolve with jobai.model_runtime.selected_final_run; never route via latest training.
+selected_model_config: "configs/final_model.yaml"
 adapter_profiles:
-  1: "configs/model.yaml"
-  2: "configs/model.yaml"
-  4: "configs/model.yaml"
+  1: "configs/model_qwen3_4b_shared.yaml"
+  2: "configs/model_qwen3_4b_shared.yaml"
+  4: "configs/model_qwen3_4b_shared.yaml"
 
 target_scopes:
   national:
     preferred_table: "11l1"
+    supported_by_final_adapter: false
     description: "Official whole-country Job Vacancy Survey targets."
   broad_region:
     preferred_table: "11n1"
+    supported_by_final_adapter: false
     description: "Official broad Finnish region targets."
   province_occupation:
     preferred_table: "12tu"
+    supported_by_final_adapter: true
     description: "KEHA province-by-occupation vacancy targets."
   province_industry:
     preferred_table: "12tw"
+    supported_by_final_adapter: true
     description: "KEHA province-by-industry end-of-month vacancy targets."
   detailed_geography:
     preferred_table: "12r5"
+    supported_by_final_adapter: false
     description: "KEHA national, municipality, ELY, and subregion targets."
 
 rules:
+  unsupported_scope: "Explain that the chosen adapter was trained on 12tu/12tw only; use a separately evaluated baseline or report that no validated model forecast is available. RAG must not invent numbers."
   rag_role: "Explain the numeric forecast with definitions, current context, and citations; never invent a missing forecast."
   ambiguous_national_question: "Use 11l1/atp_lkm unless the user explicitly asks for KEHA registered vacancies."
   unsupported_horizon: "Ask the user to choose 1, 2, or 4 quarters, or map six months to 2 quarters and one year to 4 quarters."

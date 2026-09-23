@@ -1,0 +1,19 @@
+# Explicit project choice, NOT a training run manifest or a deployment pass.
+# Notebook 06 never changes this pointer; using it needs no retraining.
+run_id: qwen-qwen3-4b__20260919T125120Z
+label: qwen3_4b_legacy_151727
+base_model: Qwen/Qwen3-4B
+architecture: causal_lm
+adapter_path: models/adapters/qwen-qwen3-4b__20260919T125120Z/final_adapter
+adapter_sha256: 56460ae742f2cf11c8bfae14b021a9a5ea2cd9479384f782c1467846d5c32a0c
+training_horizons: [1, 2, 4]
+train_examples: 151727
+target_tables: [12tu, 12tw]
+prompt_schema: legacy_v1
+history_quarters: 8
+# Non-truncating inference ceiling, not a historical training-length claim.
+max_seq_length: 768
+source_manifest: reports/model_evaluations/qwen-qwen3-4b__20260919T125120Z/evaluation_manifest.json
+comparison_evidence: reports/model_evaluations/comparisons/comparison_c64a6d3e5c17/comparison_manifest.json
+provenance_note: Original training manifest is missing locally; the prompt/history are explicit compatibility declarations. Preserve this limitation in evaluations.
+deployment_passed: false
