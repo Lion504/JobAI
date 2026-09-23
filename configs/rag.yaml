@@ -1,15 +1,10 @@
 # RAG and citation layer configuration.
 
-# Chunking. Start at 512 tokens, small overlap, then tune on a Finnish
-# retrieval evaluation set.
+# Chunking. Plain character-based sliding window, start here then tune
+# on a Finnish retrieval evaluation set.
 chunking:
-  chunk_size_tokens: 512
-  chunk_overlap_tokens: 64
-  splitter: "recursive"
-  # Chunks are measured in tokens of the embedding model, so sizes match what bge-m3 sees.
-  tokenizer: "BAAI/bge-m3"
-  # A trailing chunk shorter than this is merged into the previous one when it fits.
-  min_chunk_tokens: 40
+  chunk_size: 800
+  chunk_overlap: 100
 
 # Embedding model candidates, ordered by preference for Finnish.
 # bge-m3 is multilingual and handles Finnish; multilingual-e5-base is the
@@ -47,20 +42,6 @@ sources:
     base_url: "https://tyomarkkinatori.fi/fi/tyomarkkinat/tyollisyyskatsaus"
     language: "fi"
     notes: "Preserve Finnish; do not silently translate."
-
-# Hybrid retrieval. Semantic (Chroma) and keyword (BM25) candidates are
-# fused with Reciprocal Rank Fusion, after each side drops its own weak
-# matches. Tune min_semantic_similarity / min_bm25_score with the
-# evaluator's retrieval evaluation set once it exists; these are starting
-# values from manual checks in notebook 11, not a tuned result.
-retrieval:
-  default_k: 5
-  candidates_per_method: 20
-  rrf_k: 60
-  min_semantic_similarity: 0.30   # Chroma cosine similarity = 1 - distance
-  min_bm25_score: 0.5             # near-zero BM25 scores are noise, not matches
-  max_chunks_per_doc: 2
-  reranker_enabled: false         # left off in v1 (notebook 08 decision)
 
 # Retrieval evaluation.
 retrieval_eval:
