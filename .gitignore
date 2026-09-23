@@ -80,3 +80,8 @@ htmlcov/
 AGENTS.md
 kilo.json
 plan.md
+
+# AI assistant project files (not part of the submission)
+.claude/
+CLAUDE.md
+.mcp.json
