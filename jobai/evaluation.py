@@ -3,17 +3,95 @@ from __future__ import annotations
 
 import gc
 import importlib.metadata
+import json
 import time
 import uuid
 from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from jobai.forecasting import (KEYS, digest_json, input_view, parse_prediction,
                                prompt_messages, read_json, sha256, write_json)
 from jobai.model_runtime import (base_directory, check_fast_kernels, load_quantized_base,
                                  load_tokenizer, tokenizer_identity)
+
+
+def prepare_comparison_history(repo, frame, runs, mode="panel", expected_sources=None):
+    """Supply each saved design's history without rebuilding any training data.
+
+    Extend only backwards from the origin. Require the saved panel's suffix and
+    target to match the normalized source. Missing EXTRA history excludes the case
+    for EVERY model before sampling; changed existing data is an error instead.
+    Panel scales/features stay unchanged; input_view recomputes each model's view.
+    """
+    assert mode in {"panel", "normalized"}, "Unknown comparison history source."
+    assert len(frame) and frame.example_id.is_unique, "Need unique comparison examples."
+    required = max(int(run["history_quarters"]) for run in runs)
+    assert required > 0
+    result = frame.copy().reset_index(drop=True)
+    audit_columns = ["example_id", *KEYS, "reason", "missing_quarters"]
+    exclusions, source_hashes = [], {}
+    provenance = {"mode": mode, "required_history_quarters": required,
+                  "per_model_history": {r["model_label"]: r["history_quarters"] for r in runs},
+                  "input_rows": len(frame), "normalized_inputs": source_hashes}
+    if mode == "panel":
+        for record in result.to_dict("records"):
+            input_view(record, required)  # Fail before GPU loading, not mid-generation.
+    else:
+        for tid, table in result.groupby("table_id", sort=True):
+            relative = f"data/processed/{tid}__normalized.csv"
+            path = Path(repo) / relative
+            assert path.is_file(), f"Missing normalized history: {relative}"
+            source_hashes[relative] = sha256(path)
+            if expected_sources is not None:
+                assert expected_sources.get(relative) == source_hashes[relative], (
+                    f"Unverified or changed normalized history: {relative}; refresh 04 then 05.")
+            dimensions = table.dimensions_json.map(json.loads)
+            dim_columns = sorted(dimensions.iloc[0])
+            assert dim_columns and all(sorted(d) == dim_columns for d in dimensions), "Inconsistent dimension keys."
+            # Keep codes such as '01' intact; category labels are not identifiers.
+            source = pd.read_csv(path, dtype=str, keep_default_na=False,
+                                 usecols=[*dim_columns, "timeperiod_q", "value"])
+            assert not source.duplicated([*dim_columns, "timeperiod_q"]).any(), "Duplicate normalized series-quarter keys."
+            values = pd.to_numeric(source.value, errors="coerce")
+            lookup = dict(zip(source[[*dim_columns, "timeperiod_q"]].itertuples(index=False, name=None), values))
+            for index, record in zip(table.index, table.to_dict("records")):
+                dims = json.loads(record["dimensions_json"])
+                key = tuple(str(dims[c]) for c in dim_columns)
+                origin = pd.Period(record["origin_quarter"], freq="Q")
+                assert str(origin + int(record["horizon_q"])) == record["target_quarter"], "Wrong target quarter."
+                original = np.asarray(json.loads(record["input_values_json"]), dtype=float)
+                assert len(original) and np.isfinite(original).all(), "Invalid saved panel history."
+                count = max(required, len(original))
+                periods = [str(origin - offset) for offset in range(count - 1, -1, -1)]
+                history = np.array([lookup.get((*key, quarter), np.nan) for quarter in periods], dtype=float)
+                assert np.allclose(history[-len(original):], original, rtol=1e-10, atol=1e-8), (
+                    f"Panel/source history mismatch: {record['example_id']}; rebuild matching 04/05 inputs.")
+                assert np.isclose(original[-1], record["last_value"], rtol=1e-10, atol=1e-8), "Panel last value disagrees with history."
+                actual = lookup.get((*key, record["target_quarter"]), np.nan)
+                assert np.isclose(actual, record["target_value"], rtol=1e-10, atol=1e-8), (
+                    f"Panel/source target mismatch: {record['example_id']}; rebuild matching 04/05 inputs.")
+                missing = [quarter for quarter, value in zip(periods, history) if not np.isfinite(value)]
+                if missing:
+                    exclusions.append({k: record[k] for k in ["example_id", *KEYS]} |
+                                      {"reason": "incomplete_extra_history", "missing_quarters": ",".join(missing)})
+                else:
+                    result.at[index, "input_values_json"] = json.dumps(history.tolist())
+            assert sha256(path) == source_hashes[relative], "Normalized history changed during evaluation setup."
+    audit = pd.DataFrame(exclusions, columns=audit_columns)
+    result = result[~result.example_id.isin(audit.example_id)].reset_index(drop=True)
+    provenance.update(eligible_rows=len(result), excluded_rows=len(audit),
+                      verified_against_baseline_sources=mode == "normalized" and expected_sources is not None)
+    return result, audit, provenance
+
+
+def comparison_input_identity(sample, run):
+    """Hash the actual model-visible prompts, not only IDs of the original panel."""
+    return digest_json([{"example_id": r["example_id"],
+                         "messages": prompt_messages(r, run["prompt_schema"], run["history_quarters"])}
+                        for r in sample.to_dict("records")])
 
 
 class PredictionCache:
@@ -49,6 +127,8 @@ class PredictionCache:
 
 def generate_comparison(repo, runs, sample, comparison_cfg, model_cfg, test_sha):
     """One GPU base at a time; no downloads; skip all cached generations."""
+    # Validate every model's history and hash its inputs before loading any GPU base.
+    input_hashes = {run["run_id"]: comparison_input_identity(sample, run) for run in runs}
     import torch
     from peft import PeftModel
     repo = Path(repo)
@@ -65,7 +145,7 @@ def generate_comparison(repo, runs, sample, comparison_cfg, model_cfg, test_sha)
         base_snapshot = base_path / "jobai_base_snapshot.json"
         base_revision = read_json(base_snapshot).get("revision") if base_snapshot.exists() else None
         candidate = candidates.get(model_id)
-        assert candidate, f"Add historical base model {model_id} to model.yaml candidates."
+        assert candidate, f"Add historical base model {model_id} to the active model profile's candidates."
         model = None
         try:
             for run in group:
@@ -80,6 +160,7 @@ def generate_comparison(repo, runs, sample, comparison_cfg, model_cfg, test_sha)
                         "prompt_schema": run["prompt_schema"], "history_quarters": run["history_quarters"],
                         "max_seq_length": run["max_seq_length"], "test_sha256": test_sha,
                         "sample_ids_sha256": digest_json(sample.example_id.tolist()),
+                        "model_inputs_sha256": input_hashes[run["run_id"]],
                         "generation": {"max_new_tokens": comparison_cfg["max_new_tokens"],
                                        "do_sample": False, "enable_thinking": False},
                         "helper_hashes": helper_hashes,

@@ -80,6 +80,8 @@ Reproduce that experiment only by explicitly setting `JOBAI_MODEL_CONFIG=configs
 
 Keep existing adapters, reports, and caches. See the [adapter retention guide](docs/adapter_retention.md) for the required files.
 
+Notebook 02 now has one normalization stage and publishes a checksum-bearing validation report only after all tables pass. Run the updated 02 once if a later notebook reports that the old validation report lacks fingerprints. Identical CSV contents keep the same checksums: matching 03–05 outputs remain reusable, and no adapter retraining is needed. If normalized values change, refresh 03–05. The [normalization compatibility check](docs/normalization_compatibility.md) confirmed that all five updated CSVs match the legacy-era code and the existing local CSVs byte-for-byte.
+
 ## Model and evaluation
 
 The default model is **Qwen3-4B**, a text-only causal language model trained with 4-bit QLoRA: a small adapter is trained while the base model stays frozen. One adapter handles all three horizons; no separate H1/H2/H4 adapters are required.

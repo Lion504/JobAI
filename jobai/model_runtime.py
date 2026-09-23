@@ -5,6 +5,8 @@ import importlib
 import json
 from pathlib import Path
 
+import yaml
+
 from jobai.forecasting import digest_json, read_json, sha256, write_json
 
 
@@ -76,6 +78,7 @@ def load_quantized_base(base_dir, architecture, bf16):
     import torch
     import transformers
     from transformers import BitsAndBytesConfig
+    assert architecture in {"causal_lm", "multimodal_text_only"}, f"Unknown architecture: {architecture}"
     model_class = (transformers.AutoModelForMultimodalLM if architecture == "multimodal_text_only"
                    else transformers.AutoModelForCausalLM)
     dtype = torch.bfloat16 if bf16 else torch.float16
@@ -118,27 +121,66 @@ def resolve_repo_path(repo, value):
     return Path(repo) / path
 
 
+def selected_final_run(repo, selection_path="configs/final_model.yaml"):
+    """Resolve the pinned saved adapter, independently of the latest training pointer.
+
+    Missing original training metadata is disclosed, never reconstructed as fact.
+    """
+    repo = Path(repo)
+    spec = yaml.safe_load((repo / selection_path).read_text(encoding="utf-8"))
+    source = repo / spec["source_manifest"]
+    evidence = read_json(source)
+    for key in ("run_id", "base_model"):
+        assert evidence[key] == spec[key], f"Final selection {key} disagrees with saved evidence."
+    assert evidence.get("train_examples_used", evidence.get("train_examples")) == spec["train_examples"]
+    assert evidence["training_horizons"] == spec["training_horizons"] == [1, 2, 4]
+    assert not evidence.get("test_data_used", evidence.get("test_data_used_for_training", False))
+    assert resolve_repo_path(repo, evidence["adapter_path"]) == resolve_repo_path(repo, spec["adapter_path"])
+    adapter = resolve_repo_path(repo, spec["adapter_path"])
+    config = read_json(adapter / "adapter_config.json")
+    assert config["base_model_name_or_path"] in (
+        spec["base_model"], str(repo / "models/base" / spec["base_model"].replace("/", "--")),
+        "/content/drive/MyDrive/JobAI/models/base/" + spec["base_model"].replace("/", "--")), "Adapter base model mismatch."
+    fingerprint = adapter_identity(adapter)
+    assert fingerprint == spec["adapter_sha256"], "Pinned adapter checksum changed; do not silently substitute another run."
+    for key, expected in (("prompt_schema", spec["prompt_schema"]),
+                          ("feature_window_quarters", spec["history_quarters"])):
+        assert key not in evidence or evidence[key] == expected, f"Final selection {key} contradicts evidence."
+    return {**spec, "model_label": spec["label"], "role": "current_shared",
+            "selection_role": "pinned_final", "train_count": spec["train_examples"],
+            "adapter_dir": adapter, "adapter_sha256": fingerprint,
+            "provenance": "explicit_historical_compatibility_declaration"}
+
+
 def discover_comparison_runs(repo, comparison_cfg, model_cfg, card):
     repo = Path(repo)
-    current_id = comparison_cfg.get("current_run_id")
-    source = (repo / "data/manifests/finetune_runs" / f"{current_id}.json" if current_id
-              else repo / "data/manifests/finetune_run_manifest.json")
-    assert source.is_file(), "Run the updated notebook 06 once; the shared-run manifest is missing."
-    current = read_json(source)
-    assert current["base_model"] == model_cfg["candidate_to_run"], "Latest run uses a different model; select current_run_id explicitly."
-    assert current["training_horizons"] == [1, 2, 4], "The current run must be a shared adapter."
-    assert current["prompt_schema"] == "five_table_shared_v1", "The latest pointer is an older experiment."
-    for split in ("train", "validation"):
-        assert current[f"{split}_split_sha256"] == card["files"][split]["sha256"], f"Current adapter uses a different {split} dataset."
-    assert current["feature_window_quarters"] == card["feature_window_quarters"]
-    assert not current.get("test_data_used", False)
-    current = {**current, "source_manifest": str(source.relative_to(repo)), "role": "current_shared",
-               "model_label": "qwen35_4b_shared_" + str(current["train_examples_used"]),
-               "train_count": current["train_examples_used"], "history_quarters": current["feature_window_quarters"],
-               "max_seq_length": current["model_config"]["training"]["max_seq_length"],
-               "provenance": "training_manifest"}
+    if comparison_cfg.get("selected_model_config"):
+        current = selected_final_run(repo, comparison_cfg["selected_model_config"])
+        assert current["base_model"] == model_cfg["candidate_to_run"], "Final adapter and active model profile differ."
+        assert current["history_quarters"] == card["feature_window_quarters"], "Rebuild the matching baseline/panel profile."
+        assert set(current["target_tables"]) == set(card["selected_series_by_table"]), "Final-model target scope differs from panel."
+    else:
+        current_id = comparison_cfg.get("current_run_id")
+        source = (repo / "data/manifests/finetune_runs" / f"{current_id}.json" if current_id
+                  else repo / "data/manifests/finetune_run_manifest.json")
+        assert source.is_file(), "Choose a saved run or run notebook 06; the training manifest is missing."
+        current = read_json(source)
+        assert current["base_model"] == model_cfg["candidate_to_run"], "Latest run uses a different model; select current_run_id explicitly."
+        assert current["training_horizons"] == [1, 2, 4], "The current run must be a shared adapter."
+        schema = model_cfg.get("training", {}).get("prompt_schema", "five_table_shared_v1")
+        assert current["prompt_schema"] == schema, "Saved run and active prompt profile differ."
+        for split in ("train", "validation"):
+            assert current[f"{split}_split_sha256"] == card["files"][split]["sha256"], f"Current adapter uses a different {split} dataset."
+        assert current["feature_window_quarters"] == card["feature_window_quarters"]
+        assert not current.get("test_data_used", False)
+        label = current["base_model"].split("/")[-1].lower().replace(".", "").replace("-", "_")
+        current = {**current, "source_manifest": str(source.relative_to(repo)), "role": "current_shared",
+                   "model_label": f"{label}_shared_{current['train_examples_used']}",
+                   "train_count": current["train_examples_used"], "history_quarters": current["feature_window_quarters"],
+                   "max_seq_length": current["model_config"]["training"]["max_seq_length"],
+                   "provenance": "training_manifest"}
     runs = [current]
-    for spec in comparison_cfg["previous_runs"]:
+    for spec in comparison_cfg.get("previous_runs", []):
         run_id = spec["run_id"]
         candidates = [repo / "data/manifests/finetune_runs" / f"{run_id}.json",
                       repo / "reports/model_evaluations" / run_id / "evaluation_manifest.json"]
@@ -161,6 +203,13 @@ def discover_comparison_runs(repo, comparison_cfg, model_cfg, card):
     for run in runs:
         run["adapter_dir"] = resolve_repo_path(repo, run["adapter_path"])
         assert (run["adapter_dir"] / "adapter_config.json").is_file(), f"Missing adapter: {run['adapter_dir']}"
-        run["adapter_sha256"] = adapter_identity(run["adapter_dir"])
+        fingerprint = adapter_identity(run["adapter_dir"])
+        assert run.get("adapter_sha256", fingerprint) == fingerprint, f"Saved adapter checksum changed: {run['run_id']}"
+        run["adapter_sha256"] = fingerprint
+        assert (run["history_quarters"] <= card["feature_window_quarters"] or
+                comparison_cfg.get("history_source") == "normalized"), (
+            "Comparator needs more history than this panel; explicitly use normalized "
+            "history reconstruction in 07, never silently shorten its prompt.")
     assert len({run["model_label"] for run in runs}) == len(runs)
+    assert len({run["run_id"] for run in runs}) == len(runs), "The same adapter is listed twice."
     return runs

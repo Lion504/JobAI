@@ -49,6 +49,38 @@ def write_json(path, value, immutable=False):
         temp.replace(path)
 
 
+def verify_normalization(repo, tables, check_sources=False):
+    """Verify 02's report belongs to these exact CSVs, not an earlier run.
+
+    03 additionally checks raw/config provenance. Consumers of already-prepared
+    datasets can verify the CSVs without needing raw downloads on their machine.
+    """
+    repo = Path(repo)
+    path = repo / "data/processed/normalization_assertions.json"
+    assert path.is_file(), "Run notebook 02: normalization_assertions.json is missing."
+    checks = read_json(path)
+    for tid in tables:
+        result = checks.get(tid, {})
+        assert result.get("status") == "passed", f"{tid}: notebook 02 validation did not pass."
+        assert result.get("schema_version") == 2, f"{tid}: old normalization report has no verified fingerprints; rerun updated 02."
+        relative = f"data/processed/{tid}__normalized.csv"
+        evidence = result.get("normalized_csv", {})
+        assert evidence.get("path") == relative, f"{tid}: incorrect normalized-file identity; rerun 02."
+        csv_path = repo / relative
+        assert csv_path.is_file(), f"Missing normalized file: {relative}; rerun 02."
+        assert sha256(csv_path) == evidence.get("sha256"), f"Normalized source changed: {relative}; rerun 02 before 03–07."
+        if check_sources:
+            raw_files = result.get("raw_slices", {})
+            actual = {str(p.relative_to(repo)) for p in (repo / "data/raw").glob(f"{tid}__data__slice_*.json")}
+            assert raw_files and set(raw_files) == actual, f"{tid}: raw slice inventory changed; rerun 02."
+            configs = result.get("input_files", {})
+            assert {"configs/data.yaml", "data/manifests/_dimension_catalog.json"}.issubset(configs), "Normalization provenance is incomplete; rerun 02."
+            for relative, fingerprint in {**raw_files, **configs}.items():
+                source = repo / relative
+                assert source.is_file() and sha256(source) == fingerprint, f"Normalization input changed: {relative}; rerun 02."
+    return {tid: checks[tid] for tid in tables}
+
+
 def verify_pipeline(repo, cfg, splits=("train", "validation")):
     """Fail before loading a model if 03/04/05 disagree. Never reads test in 06."""
     repo = Path(repo)
@@ -58,7 +90,7 @@ def verify_pipeline(repo, cfg, splits=("train", "validation")):
     expected = {"feature_window_quarters": cfg["feature_window_quarters"],
                 "horizons_q": cfg["horizons"], "splits": cfg["splits"]}
     for key, value in expected.items():
-        assert card.get(key) == value, f"Notebook 05 {key} is stale; rebuild 04/05 with configs/eval.yaml."
+        assert card.get(key) == value, f"Notebook 05 {key} is stale; rebuild 04/05 with the active evaluation profile."
         assert baseline.get(key) == value, f"Notebook 04 {key} is stale; rebuild 04 then 05."
     assert card.get("feature_set") == cfg["engineered_feature_set"], "Panel feature set is stale."
     assert baseline.get("engineered_feature_set") == cfg["engineered_feature_set"], "Baseline features are stale."
@@ -77,6 +109,10 @@ def verify_pipeline(repo, cfg, splits=("train", "validation")):
     sources = baseline.get("normalized_inputs", {})
     for relative, expected_sha in sources.items():
         assert sha256(repo / relative) == expected_sha, f"Normalized source changed: {relative}; rerun 03–05."
+    normalization = verify_normalization(repo, cfg["panel_selection"]["target_tables"])
+    for result in normalization.values():
+        evidence = result["normalized_csv"]
+        assert sources.get(evidence["path"]) == evidence["sha256"], "Baseline normalization fingerprints are stale; rerun 04 then 05."
     return card, baseline
 
 
@@ -84,6 +120,17 @@ def _rank(frame, seed):
     result = frame.copy()
     result["_rank"] = result.example_id.map(lambda x: hashlib.sha256(f"{seed}|{x}".encode()).hexdigest())
     return result
+
+
+def deterministic_sample(frame, limit, seed, horizons=(1, 2, 4)):
+    """Legacy shared sampling: one mixed pool, no horizon quotas or replacement."""
+    frame = frame[frame.horizon_q.isin(horizons)].copy()
+    assert frame.example_id.is_unique, "Duplicate training/validation example IDs."
+    assert set(frame.horizon_q) == set(horizons), "A requested horizon has no examples."
+    if limit is not None:
+        assert isinstance(limit, int) and 0 < limit <= len(frame), "Sample budget exceeds available records."
+        frame = _rank(frame, seed).sort_values(["_rank", "example_id"]).head(limit).drop(columns="_rank")
+    return frame.sort_values("example_id").reset_index(drop=True)
 
 
 def balanced_sample(frame, limit, seed, horizons=(1, 2, 4), priority_tables=("11l1", "11n1")):

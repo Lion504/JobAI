@@ -8,7 +8,20 @@
     "time_last": "2026Q2",
     "duplicate_keys": 0,
     "series_with_gaps": 0,
-    "bad_source_months": 0
+    "bad_source_months": 0,
+    "schema_version": 2,
+    "normalized_csv": {
+      "path": "data/processed/11l1__normalized.csv",
+      "sha256": "d9ec7c1ee2eb453eea9180542e017f84cb5319c3bd1dc51ed7ca4bd2926d0e0b"
+    },
+    "raw_slices": {
+      "data/raw/11l1__data__slice_0.json": "33bfeb61ca4f0cd1ce8848357b5317845d1e6ba614221dcea7b0404223dea7e8"
+    },
+    "input_files": {
+      "configs/data.yaml": "091631efa99dc55ccb9112d80e39546161bb5feafe2aa39a10cd9603d122b478",
+      "data/manifests/_dimension_catalog.json": "694cdcf9ef201d90536a57fa60cc5f3da255d2d2a15849f3472e15f7b66cd143"
+    },
+    "aggregation_rule": "quarterly_native"
   },
   "11n1": {
     "status": "passed",
@@ -19,7 +32,20 @@
     "time_last": "2026Q2",
     "duplicate_keys": 0,
     "series_with_gaps": 0,
-    "bad_source_months": 0
+    "bad_source_months": 0,
+    "schema_version": 2,
+    "normalized_csv": {
+      "path": "data/processed/11n1__normalized.csv",
+      "sha256": "185dfac606568a1f11e634c74aa8fbc89b143924c491939b54e7f4046a5ed375"
+    },
+    "raw_slices": {
+      "data/raw/11n1__data__slice_0.json": "dfa90622cb8cc06fcdf38d1fc514a02fa390c327503993623a2779cffeaa249c"
+    },
+    "input_files": {
+      "configs/data.yaml": "091631efa99dc55ccb9112d80e39546161bb5feafe2aa39a10cd9603d122b478",
+      "data/manifests/_dimension_catalog.json": "694cdcf9ef201d90536a57fa60cc5f3da255d2d2a15849f3472e15f7b66cd143"
+    },
+    "aggregation_rule": "quarterly_native"
   },
   "12tu": {
     "status": "passed",
@@ -30,7 +56,24 @@
     "time_last": "2026Q2",
     "duplicate_keys": 0,
     "series_with_gaps": 0,
-    "bad_source_months": 0
+    "bad_source_months": 0,
+    "schema_version": 2,
+    "normalized_csv": {
+      "path": "data/processed/12tu__normalized.csv",
+      "sha256": "fb0873f5a5e750348df1857ddcf6ec4325a94f0950a2188c3e7328a888d5ea74"
+    },
+    "raw_slices": {
+      "data/raw/12tu__data__slice_0.json": "56bc86895da5451d455963c0480caf2554372c190a09cf85904f482435848a2c",
+      "data/raw/12tu__data__slice_1.json": "a107f5b7d6dca4c83de9fac938aaffda6e04329a809d62f0452c451c0ebfd93b",
+      "data/raw/12tu__data__slice_2.json": "79076148f2021fc91285afc9f8cf81bf5f82b3a37a221e95cd7af328ce7a43ae",
+      "data/raw/12tu__data__slice_3.json": "1214219d7ee88c77c37cbdf1e725ff720a3efacccb1394ac2e35d21ae307c70d",
+      "data/raw/12tu__data__slice_4.json": "73732699f835fee173f738608470a0650e57d740761e03251f2a383eec5fa588"
+    },
+    "input_files": {
+      "configs/data.yaml": "091631efa99dc55ccb9112d80e39546161bb5feafe2aa39a10cd9603d122b478",
+      "data/manifests/_dimension_catalog.json": "694cdcf9ef201d90536a57fa60cc5f3da255d2d2a15849f3472e15f7b66cd143"
+    },
+    "aggregation_rule": "end_of_quarter"
   },
   "12tw": {
     "status": "passed",
@@ -41,7 +84,37 @@
     "time_last": "2026Q2",
     "duplicate_keys": 0,
     "series_with_gaps": 0,
-    "bad_source_months": 0
+    "bad_source_months": 0,
+    "schema_version": 2,
+    "normalized_csv": {
+      "path": "data/processed/12tw__normalized.csv",
+      "sha256": "9247f5e9ee4c85656b4194c3ed0b72e16ba16b16b3fe0840b50dfd569cec9e03"
+    },
+    "raw_slices": {
+      "data/raw/12tw__data__slice_0.json": "ed368346ddeda76aadc8df820f338d49ce839450534f9d306ddbe281f7f9138e",
+      "data/raw/12tw__data__slice_1.json": "39883cf52cfb682a920df74bbca2676f718c979c367e09b5e211be749f2f2a7c",
+      "data/raw/12tw__data__slice_10.json": "734cd255eda075d25d879eacae9d7a8f3210f96020dba72b12300319c5fac6d4",
+      "data/raw/12tw__data__slice_11.json": "273428d6893a4145662fd59346125837a245e5bed5aeb1a2c3a0e3514ecb77ed",
+      "data/raw/12tw__data__slice_12.json": "722f231d049edc6126885aac948372f077a7da665ca5be8efb8099893e87fd49",
+      "data/raw/12tw__data__slice_13.json": "87c2b229d08e0110dce3b05245bbdd3b1612cf28e07e741d496ec10afe00f946",
+      "data/raw/12tw__data__slice_14.json": "25f73dca0039731e73c5dd1e7351515cccebe349de5a0f6f2f0fc7c7b92f3201",
+      "data/raw/12tw__data__slice_15.json": "d104a0173fb3c45c9ab78041cd4f503a08d2d9b9bb2639daa5efcbf42c4600ad",
+      "data/raw/12tw__data__slice_16.json": "8c28d5a58fe6d983a049265a2d6564b7873d2a4ee0ac8e85359fddc1ac93b715",
+      "data/raw/12tw__data__slice_17.json": "f0b9396bb8a64304dc31981236af815b67d62e71a70c421e4266db37d59ab988",
+      "data/raw/12tw__data__slice_2.json": "bc503793d139333b10452dcab30455946b8db8dba792669eddf434634f654f1b",
+      "data/raw/12tw__data__slice_3.json": "ad71899695c84490e51eeddad47a2ca8446762450661931cba9ed9620b8b3972",
+      "data/raw/12tw__data__slice_4.json": "a7d170d4691878cbf5e8ac924c9485e891b1d0cad5149c253c428d7de8f1200e",
+      "data/raw/12tw__data__slice_5.json": "b7da70a8ef66445ebff4468fcddc35b5e9e7110d09f378f6930f651a6550e3ed",
+      "data/raw/12tw__data__slice_6.json": "636bd36a05ebc4711d78d7074634936a27e4d9c80a90588908509d3504711798",
+      "data/raw/12tw__data__slice_7.json": "654f0a596fa2df393c6e29bee33c099e5dc96873ef8a301d07beaeecf0297b86",
+      "data/raw/12tw__data__slice_8.json": "4e1dba6999112c5c26a0a4a237c67f60bb3ad9d0c08cf67c792c8e289897be09",
+      "data/raw/12tw__data__slice_9.json": "cee4a194ed37a9ff9e6468ca98228552cd58c333fcee0a286d843ca1877bf807"
+    },
+    "input_files": {
+      "configs/data.yaml": "091631efa99dc55ccb9112d80e39546161bb5feafe2aa39a10cd9603d122b478",
+      "data/manifests/_dimension_catalog.json": "694cdcf9ef201d90536a57fa60cc5f3da255d2d2a15849f3472e15f7b66cd143"
+    },
+    "aggregation_rule": "end_of_quarter"
   },
   "12r5": {
     "status": "passed",
@@ -52,6 +125,19 @@
     "time_last": "2026Q2",
     "duplicate_keys": 0,
     "series_with_gaps": 0,
-    "bad_source_months": 0
+    "bad_source_months": 0,
+    "schema_version": 2,
+    "normalized_csv": {
+      "path": "data/processed/12r5__normalized.csv",
+      "sha256": "74fd225bcc4bb1669ec2300ad345ce22f5a6d1e23bd9fe26bc18c4b11b3513f1"
+    },
+    "raw_slices": {
+      "data/raw/12r5__data__slice_0.json": "4f77d812be45d8444b5922371caf11795fff7b9251640192294b06795f59bfb5"
+    },
+    "input_files": {
+      "configs/data.yaml": "091631efa99dc55ccb9112d80e39546161bb5feafe2aa39a10cd9603d122b478",
+      "data/manifests/_dimension_catalog.json": "694cdcf9ef201d90536a57fa60cc5f3da255d2d2a15849f3472e15f7b66cd143"
+    },
+    "aggregation_rule": "end_of_quarter"
   }
 }
