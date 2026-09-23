@@ -1,11 +1,10 @@
 # RAG and citation layer configuration.
 
-# Chunking. Start at 512 tokens, small overlap, then tune on a Finnish
-# retrieval evaluation set.
+# Chunking. Plain character-based sliding window, start here then tune
+# on a Finnish retrieval evaluation set.
 chunking:
-  chunk_size_tokens: 512
-  chunk_overlap_tokens: 64
-  splitter: "recursive"
+  chunk_size: 800
+  chunk_overlap: 100
 
 # Embedding model candidates, ordered by preference for Finnish.
 # bge-m3 is multilingual and handles Finnish; multilingual-e5-base is the
@@ -20,14 +19,15 @@ embedding_candidates:
 # be persisted to durable storage (Drive when on Colab).
 vector_store:
   backend: "chromadb"
-  persist_dir: "data/processed/chroma"
+  persist_dir: "data/processed/rag/chroma"
   collection_name: "jobai_corpus"
 
 # Treat legacy mol.fi RSS endpoints as
 # unverified until they are explicitly added to this list by a team decision.
 sources:
   - type: "statfin_release_page"
-    base_url: "https://stat.fi/en/releases-and-publications"
+    # Corrected 2026-09-21: the previous URL (/en/releases-and-publications) returned 404.
+    base_url: "https://stat.fi/en/statistics/atp"
     language: "en"
   - type: "statfin_future_releases"
     base_url: "https://stat.fi/en/future-releases"

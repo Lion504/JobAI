@@ -39,6 +39,10 @@ ENV/
 *.hdf5
 *.jsonl
 
+# RAG source documents and derived index (some are In Copyright; keep only manifests in git)
+data/raw/rag/
+data/processed/rag/
+
 # Models
 models/*.pt
 models/*.pth
@@ -76,3 +80,8 @@ htmlcov/
 AGENTS.md
 kilo.json
 plan.md
+
+# AI assistant project files (not part of the submission)
+.claude/
+CLAUDE.md
+.mcp.json
