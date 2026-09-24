@@ -31,7 +31,11 @@ def check_fast_kernels(model_id, required=True):
 def base_directory(repo, model_id, download=False):
     path = Path(repo) / "models/base" / model_id.replace("/", "--")
     ready = path / ".download_complete"
-    if not ready.exists():
+    index = path / "model.safetensors.index.json"
+    weights = set(read_json(index)["weight_map"].values()) if index.exists() else {"model.safetensors"}
+    complete = ((path / "config.json").is_file() and bool(weights) and
+                all((path / name).is_file() and (path / name).stat().st_size > 0 for name in weights))
+    if not ready.exists() and not complete:
         assert download, f"Missing cached base model: {path}. Download it with 06 or restore its cache; 07 never silently downloads."
         from huggingface_hub import HfApi, snapshot_download
         revision = HfApi().model_info(model_id).sha
@@ -41,7 +45,7 @@ def base_directory(repo, model_id, download=False):
     assert (path / "config.json").is_file(), f"Incomplete base cache: {path}"
     index = path / "model.safetensors.index.json"
     weights = set(read_json(index)["weight_map"].values()) if index.exists() else {"model.safetensors"}
-    assert all((path / name).is_file() and (path / name).stat().st_size > 0 for name in weights), f"Missing base weight shards: {path}"
+    assert weights and all((path / name).is_file() and (path / name).stat().st_size > 0 for name in weights), f"Missing base weight shards: {path}"
     if not ready.exists():
         ready.write_text(model_id + "\n", encoding="utf-8")
     return path

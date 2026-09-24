@@ -223,6 +223,28 @@ def test_base_cache_never_downloads_in_evaluation(tmp_path):
     assert base_directory(tmp_path, 'Qwen/Qwen3-4B') == base
 
 
+@pytest.mark.parametrize('sharded', [False, True])
+def test_complete_base_cache_is_reused_without_marker(tmp_path, monkeypatch, sharded):
+    import sys
+    from types import SimpleNamespace
+    def no_network(*args, **kwargs):
+        pytest.fail('A complete saved base must not access the model hub.')
+    monkeypatch.setitem(sys.modules, 'huggingface_hub',
+                        SimpleNamespace(HfApi=no_network, snapshot_download=no_network))
+    base = tmp_path / 'models/base/Qwen--Qwen3-4B'
+    base.mkdir(parents=True)
+    (base / 'config.json').write_text('{}')
+    weights = ['shard-1.safetensors', 'shard-2.safetensors'] if sharded else ['model.safetensors']
+    if sharded:
+        write_json(base / 'model.safetensors.index.json', {'weight_map': dict(enumerate(weights))})
+    for name in weights:
+        (base / name).write_bytes(b'fixture')
+    for download in (False, True):
+        assert not (base / '.download_complete').exists()
+        assert base_directory(tmp_path, 'Qwen/Qwen3-4B', download=download) == base
+        (base / '.download_complete').unlink()
+
+
 def test_notebook_structure_and_shared_defaults():
     import nbformat
     for name in ['02_normalize_and_validate_data', '03_eda_and_series_selection', '04_baselines_and_rolling_evaluation', '05_prepare_panel_dataset',
