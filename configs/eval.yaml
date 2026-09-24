@@ -16,8 +16,9 @@ splits:
 # Forecast horizons, in quarters.
 horizons: [1, 2, 4]
 
-# Input feature window length, in quarters.
-feature_window_quarters: 8
+# Input feature window length, in quarters. Twelve quarters expose three annual
+# cycles while remaining short enough for the Qwen3-4B Colab training profile.
+feature_window_quarters: 12
 
 # Derived only from information available at the forecast origin. Notebook 05
 # stores these with every example; notebooks 04 and 06 use the same definitions.
@@ -34,9 +35,12 @@ engineered_features:
   - window_std_scaled
   - zero_fraction_window
 
-# Future controlled experiments may change the active window to 12 or 16 and
-# rebuild notebooks 04-07. The current comparable production window remains 8.
+# Historical adapters may use other windows; record those per adapter in 07.
 feature_window_candidates: [8, 12, 16]
+
+# Shared training consumes the combined files. Historical horizon exports may
+# remain on disk, but are not read by notebooks 06/07 and are never auto-deleted.
+export_horizon_files: false
 
 # Metrics to report per (series, horizon, split). All four are required.
 metrics:
@@ -52,7 +56,7 @@ baselines:
   - name: "last_value"
     description: "Value at origin+h equals value at origin."
   - name: "linear_regression"
-    description: "Ridge regression on the 8-quarter lag window."
+    description: "Ridge regression on the configured quarterly lag window."
   - name: "ridge_enhanced"
     description: "Ridge regression on the same lag window plus origin-safe trend, seasonality, volatility, and zero-pattern features."
 
@@ -61,10 +65,22 @@ panel_selection:
   minimum_non_null_quarters: 48
   maximum_zero_fraction: 0.50
   minimum_variance: 1.0e-12
-  target_tables: ["12tu", "12tw"]
+  # All five tables contribute direct forecast targets. ATP series preserve
+  # official national/broad-region coverage, while KEHA contributes detailed
+  # occupation, industry, and geographic coverage.
+  target_tables: ["11l1", "11n1", "12tu", "12tw", "12r5"]
   target_contentscodes:
+    11l1: ["atp_lkm", "atp_eihoit", "atp_osa", "atp_maar", "atp_vaik"]
+    11n1: ["atp_lkm"]
     12tu: ["AVPAIKATYHT"]
     12tw: ["AVPAIKATLOPUSSA"]
+    12r5: ["AVPAIKATLOPUSSA", "UUDETAVP"]
+  # 11n1/SSS duplicates the authoritative 11l1 national vacancy series.
+  # 12r5 province-level end-of-month totals duplicate 12tw total-industry rows
+  # when the same province exists in 12tw. Notebook 03 detects the exact set.
+  duplicate_precedence:
+    national_atp: "11l1"
+    province_end_of_month_keha: "12tw"
 
 # Fine-tuning is gated on the panel produced by notebook 05.
 finetuning_gate:

@@ -1,5 +1,5 @@
 {
-  "name": "JobAI KEHA panel forecasting dataset",
+  "name": "JobAI shared quarterly forecasting dataset",
   "responsibility": "dataset construction only; no model training",
   "feature_window_quarters": 8,
   "horizons_q": [
@@ -14,21 +14,33 @@
     "test_start": "2024Q3",
     "test_end": "2026Q1"
   },
-  "feature_set": "enhanced_v1",
-  "engineered_features": [
-    "quarter_of_year",
-    "qoq_change_scaled",
-    "yoy_change_scaled",
-    "recent_mean_4_scaled",
-    "window_mean_scaled",
-    "recent_slope_4_scaled",
-    "window_slope_scaled",
-    "recent_std_4_scaled",
-    "window_std_scaled",
-    "zero_fraction_window"
-  ],
+  "feature_set": "legacy_v1",
+  "engineered_features": [],
+  "hierarchical_context": "none",
   "selected_panel_series": 1679,
-  "selection_catalog_sha256": "76098f9dc553cafd7c73b3d58ce54b0c5ae174d41fb13390ffe47b1deff8e570",
+  "selected_series_by_table": {
+    "12tu": 842,
+    "12tw": 837
+  },
+  "selection_catalog_sha256": "2ad7699425d050969b76fbe2e1a017367c23f43b6e14854aa8619cd592826bf3",
+  "baseline_manifest_sha256": "985fef7dd8e5295c9217236ce7cd0116886fb112d84ccae2741b8dd2cdec610f",
+  "horizon_counts": {
+    "train": {
+      "1": 52668,
+      "2": 51066,
+      "4": 47993
+    },
+    "validation": {
+      "1": 7212,
+      "2": 5793,
+      "4": 2924
+    },
+    "test": {
+      "1": 7240,
+      "2": 6285,
+      "4": 4284
+    }
+  },
   "gate": {
     "normalization_assertions_passed": true,
     "baseline_report_present": true,
@@ -44,22 +56,23 @@
     "combined": {
       "path": "data/processed/panel_forecasting_dataset.parquet",
       "rows": 185465,
-      "sha256": "6f0bc1d3ea5b4d8f219c5bf96a16168894c05e51ebde9d67a135081216c3c11b"
+      "sha256": "8a59cc03a6da1c353a17fd7fa726c5740da64e0d0d064a905b1548a84525bdbb"
     },
     "train": {
       "path": "data/processed/panel_train.jsonl",
       "rows": 151727,
-      "sha256": "230f8301308163d92b4c7515b92074f3472b03271905743723b018e8e080e7b5"
+      "sha256": "71ab055ab3c5255de7d2ac1074d71fe3c163fba33279e3f2067c4524e942eba8"
     },
     "validation": {
       "path": "data/processed/panel_validation.jsonl",
       "rows": 15929,
-      "sha256": "8d987055261a81c4b5949a5ab98f553843616ac3a3ba0905c3ef32b0342e5c70"
+      "sha256": "f610d14bf5f7a047425ed5bc43b1a979aa6fba92d395965fa3c4ba5b21efe39f"
     },
     "test": {
       "path": "data/processed/panel_test.jsonl",
       "rows": 17809,
-      "sha256": "1a2b059e33bd4fe70ea42c16759f0b458c326d96411ef813d2f79672ef48553b"
+      "sha256": "438ab13783a29b751673afbfea3781ea16e4050e4b2f6f7b3b4cd6ee3996057e"
     }
-  }
+  },
+  "horizon_files": {}
 }

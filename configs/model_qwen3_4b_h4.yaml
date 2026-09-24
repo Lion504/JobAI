@@ -1,0 +1,15 @@
+# Horizon-specific pilot profile. Notebook 06 merges this file over model.yaml.
+extends: "model.yaml"
+profile_name: "qwen3_4b_h4"
+training:
+  training_horizons: [4]
+  # About 500 prompt tokens: batch 10 exhausts an A100-40GB; batch 8 is stable
+  # without enabling slower activation checkpointing.
+  per_device_train_batch_size: 8
+  gradient_accumulation_steps: 1
+  gradient_checkpointing: false
+  max_train_examples: 60000
+  max_validation_examples: 1000
+  max_seq_length: 550
+  sampling_strategy: "balanced_v1"
+  always_include_tables: ["11l1", "11n1"]

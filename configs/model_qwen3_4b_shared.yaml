@@ -1,0 +1,63 @@
+# Active training profile. The selected SAVED adapter is pinned separately in final_model.yaml.
+# Restore the shared legacy design from d8f7cf8 without reverting cache/safety fixes.
+candidate_to_run: Qwen/Qwen3-4B
+profile_name: qwen3_4b_shared_legacy
+evaluation_config: configs/eval_qwen3_4b_legacy.yaml
+candidates:
+  - id: Qwen/Qwen3-4B
+    architecture: causal_lm
+    expected_size_b: 4
+    # This batch/checkpointing combination targets the previously used A100 40GB.
+    # Memory is not guaranteed; reduce batch or enable checkpointing if needed.
+    minimum_vram_gb: 38
+    training_mode: qlora_4bit
+    freeze_vision: false
+    require_fast_kernels: false
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  bias: none
+  task_type: CAUSAL_LM
+training:
+  output_root: models/adapters
+  feature_set: legacy_v1
+  prompt_schema: legacy_v1
+  training_horizons: [1, 2, 4]
+  sampling_strategy: deterministic_hash_v1
+  always_include_tables: []
+  num_train_epochs: 1
+  per_device_train_batch_size: 18
+  per_device_eval_batch_size: 18
+  gradient_accumulation_steps: 1
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  optim: adamw_torch
+  # Same legacy prompt. A local sample reached 258 tokens including the answer,
+  # so keep a safer ceiling than the old 256. Dynamic padding uses actual lengths.
+  # Every record is checked; never truncate a completion to fit.
+  max_seq_length: 384
+  logging_steps: 10
+  save_steps: 2000
+  eval_steps: 2000
+  eval_strategy: steps
+  save_total_limit: 2
+  fp16: false
+  bf16: true
+  gradient_checkpointing: false
+  seed: 42
+  # All eligible mixed-horizon training records (151,727 in the saved snapshot).
+  max_train_examples: null
+  max_validation_examples: 1000
+  generation_batch_size: 4
+  validation_forecasts_per_horizon: 96
+  max_new_tokens: 64
+  speed_report_step: 20
+  resume_from_checkpoint: null
+checkpoint_selection:
+  strategy: final_epoch
+  primary_metric: val_sMAPE_macro
+  secondary_metric: parse_success_rate

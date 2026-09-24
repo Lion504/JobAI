@@ -1,0 +1,38 @@
+# Active shared Qwen3-4B design: eight-quarter history, KEHA occupation/industry targets.
+# Other normalized tables remain benchmarks/context; no sources are deleted.
+splits:
+  train_end: 2022Q4
+  val_start: 2023Q1
+  val_end: 2024Q2
+  test_start: 2024Q3
+  test_end: 2026Q1
+horizons: [1, 2, 4]
+feature_window_quarters: 8
+engineered_feature_set: legacy_v1
+engineered_features: []
+hierarchical_context: false
+export_horizon_files: false
+metrics: [MAE, RMSE, MASE, sMAPE]
+baselines:
+  - name: seasonal_naive
+  - name: last_value
+  - name: linear_regression
+  - name: ridge_enhanced
+panel_selection:
+  minimum_non_null_quarters: 48
+  maximum_zero_fraction: 0.50
+  minimum_variance: 1.0e-12
+  target_tables: [12tu, 12tw]
+  # Retain all-table catalog/EDA; only target_tables feed 04/05/06.
+  target_contentscodes:
+    11l1: [atp_lkm, atp_eihoit, atp_osa, atp_maar, atp_vaik]
+    11n1: [atp_lkm]
+    12tu: [AVPAIKATYHT]
+    12tw: [AVPAIKATLOPUSSA]
+    12r5: [AVPAIKATLOPUSSA, UUDETAVP]
+finetuning_gate:
+  minimum_selected_panel_series: 100
+  minimum_train_examples: 10000
+  require_normalization_assertions: true
+  require_baseline_report: true
+seed: 42

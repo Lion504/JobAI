@@ -1,0 +1,36 @@
+# Explicit comparison roster: no discovery of every adapter or three-run gate.
+current_run_id: null # null uses the shared latest pointer written by notebook 06
+test_examples_per_horizon: 1000
+generation_batch_size: 40
+max_new_tokens: 64
+primary_metric: sMAPE_pct
+minimum_parse_success: 0.99
+previous_runs:
+  - run_id: qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z
+    label: qwen3_4b_enhanced_75000
+    base_model: Qwen/Qwen3-4B
+    train_examples: 75000
+    prompt_schema: enhanced_shared_v1
+    history_quarters: 12
+    max_seq_length: 768
+  - run_id: qwen-qwen3-4b__20260919T125120Z
+    label: qwen3_4b_legacy_151727
+    base_model: Qwen/Qwen3-4B
+    train_examples: 151727
+    prompt_schema: legacy_v1
+    history_quarters: 8
+    max_seq_length: 768
+  - run_id: qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z
+    label: qwen3_4b_enhanced_6000
+    base_model: Qwen/Qwen3-4B
+    train_examples: 6000
+    prompt_schema: enhanced_shared_v1
+    history_quarters: 12
+    max_seq_length: 768
+# These history/prompt compatibility declarations preserve the preceding 07
+# comparison protocol. Original training manifests are missing locally: they
+# are NOT independently verified historical training settings. 07 records this
+# limitation, uses an original manifest when available, and never infers a
+# window from a model/folder name. Confirm declarations from Colab evidence.
+# max_seq_length here is a non-truncating inference safety limit, NOT a claim
+# about the sequence limit used in the old training runs.

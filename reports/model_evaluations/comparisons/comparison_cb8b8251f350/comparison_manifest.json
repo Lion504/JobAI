@@ -1,0 +1,34 @@
+{
+  "selected_run_ids": [
+    "qwen-qwen3-4b__20260919T083224Z",
+    "qwen-qwen3-4b__20260919T125120Z",
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z",
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z"
+  ],
+  "selected_feature_sets": [
+    "legacy_v1",
+    "legacy_v1",
+    "enhanced_v1",
+    "enhanced_v1"
+  ],
+  "selected_max_seq_lengths": [
+    256,
+    256,
+    384,
+    384
+  ],
+  "panel_test_sha256": "9084f2f56b93096cb7efee6f4b4cad18c1b12b07dc22adb0a5d2d946aa0870c1",
+  "baseline_predictions_sha256": "53fb4ee0b091b95b3f117c8538d869a1a71f9ec6822e7f4f0c1b320e48d106d2",
+  "test_examples_per_horizon": 200,
+  "comparison_id": "cb8b8251f350",
+  "models": [
+    "last_value",
+    "qwen3_4b_enhanced_v1_h1-2-4_6000_examples",
+    "qwen3_4b_enhanced_v1_h1-2-4_75000_examples",
+    "qwen3_4b_legacy_v1_h1-2-4_151727_examples",
+    "qwen3_4b_legacy_v1_h1-2-4_6000_examples",
+    "ridge",
+    "seasonal_naive"
+  ],
+  "output_directory": "reports/model_evaluations/comparisons/comparison_cb8b8251f350"
+}

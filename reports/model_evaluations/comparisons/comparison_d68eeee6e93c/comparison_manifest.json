@@ -1,0 +1,68 @@
+{
+  "selected_run_ids": [
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z",
+    "qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T082714Z",
+    "qwen-qwen3-4b__20260919T083224Z",
+    "qwen-qwen3-4b__20260919T125120Z",
+    "qwen-qwen3-4b__qwen3_4b_h1__enhanced_v1__h1__20260920T141640Z",
+    "qwen-qwen3-4b__qwen3_4b_h2__enhanced_v1__h2__20260920T143643Z",
+    "qwen-qwen3-4b__qwen3_4b_h4__enhanced_v1__h4__20260920T150045Z"
+  ],
+  "selected_feature_sets": [
+    "enhanced_v1",
+    "enhanced_v1",
+    "legacy_v1",
+    "legacy_v1",
+    "enhanced_v1",
+    "enhanced_v1",
+    "enhanced_v1"
+  ],
+  "selected_comparison_roles": [
+    "previous_shared",
+    "previous_shared",
+    "previous_shared",
+    "previous_shared",
+    "current_horizon_specific",
+    "current_horizon_specific",
+    "current_horizon_specific"
+  ],
+  "selected_prompt_schemas": [
+    "enhanced_shared_v1",
+    "enhanced_shared_v1",
+    "legacy_v1",
+    "legacy_v1",
+    "five_table_context_v5",
+    "five_table_context_v5",
+    "five_table_context_v5"
+  ],
+  "selected_max_seq_lengths": [
+    512,
+    512,
+    256,
+    256,
+    512,
+    520,
+    550
+  ],
+  "panel_test_sha256": "1ee79979c1900726badb95800361deb5f0102758a2de47453dd6b1dce5f17353",
+  "baseline_predictions_sha256": "cc5fe1d4ff6aeb886b218cb44a9a6f6e3effbb15d601c25016024cdfdf08f335",
+  "test_examples_per_horizon": 1000,
+  "selected_example_ids_sha256": "4ec19acc3e6e8499df7d032c82a42e3a937959b537c882d536fd5e2bbd1087f1",
+  "common_scored_keys_sha256": "f0579c6bbcaed73e03b7655402ade8b9c243446edf7db9fe15905cd5578457b6",
+  "comparison_id": "d68eeee6e93c",
+  "replacement_passed": false,
+  "models": [
+    "last_value",
+    "qwen3_4b_new_enhanced_v1_h1_10000_examples_4",
+    "qwen3_4b_new_enhanced_v1_h2_10000_examples_5",
+    "qwen3_4b_new_enhanced_v1_h4_10000_examples_6",
+    "qwen3_4b_previous_enhanced_v1_h1-2-4_6000_examples_0",
+    "qwen3_4b_previous_enhanced_v1_h1-2-4_75000_examples_1",
+    "qwen3_4b_previous_legacy_v1_h1-2-4_151727_examples_3",
+    "qwen3_4b_previous_legacy_v1_h1-2-4_6000_examples_2",
+    "ridge",
+    "ridge_enhanced",
+    "seasonal_naive"
+  ],
+  "output_directory": "reports/model_evaluations/comparisons/comparison_d68eeee6e93c"
+}

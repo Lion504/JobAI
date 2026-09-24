@@ -44,14 +44,10 @@ data/raw/rag/
 data/processed/rag/
 
 # Models
-models/*.pt
-models/*.pth
-models/*.pkl
-models/*.joblib
-models/*.onnx
-models/checkpoints/
-models/runs/
-models/logs/
+models/adapters/qwen-qwen3-4b__20260919T083224Z
+models/adapters/qwen-qwen3-4b__qwen3_4b_h1__enhanced_v1__h1__20260920T184401Z
+models/adapters/qwen-qwen3-4b__enhanced_v1__h1-2-4__20260920T071954Z
+models/adapters/**/optimizer.pt
 
 # MLflow / experiment tracking
 mlruns/
@@ -80,8 +76,8 @@ htmlcov/
 AGENTS.md
 kilo.json
 plan.md
+reports/presentations/JobAI_Finnish_vacancy_forecasting_2026-09-22.pptx
 
-# AI assistant project files (not part of the submission)
 .claude/
 CLAUDE.md
 .mcp.json

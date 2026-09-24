@@ -1,6 +1,10 @@
 {
-  "dataset": "Dataset B: selected KEHA occupation and industry panel targets",
+  "dataset": "Quality-accepted direct targets allowed by the active evaluation profile",
   "series_count": 1679,
+  "series_by_table": {
+    "12tu": 842,
+    "12tw": 837
+  },
   "horizons_q": [
     1,
     2,
@@ -13,7 +17,7 @@
     "ridge",
     "ridge_enhanced"
   ],
-  "engineered_feature_set": "enhanced_v1",
+  "engineered_feature_set": "legacy_v1",
   "splits": {
     "train_end": "2022Q4",
     "val_start": "2023Q1",
@@ -22,18 +26,27 @@
     "test_end": "2026Q1"
   },
   "information_cutoff_assertion": "passed",
+  "selection_catalog_sha256": "2ad7699425d050969b76fbe2e1a017367c23f43b6e14854aa8619cd592826bf3",
+  "normalized_inputs": {
+    "data/processed/12tu__normalized.csv": "fb0873f5a5e750348df1857ddcf6ec4325a94f0950a2188c3e7328a888d5ea74",
+    "data/processed/12tw__normalized.csv": "9247f5e9ee4c85656b4194c3ed0b72e16ba16b16b3fe0840b50dfd569cec9e03"
+  },
   "outputs": {
     "reports/baseline_predictions.csv": {
       "rows": 168692,
-      "sha256": "25145781f6c6369cf170d0a39a98bbb8e9e621c84d3d47b42e6a63a66c05e564"
+      "sha256": "4383fe38f169d534055f8b3382ed2df039d52917e70665eba15fd06ed04de07f"
     },
     "reports/baseline_metrics_by_series.csv": {
       "rows": 32868,
-      "sha256": "0bd1d2151365128274015ff2dfc42c8fa9447170cb192e444e2472cbfbfe0c98"
+      "sha256": "95ee0ff7b6c7387e36039ba7af7a3109f78c18001e2af3b138f96c7f5da8951f"
     },
     "reports/baselines.csv": {
       "rows": 24,
       "sha256": "5f92231aee5ed374c05558a7a5a8edfe139e06b5936edf0a6d6644b5723f9b23"
+    },
+    "reports/baselines_by_scope.csv": {
+      "rows": 48,
+      "sha256": "2aee374db5847efd7bb7c653a18d8e2330546401c0966ecbc7922e0ea9f806e1"
     }
   }
 }
