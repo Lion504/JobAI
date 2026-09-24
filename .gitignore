@@ -39,6 +39,10 @@ ENV/
 *.hdf5
 *.jsonl
 
+# RAG source documents and derived index (some are In Copyright; keep only manifests in git)
+data/raw/rag/
+data/processed/rag/
+
 # Models
 models/adapters/qwen-qwen3-4b__20260919T083224Z
 models/adapters/qwen-qwen3-4b__qwen3_4b_h1__enhanced_v1__h1__20260920T184401Z
@@ -73,3 +77,7 @@ AGENTS.md
 kilo.json
 plan.md
 reports/presentations/JobAI_Finnish_vacancy_forecasting_2026-09-22.pptx
+
+.claude/
+CLAUDE.md
+.mcp.json
