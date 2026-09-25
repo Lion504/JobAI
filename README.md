@@ -2,7 +2,7 @@
 
 JobAI is a team project that explores whether a fine-tuned language model can improve forecasts of Finnish job vacancies. It uses official Statistics Finland and KEHA data to predict vacancy counts **1, 2, and 4 quarters ahead**—roughly 3, 6, and 12 months.
 
-The forecasting pipeline downloads and checks the data, builds training examples, and compares the model with simple forecasting methods. A planned explanation layer will use retrieval-augmented generation (RAG) to find relevant official publications and explain forecasts with citations.
+The forecasting pipeline downloads and checks the data, builds training examples, and compares the model with simple forecasting methods. The RAG explanation layer retrieves official bulletin passages for text answers with checked source IDs and quotes. RAG supplies context; it does not change the numeric forecasts.
 
 ## Current status
 
@@ -55,7 +55,7 @@ A *forecast origin* is the quarter when the prediction is made. Each example con
 
 ## Workflow
 
-Run the main notebooks in order. Each saves the inputs needed by the next step.
+Run the preparation notebooks in order when rebuilding inputs; reuse saved outputs when available. Notebook 06 is only needed for new fine-tuning.
 
 | Step | Notebook                                                                  | Purpose                                         |
 | ---- | ------------------------------------------------------------------------- | ----------------------------------------------- |
@@ -67,8 +67,19 @@ Run the main notebooks in order. Each saves the inputs needed by the next step.
 | 05   | [Prepare the panel](notebooks/05_prepare_panel_dataset.ipynb)             | Build training, validation, and test examples   |
 | 06   | [Fine-tune the model](notebooks/06_finetune_model.ipynb)                  | Train one adapter for all three horizons        |
 | 07   | [Evaluate the model](notebooks/07_evaluate_model.ipynb)                   | Compare forecasts on matching test cases        |
+| 08   | [Collect documents](notebooks/08_collect_documents.ipynb)               | Save official publications and document metadata |
+| 09   | [Build the RAG index](notebooks/09_build_index.ipynb)                    | Chunk and embed documents in persistent Chroma storage |
+| 10   | [Search and explain](notebooks/10_search_and_explain.ipynb)              | Demonstrate saved-model forecasts and bulletin context |
+| 11   | [Evaluate RAG](notebooks/11_evaluate_rag.ipynb)                          | Check retrieval quality and review citations |
+| 12   | [Forecast chat with RAG](notebooks/12_forecast_chat_with_rag.ipynb)        | Route text questions to forecasts and cited explanations |
 
 The classification notebook, separate horizon profiles, and larger-model experiment are optional work outside this main sequence.
+
+### Use forecast chat in Colab
+
+Run **12** in a GPU runtime with the full `jobai/` folder, configs, saved data/metadata, pinned adapter and its evaluation manifest, and cached base model restored. Also keep `data/processed/rag/chroma/` and `models/embeddings/BAAI--bge-m3/`. Run **08 → 09** if the index is missing; 10 and 11 are separate demo/evaluation notebooks, not prerequisites for 12. If the embedding model is absent from both saved and runtime caches, set `ALLOW_EMBEDDING_DOWNLOAD = True` once in 12 to save it.
+
+Edit `USER_QUESTION` in the last cell and rerun it; `CHAT_CONTEXT` carries follow-up questions. Supported requests cover selected `12tu`/`12tw` province/occupation or province/industry series at 1Q/2Q/4Q. The reusable backend is [jobai/chat.py](jobai/chat.py), with question routing in [jobai/question_routing.py](jobai/question_routing.py); a Streamlit interface is not yet implemented. Using saved assets requires no fine-tuning.
 
 ### Use the final model or run a new shared experiment in Colab
 
@@ -80,7 +91,7 @@ Reproduce that experiment only by explicitly setting `JOBAI_MODEL_CONFIG=configs
 
 Keep existing adapters, reports, and caches. See the [adapter retention guide](docs/adapter_retention.md) for the required files.
 
-Notebook 02 now has one normalization stage and publishes a checksum-bearing validation report only after all tables pass. Run the updated 02 once if a later notebook reports that the old validation report lacks fingerprints. Identical CSV contents keep the same checksums: matching 03–05 outputs remain reusable, and no adapter retraining is needed. If normalized values change, refresh 03–05. The [normalization compatibility check](docs/normalization_compatibility.md) confirmed that all five updated CSVs match the legacy-era code and the existing local CSVs byte-for-byte.
+Notebook 02 now has one normalization stage and publishes a checksum-bearing validation report only after all tables pass. Run the updated 02 once if notebooks 03–07 report that the old validation report lacks fingerprints; forecast notebooks 10 and 12 also accept older passed reports and check the forecast history without requiring a rerun of 02. Identical CSV contents keep the same checksums: matching 03–05 outputs remain reusable, and no adapter retraining is needed. If normalized values change, refresh 03–05. The [normalization compatibility check](docs/normalization_compatibility.md) confirmed that all five updated CSVs match the legacy-era code and the existing local CSVs byte-for-byte.
 
 ## Model and evaluation
 

@@ -1,0 +1,4 @@
+run_id,series_id,origin_quarter,target_quarter,horizon_q,last_value,y_pred,response
+qwen-qwen3-4b__20260919T125120Z,12tu::Alue=MK01|Ammattiryhmä=2142|Työmarkkina-asema=SSS|contentscode=AVPAIKATYHT,2026Q2,2026Q3,1,64.0,53.0,"{""target_scaled_change"": -0.171875}"
+qwen-qwen3-4b__20260919T125120Z,12tu::Alue=MK01|Ammattiryhmä=2142|Työmarkkina-asema=SSS|contentscode=AVPAIKATYHT,2026Q2,2026Q4,2,64.0,49.0,"{""target_scaled_change"": -0.234375}"
+qwen-qwen3-4b__20260919T125120Z,12tu::Alue=MK01|Ammattiryhmä=2142|Työmarkkina-asema=SSS|contentscode=AVPAIKATYHT,2026Q2,2027Q2,4,64.0,60.0,"{""target_scaled_change"": -0.0625}"

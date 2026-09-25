@@ -1,0 +1,31 @@
+table_id,category,observation
+11l1,missing_values,none: 270 cells fully populated across 1 slice(s)
+11l1,inconsistent_categories,all 59 category labels present across 1 slice(s)
+11l1,duplicate_observations,"none: 270 non-null rows, 270 unique (dim-tuple) keys"
+11l1,incorrect_unexpected_dtypes,"raw JSON values: 270 numeric, 0 null, 0 string-marker"
+11l1,potential_outliers,"2 raw values above p99.5=77,867 (REPORT ONLY - no action)"
+11l1,irrelevant_redundant_variables,none declared in configs/data_quality.yaml
+11n1,missing_values,none: 270 cells fully populated across 1 slice(s)
+11n1,inconsistent_categories,all 60 category labels present across 1 slice(s)
+11n1,duplicate_observations,"none: 270 non-null rows, 270 unique (dim-tuple) keys"
+11n1,incorrect_unexpected_dtypes,"raw JSON values: 270 numeric, 0 null, 0 string-marker"
+11n1,potential_outliers,"2 raw values above p99.5=77,867 (REPORT ONLY - no action)"
+11n1,irrelevant_redundant_variables,none declared in configs/data_quality.yaml
+12tu,missing_values,"101,912 null and 0 suppressed (string-marker) cells out of 445,284"
+12tu,inconsistent_categories,"all 2,329 category labels present across 5 slice(s)"
+12tu,duplicate_observations,"none: 445,284 non-null rows, 343,372 unique (dim-tuple) keys"
+12tu,incorrect_unexpected_dtypes,"raw JSON values: 343,372 numeric, 101,912 null, 0 string-marker"
+12tu,potential_outliers,1716 raw values above p99.5=703 (REPORT ONLY - no action)
+12tu,irrelevant_redundant_variables,declared: timeperiod_m
+12tw,missing_values,"91,948 null and 0 suppressed (string-marker) cells out of 453,017"
+12tw,inconsistent_categories,"all 2,641 category labels present across 18 slice(s)"
+12tw,duplicate_observations,"none: 453,017 non-null rows, 361,069 unique (dim-tuple) keys"
+12tw,incorrect_unexpected_dtypes,"raw JSON values: 361,069 numeric, 91,948 null, 0 string-marker"
+12tw,potential_outliers,"1805 raw values above p99.5=2,247 (REPORT ONLY - no action)"
+12tw,irrelevant_redundant_variables,declared: timeperiod_m
+12r5,missing_values,"6,664 null and 0 suppressed (string-marker) cells out of 58,940"
+12r5,inconsistent_categories,all 493 category labels present across 1 slice(s)
+12r5,duplicate_observations,"none: 58,940 non-null rows, 52,276 unique (dim-tuple) keys"
+12r5,incorrect_unexpected_dtypes,"raw JSON values: 52,276 numeric, 6,664 null, 0 string-marker"
+12r5,potential_outliers,"261 raw values above p99.5=17,004 (REPORT ONLY - no action)"
+12r5,irrelevant_redundant_variables,declared: timeperiod_m

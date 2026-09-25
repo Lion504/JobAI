@@ -1,0 +1,271 @@
+table_id,contentscode,timeperiod_q,contentscode_text,timeperiod_q_text,value,value_str,source,updated
+11l1,atp_lkm,2013Q1,Job vacancies,2013Q1,45300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2013Q2,Job vacancies,2013Q2,32500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2013Q3,Job vacancies,2013Q3,23500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2013Q4,Job vacancies,2013Q4,16600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2014Q1,Job vacancies,2014Q1,46000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2014Q2,Job vacancies,2014Q2,27800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2014Q3,Job vacancies,2014Q3,20500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2014Q4,Job vacancies,2014Q4,19800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2015Q1,Job vacancies,2015Q1,43900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2015Q2,Job vacancies,2015Q2,28800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2015Q3,Job vacancies,2015Q3,21200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2015Q4,Job vacancies,2015Q4,21900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2016Q1,Job vacancies,2016Q1,48000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2016Q2,Job vacancies,2016Q2,30600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2016Q3,Job vacancies,2016Q3,30800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2016Q4,Job vacancies,2016Q4,26400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2017Q1,Job vacancies,2017Q1,58000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2017Q2,Job vacancies,2017Q2,36800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2017Q3,Job vacancies,2017Q3,34300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2017Q4,Job vacancies,2017Q4,37200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2018Q1,Job vacancies,2018Q1,60100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2018Q2,Job vacancies,2018Q2,49500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2018Q3,Job vacancies,2018Q3,46900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2018Q4,Job vacancies,2018Q4,41000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2019Q1,Job vacancies,2019Q1,63100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2019Q2,Job vacancies,2019Q2,50900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2019Q3,Job vacancies,2019Q3,48500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2019Q4,Job vacancies,2019Q4,37500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2020Q1,Job vacancies,2020Q1,63300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2020Q2,Job vacancies,2020Q2,35400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2020Q3,Job vacancies,2020Q3,43000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2020Q4,Job vacancies,2020Q4,33400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2021Q1,Job vacancies,2021Q1,59500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2021Q2,Job vacancies,2021Q2,51100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2021Q3,Job vacancies,2021Q3,62400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2021Q4,Job vacancies,2021Q4,59100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2022Q1,Job vacancies,2022Q1,91600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2022Q2,Job vacancies,2022Q2,72300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2022Q3,Job vacancies,2022Q3,59000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2022Q4,Job vacancies,2022Q4,50300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2023Q1,Job vacancies,2023Q1,80800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2023Q2,Job vacancies,2023Q2,52700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2023Q3,Job vacancies,2023Q3,42400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2023Q4,Job vacancies,2023Q4,42000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2024Q1,Job vacancies,2024Q1,60000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2024Q2,Job vacancies,2024Q2,47000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2024Q3,Job vacancies,2024Q3,34600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2024Q4,Job vacancies,2024Q4,33000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2025Q1,Job vacancies,2025Q1,57500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2025Q2,Job vacancies,2025Q2,28900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2025Q3,Job vacancies,2025Q3,27100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2025Q4,Job vacancies,2025Q4,22700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2026Q1,Job vacancies,2026Q1,48600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_lkm,2026Q2,Job vacancies,2026Q2,29600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2013Q1,Unoccupied job vacancies,2013Q1,19900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2013Q2,Unoccupied job vacancies,2013Q2,15400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2013Q3,Unoccupied job vacancies,2013Q3,12200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2013Q4,Unoccupied job vacancies,2013Q4,7400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2014Q1,Unoccupied job vacancies,2014Q1,25000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2014Q2,Unoccupied job vacancies,2014Q2,16300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2014Q3,Unoccupied job vacancies,2014Q3,9500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2014Q4,Unoccupied job vacancies,2014Q4,10700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2015Q1,Unoccupied job vacancies,2015Q1,20400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2015Q2,Unoccupied job vacancies,2015Q2,16100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2015Q3,Unoccupied job vacancies,2015Q3,10000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2015Q4,Unoccupied job vacancies,2015Q4,12200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2016Q1,Unoccupied job vacancies,2016Q1,19400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2016Q2,Unoccupied job vacancies,2016Q2,14700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2016Q3,Unoccupied job vacancies,2016Q3,19000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2016Q4,Unoccupied job vacancies,2016Q4,11900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2017Q1,Unoccupied job vacancies,2017Q1,23300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2017Q2,Unoccupied job vacancies,2017Q2,22000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2017Q3,Unoccupied job vacancies,2017Q3,17800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2017Q4,Unoccupied job vacancies,2017Q4,18300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2018Q1,Unoccupied job vacancies,2018Q1,33400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2018Q2,Unoccupied job vacancies,2018Q2,26700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2018Q3,Unoccupied job vacancies,2018Q3,29400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2018Q4,Unoccupied job vacancies,2018Q4,22900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2019Q1,Unoccupied job vacancies,2019Q1,35100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2019Q2,Unoccupied job vacancies,2019Q2,29300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2019Q3,Unoccupied job vacancies,2019Q3,30000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2019Q4,Unoccupied job vacancies,2019Q4,21300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2020Q1,Unoccupied job vacancies,2020Q1,31100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2020Q2,Unoccupied job vacancies,2020Q2,20100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2020Q3,Unoccupied job vacancies,2020Q3,26600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2020Q4,Unoccupied job vacancies,2020Q4,18300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2021Q1,Unoccupied job vacancies,2021Q1,34600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2021Q2,Unoccupied job vacancies,2021Q2,28900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2021Q3,Unoccupied job vacancies,2021Q3,36700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2021Q4,Unoccupied job vacancies,2021Q4,35000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2022Q1,Unoccupied job vacancies,2022Q1,57900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2022Q2,Unoccupied job vacancies,2022Q2,43300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2022Q3,Unoccupied job vacancies,2022Q3,35900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2022Q4,Unoccupied job vacancies,2022Q4,31200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2023Q1,Unoccupied job vacancies,2023Q1,47100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2023Q2,Unoccupied job vacancies,2023Q2,31500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2023Q3,Unoccupied job vacancies,2023Q3,24600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2023Q4,Unoccupied job vacancies,2023Q4,26600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2024Q1,Unoccupied job vacancies,2024Q1,32200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2024Q2,Unoccupied job vacancies,2024Q2,26300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2024Q3,Unoccupied job vacancies,2024Q3,21100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2024Q4,Unoccupied job vacancies,2024Q4,17900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2025Q1,Unoccupied job vacancies,2025Q1,27400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2025Q2,Unoccupied job vacancies,2025Q2,15500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2025Q3,Unoccupied job vacancies,2025Q3,14900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2025Q4,Unoccupied job vacancies,2025Q4,13300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2026Q1,Unoccupied job vacancies,2026Q1,25200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_eihoit,2026Q2,Unoccupied job vacancies,2026Q2,14500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2013Q1,Part-time vacancies,2013Q1,13400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2013Q2,Part-time vacancies,2013Q2,6500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2013Q3,Part-time vacancies,2013Q3,6300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2013Q4,Part-time vacancies,2013Q4,1500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2014Q1,Part-time vacancies,2014Q1,10200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2014Q2,Part-time vacancies,2014Q2,8500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2014Q3,Part-time vacancies,2014Q3,3900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2014Q4,Part-time vacancies,2014Q4,4300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2015Q1,Part-time vacancies,2015Q1,8500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2015Q2,Part-time vacancies,2015Q2,6100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2015Q3,Part-time vacancies,2015Q3,6600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2015Q4,Part-time vacancies,2015Q4,4300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2016Q1,Part-time vacancies,2016Q1,9700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2016Q2,Part-time vacancies,2016Q2,8400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2016Q3,Part-time vacancies,2016Q3,5500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2016Q4,Part-time vacancies,2016Q4,5200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2017Q1,Part-time vacancies,2017Q1,13000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2017Q2,Part-time vacancies,2017Q2,4800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2017Q3,Part-time vacancies,2017Q3,6200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2017Q4,Part-time vacancies,2017Q4,6900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2018Q1,Part-time vacancies,2018Q1,15700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2018Q2,Part-time vacancies,2018Q2,9300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2018Q3,Part-time vacancies,2018Q3,7300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2018Q4,Part-time vacancies,2018Q4,6600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2019Q1,Part-time vacancies,2019Q1,11100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2019Q2,Part-time vacancies,2019Q2,6600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2019Q3,Part-time vacancies,2019Q3,8900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2019Q4,Part-time vacancies,2019Q4,6500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2020Q1,Part-time vacancies,2020Q1,11800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2020Q2,Part-time vacancies,2020Q2,5800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2020Q3,Part-time vacancies,2020Q3,9900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2020Q4,Part-time vacancies,2020Q4,5300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2021Q1,Part-time vacancies,2021Q1,11500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2021Q2,Part-time vacancies,2021Q2,10600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2021Q3,Part-time vacancies,2021Q3,11200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2021Q4,Part-time vacancies,2021Q4,9300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2022Q1,Part-time vacancies,2022Q1,15500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2022Q2,Part-time vacancies,2022Q2,12400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2022Q3,Part-time vacancies,2022Q3,9800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2022Q4,Part-time vacancies,2022Q4,7500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2023Q1,Part-time vacancies,2023Q1,19900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2023Q2,Part-time vacancies,2023Q2,9300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2023Q3,Part-time vacancies,2023Q3,7900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2023Q4,Part-time vacancies,2023Q4,10300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2024Q1,Part-time vacancies,2024Q1,12500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2024Q2,Part-time vacancies,2024Q2,9000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2024Q3,Part-time vacancies,2024Q3,5600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2024Q4,Part-time vacancies,2024Q4,7000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2025Q1,Part-time vacancies,2025Q1,10600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2025Q2,Part-time vacancies,2025Q2,4500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2025Q3,Part-time vacancies,2025Q3,5600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2025Q4,Part-time vacancies,2025Q4,3500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2026Q1,Part-time vacancies,2026Q1,9700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_osa,2026Q2,Part-time vacancies,2026Q2,5700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2013Q1,Fixed term vacancies,2013Q1,26600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2013Q2,Fixed term vacancies,2013Q2,11600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2013Q3,Fixed term vacancies,2013Q3,6800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2013Q4,Fixed term vacancies,2013Q4,5100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2014Q1,Fixed term vacancies,2014Q1,25000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2014Q2,Fixed term vacancies,2014Q2,14900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2014Q3,Fixed term vacancies,2014Q3,6600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2014Q4,Fixed term vacancies,2014Q4,6700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2015Q1,Fixed term vacancies,2015Q1,24100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2015Q2,Fixed term vacancies,2015Q2,12200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2015Q3,Fixed term vacancies,2015Q3,6700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2015Q4,Fixed term vacancies,2015Q4,8100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2016Q1,Fixed term vacancies,2016Q1,27800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2016Q2,Fixed term vacancies,2016Q2,13300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2016Q3,Fixed term vacancies,2016Q3,9200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2016Q4,Fixed term vacancies,2016Q4,8100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2017Q1,Fixed term vacancies,2017Q1,33200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2017Q2,Fixed term vacancies,2017Q2,12100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2017Q3,Fixed term vacancies,2017Q3,12500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2017Q4,Fixed term vacancies,2017Q4,9500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2018Q1,Fixed term vacancies,2018Q1,29400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2018Q2,Fixed term vacancies,2018Q2,19200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2018Q3,Fixed term vacancies,2018Q3,10000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2018Q4,Fixed term vacancies,2018Q4,11900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2019Q1,Fixed term vacancies,2019Q1,33000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2019Q2,Fixed term vacancies,2019Q2,16900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2019Q3,Fixed term vacancies,2019Q3,11100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2019Q4,Fixed term vacancies,2019Q4,11500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2020Q1,Fixed term vacancies,2020Q1,29700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2020Q2,Fixed term vacancies,2020Q2,14100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2020Q3,Fixed term vacancies,2020Q3,13100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2020Q4,Fixed term vacancies,2020Q4,9000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2021Q1,Fixed term vacancies,2021Q1,26600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2021Q2,Fixed term vacancies,2021Q2,18500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2021Q3,Fixed term vacancies,2021Q3,17600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2021Q4,Fixed term vacancies,2021Q4,17600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2022Q1,Fixed term vacancies,2022Q1,34400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2022Q2,Fixed term vacancies,2022Q2,21900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2022Q3,Fixed term vacancies,2022Q3,13000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2022Q4,Fixed term vacancies,2022Q4,14400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2023Q1,Fixed term vacancies,2023Q1,35800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2023Q2,Fixed term vacancies,2023Q2,16200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2023Q3,Fixed term vacancies,2023Q3,11200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2023Q4,Fixed term vacancies,2023Q4,12800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2024Q1,Fixed term vacancies,2024Q1,29300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2024Q2,Fixed term vacancies,2024Q2,16600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2024Q3,Fixed term vacancies,2024Q3,9500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2024Q4,Fixed term vacancies,2024Q4,9900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2025Q1,Fixed term vacancies,2025Q1,32100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2025Q2,Fixed term vacancies,2025Q2,11200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2025Q3,Fixed term vacancies,2025Q3,8500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2025Q4,Fixed term vacancies,2025Q4,6800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2026Q1,Fixed term vacancies,2026Q1,25000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_maar,2026Q2,Fixed term vacancies,2026Q2,10100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2013Q1,Hard-to-fill vacancies,2013Q1,14300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2013Q2,Hard-to-fill vacancies,2013Q2,15600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2013Q3,Hard-to-fill vacancies,2013Q3,12000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2013Q4,Hard-to-fill vacancies,2013Q4,7000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2014Q1,Hard-to-fill vacancies,2014Q1,11400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2014Q2,Hard-to-fill vacancies,2014Q2,10100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2014Q3,Hard-to-fill vacancies,2014Q3,8200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2014Q4,Hard-to-fill vacancies,2014Q4,8300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2015Q1,Hard-to-fill vacancies,2015Q1,10900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2015Q2,Hard-to-fill vacancies,2015Q2,12500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2015Q3,Hard-to-fill vacancies,2015Q3,9600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2015Q4,Hard-to-fill vacancies,2015Q4,9800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2016Q1,Hard-to-fill vacancies,2016Q1,13400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2016Q2,Hard-to-fill vacancies,2016Q2,15300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2016Q3,Hard-to-fill vacancies,2016Q3,12700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2016Q4,Hard-to-fill vacancies,2016Q4,13200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2017Q1,Hard-to-fill vacancies,2017Q1,16900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2017Q2,Hard-to-fill vacancies,2017Q2,20000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2017Q3,Hard-to-fill vacancies,2017Q3,17600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2017Q4,Hard-to-fill vacancies,2017Q4,19900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2018Q1,Hard-to-fill vacancies,2018Q1,27100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2018Q2,Hard-to-fill vacancies,2018Q2,26000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2018Q3,Hard-to-fill vacancies,2018Q3,26900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2018Q4,Hard-to-fill vacancies,2018Q4,24200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2019Q1,Hard-to-fill vacancies,2019Q1,27000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2019Q2,Hard-to-fill vacancies,2019Q2,30400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2019Q3,Hard-to-fill vacancies,2019Q3,32300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2019Q4,Hard-to-fill vacancies,2019Q4,21800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2020Q1,Hard-to-fill vacancies,2020Q1,30600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2020Q2,Hard-to-fill vacancies,2020Q2,15400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2020Q3,Hard-to-fill vacancies,2020Q3,23300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2020Q4,Hard-to-fill vacancies,2020Q4,15700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2021Q1,Hard-to-fill vacancies,2021Q1,25900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2021Q2,Hard-to-fill vacancies,2021Q2,29600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2021Q3,Hard-to-fill vacancies,2021Q3,41500,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2021Q4,Hard-to-fill vacancies,2021Q4,34300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2022Q1,Hard-to-fill vacancies,2022Q1,53000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2022Q2,Hard-to-fill vacancies,2022Q2,47200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2022Q3,Hard-to-fill vacancies,2022Q3,37700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2022Q4,Hard-to-fill vacancies,2022Q4,28700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2023Q1,Hard-to-fill vacancies,2023Q1,39800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2023Q2,Hard-to-fill vacancies,2023Q2,33100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2023Q3,Hard-to-fill vacancies,2023Q3,23700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2023Q4,Hard-to-fill vacancies,2023Q4,24400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2024Q1,Hard-to-fill vacancies,2024Q1,22800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2024Q2,Hard-to-fill vacancies,2024Q2,20000,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2024Q3,Hard-to-fill vacancies,2024Q3,17300,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2024Q4,Hard-to-fill vacancies,2024Q4,13100,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2025Q1,Hard-to-fill vacancies,2025Q1,17200,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2025Q2,Hard-to-fill vacancies,2025Q2,10600,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2025Q3,Hard-to-fill vacancies,2025Q3,8400,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2025Q4,Hard-to-fill vacancies,2025Q4,8700,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2026Q1,Hard-to-fill vacancies,2026Q1,12800,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
+11l1,atp_vaik,2026Q2,Hard-to-fill vacancies,2026Q2,9900,,"Statistics Finland, job vacancy survey",2026-08-20T05:00:00Z
