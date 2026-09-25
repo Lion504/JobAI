@@ -43,6 +43,34 @@ st.sidebar.markdown(
     "- **RAG**: BGE-M3 + TEM/KEHA Bulletins\n"
 )
 st.sidebar.markdown("---")
+st.sidebar.markdown("### System Diagnostics")
+
+# Check GPU acceleration
+try:
+    import torch
+    if torch.cuda.is_available():
+        gpu_name = torch.cuda.get_device_name(0)
+        st.sidebar.success(f"🟢 **GPU Active:** {gpu_name}")
+    else:
+        st.sidebar.warning("🟡 **CPU Runtime:** For full inference, select GPU in Colab (`Runtime > Change runtime type > T4 GPU`).")
+except Exception:
+    st.sidebar.warning("⚪ PyTorch not initialized.")
+
+# Check Chroma Vector Store
+chroma_dir = REPO / "data/processed/rag/chroma"
+if chroma_dir.is_dir() and any(chroma_dir.iterdir()):
+    st.sidebar.success("🟢 **RAG Store:** 6,982 passages indexed")
+else:
+    st.sidebar.error("🔴 **RAG Store:** Chroma index missing")
+
+# Check Pinned LoRA Adapter
+adapter_dir = REPO / "models/adapters/qwen-qwen3-4b__20260919T125120Z/final_adapter"
+if adapter_dir.is_dir():
+    st.sidebar.success("🟢 **Adapter:** Pinned & verified")
+else:
+    st.sidebar.error("🔴 **Adapter:** Checkpoint missing")
+
+st.sidebar.markdown("---")
 st.sidebar.info("Tip: Use the tabs above to toggle between the **Chatbot** and **Analytics**.")
 
 # Custom Styling: RGB Animated Gradient Border & Theme Tokens
@@ -134,12 +162,19 @@ with tab_chat:
     def load_forecast_service(repo_dir):
         try:
             from jobai.chat import ForecastService
-            service = ForecastService(repo_dir, allow_embedding_download=True)
+            service = ForecastService(repo_dir, allow_embedding_download=True, allow_base_download=True)
             return service, None
         except Exception as e:
             return None, str(e)
 
     service, service_err = load_forecast_service(REPO)
+
+    if service is None:
+        st.error(
+            f"⚠️ **Forecast Service could not be initialized:** `{service_err}`\n\n"
+            "- Ensure you are connected to a **GPU runtime** in Google Colab (`Runtime > Change runtime type > T4 GPU`).\n"
+            "- Ensure the required packages are installed (`pip install -r requirements.txt`)."
+        )
 
     # Initialize chat session state
     if "messages" not in st.session_state:
@@ -155,6 +190,7 @@ with tab_chat:
                     "- *'What is the trend for construction workers in North Ostrobothnia?'*"
                 ),
                 "forecasts": None,
+                "choices": None,
                 "rag": None
             }
         ]
@@ -165,8 +201,11 @@ with tab_chat:
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-            if msg.get("forecasts") is not None and not msg["forecasts"].empty:
+            if isinstance(msg.get("forecasts"), pd.DataFrame) and not msg["forecasts"].empty:
                 st.dataframe(msg["forecasts"], use_container_width=True)
+            if msg.get("choices"):
+                st.caption("Available matching series to specify:")
+                st.dataframe(pd.DataFrame(msg["choices"]), use_container_width=True)
             if msg.get("rag") and msg["rag"].get("passages"):
                 passages = msg["rag"]["passages"]
                 with st.expander(f"View {len(passages)} Quoted Official Sources"):
@@ -177,7 +216,7 @@ with tab_chat:
     # Chat Input Box
     if prompt := st.chat_input("Ask a forecast question (e.g., 'What is the outlook for nurses in Uusimaa?')..."):
         # Record user message
-        st.session_state.messages.append({"role": "user", "content": prompt, "forecasts": None, "rag": None})
+        st.session_state.messages.append({"role": "user", "content": prompt, "forecasts": None, "choices": None, "rag": None})
         with st.chat_message("user"):
             st.markdown(prompt)
 
@@ -190,7 +229,7 @@ with tab_chat:
                     "from `notebooks/12_forecast_chat_with_rag.ipynb` are installed."
                 )
                 st.error(err_msg)
-                st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "rag": None})
+                st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
             else:
                 with st.spinner("Routing query, forecasting with Qwen3-4B, and retrieving bulletin context..."):
                     try:
@@ -206,6 +245,11 @@ with tab_chat:
                             forecasts_df = raw_df[show_cols].round(2)
                             st.dataframe(forecasts_df, use_container_width=True)
 
+                        choices = result.get("request", {}).get("choices")
+                        if choices:
+                            st.caption("Available matching series to specify:")
+                            st.dataframe(pd.DataFrame(choices), use_container_width=True)
+
                         rag_info = result.get("rag", {})
                         if rag_info.get("passages"):
                             passages = rag_info["passages"]
@@ -218,12 +262,13 @@ with tab_chat:
                             "role": "assistant",
                             "content": answer_text,
                             "forecasts": forecasts_df,
+                            "choices": choices,
                             "rag": rag_info
                         })
                     except Exception as ex:
                         fail_msg = f"**An error occurred during inference:** `{ex}`"
                         st.error(fail_msg)
-                        st.session_state.messages.append({"role": "assistant", "content": fail_msg, "forecasts": None, "rag": None})
+                        st.session_state.messages.append({"role": "assistant", "content": fail_msg, "forecasts": None, "choices": None, "rag": None})
 
 # Tab 2: Figures & Analytics Dashboard
 with tab_analytics:

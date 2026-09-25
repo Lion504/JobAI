@@ -47,13 +47,14 @@ def verified_quote(value, passages):
 class ForecastService:
     """Load saved assets once and keep conversation state with the caller."""
 
-    def __init__(self, repo, *, allow_embedding_download=False):
+    def __init__(self, repo, *, allow_embedding_download=False, allow_base_download=False):
         self.repo = Path(repo)
         self.router = QuestionRouter(self.repo)
         self.run = selected_final_run(self.repo, self.router.config["selected_model_config"])
         assert self.router.tables <= set(self.run["target_tables"]), "Routing includes targets unsupported by the pinned adapter."
         assert set(self.router.horizons) <= set(self.run["training_horizons"]), "Routing includes unsupported horizons."
         self.allow_embedding_download = allow_embedding_download
+        self.allow_base_download = allow_base_download
         self.model = self.tokenizer = self.collection = self.embedding_model = None
         self._forecast_cache = {}
         # Disabling the adapter for prose must never overlap another GPU request.
@@ -79,7 +80,7 @@ class ForecastService:
 
             assert torch.cuda.is_available(), "Use a GPU runtime for saved-model inference. No fine-tuning is needed."
             assert is_bitsandbytes_available(), "Install bitsandbytes and restart the runtime."
-            base_path = base_directory(self.repo, self.run["base_model"], download=False)
+            base_path = base_directory(self.repo, self.run["base_model"], download=self.allow_base_download)
             tokenizer, _ = load_tokenizer(base_path, self.run["base_model"], self.run["adapter_dir"])
             tokenizer.padding_side = "left"
             if tokenizer.pad_token_id is None:
