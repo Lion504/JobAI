@@ -32,7 +32,6 @@ ENV/
 */.ipynb_checkpoints/
 
 # Data & artifacts (keep structure, ignore bulky/generated content)
-*.csv
 *.parquet
 *.feather
 *.h5
