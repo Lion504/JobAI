@@ -41,7 +41,6 @@ ENV/
 
 # RAG source documents and derived index (some are In Copyright; keep only manifests in git)
 data/raw/rag/
-data/processed/rag/
 
 # Models
 models/adapters/qwen-qwen3-4b__20260919T083224Z
