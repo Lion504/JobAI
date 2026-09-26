@@ -151,8 +151,25 @@ section[data-testid="stSidebar"] hr {{
     border-color: #CBD5E1 !important;
 }}
 
-/* Chat input typing bar: pure black text, black caret, readable placeholder & black send icon */
-[data-testid="stChatInput"],
+/* Chat input typing bar: pinned to bottom, pure black text, black caret, readable placeholder & black send icon */
+div[data-testid="stChatInput"] {{
+    position: fixed !important;
+    bottom: 20px !important;
+    left: calc(max(220px, 100vw * 1.5 / 9) + 2rem) !important;
+    right: 2rem !important;
+    width: calc(100vw - max(220px, 100vw * 1.5 / 9) - 4rem) !important;
+    max-width: 100% !important;
+    z-index: 999 !important;
+    background-color: #FFFFFF !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+}}
+
+section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid="stChatInput"] {{
+    left: 2rem !important;
+    width: calc(100vw - 4rem) !important;
+}}
+
 [data-testid="stChatInput"] > div {{
     background-color: #FFFFFF !important;
 }}
@@ -179,11 +196,12 @@ div[data-testid="stBottom"] {{
     background-color: transparent !important;
 }}
 
-/* Main container: expands cleanly to fill the remaining 7.5 out of 9 */
+/* Main container: expands cleanly to fill the remaining 7.5 out of 9 with bottom padding for fixed chat bar */
 .main .block-container {{
     padding-top: 1.8rem !important;
     padding-left: 2rem !important;
     padding-right: 2rem !important;
+    padding-bottom: 6.5rem !important;
     max-width: 100% !important;
 }}
 
@@ -402,78 +420,92 @@ with tab_chat:
     if "chat_context" not in st.session_state:
         st.session_state.chat_context = None
 
-    # Display historical chat messages
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-            if isinstance(msg.get("forecasts"), pd.DataFrame) and not msg["forecasts"].empty:
-                st.dataframe(msg["forecasts"], use_container_width=True)
-            if msg.get("choices"):
-                st.caption("Available matching series to specify:")
-                st.dataframe(pd.DataFrame(msg["choices"]), use_container_width=True)
-            if msg.get("rag") and msg["rag"].get("passages"):
-                passages = msg["rag"]["passages"]
-                with st.expander(f"View {len(passages)} Quoted Official Sources"):
-                    for idx, p in enumerate(passages, 1):
-                        st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
-                        st.caption(f"> \"{p.get('text', '')[:320]}...\"")
+    # Container for all chat messages: ensures all messages appear BEFORE the typing text bar
+    messages_container = st.container()
 
-    # Chat Input Box
+    # Display historical chat messages inside the container
+    with messages_container:
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+                if isinstance(msg.get("forecasts"), pd.DataFrame) and not msg["forecasts"].empty:
+                    st.dataframe(msg["forecasts"], use_container_width=True)
+                if msg.get("choices"):
+                    st.caption("Available matching series to specify:")
+                    st.dataframe(pd.DataFrame(msg["choices"]), use_container_width=True)
+                if (msg.get("rag") or {}).get("passages"):
+                    passages = msg["rag"]["passages"]
+                    with st.expander(f"View {len(passages)} Quoted Official Sources"):
+                        for idx, p in enumerate(passages, 1):
+                            st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
+                            st.caption(f"> \"{p.get('text', '')[:320]}...\"")
+
+    # Chat Input Box (Fixed to stay docked at the bottom of the viewport)
     if prompt := st.chat_input("Ask a forecast question (e.g., 'What is the outlook for nurses in Uusimaa?')..."):
         # Record user message
         st.session_state.messages.append({"role": "user", "content": prompt, "forecasts": None, "choices": None, "rag": None})
-        with st.chat_message("user"):
-            st.markdown(prompt)
 
-        # Assistant response block
-        with st.chat_message("assistant"):
-            if service is None:
-                err_msg = (
-                    f"**Forecast Service could not be initialized:** `{service_err}`\n\n"
-                    "Please ensure you are connected to a **GPU runtime** in Colab and that the dependencies "
-                    "from `notebooks/12_forecast_chat_with_rag.ipynb` are installed."
-                )
-                st.error(err_msg)
-                st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
-            else:
-                with st.spinner("Routing query, forecasting with Qwen3-4B, and retrieving bulletin context..."):
-                    try:
-                        result = service.answer_question(prompt, context=st.session_state.chat_context)
-                        st.session_state.chat_context = result.get("context")
-                        answer_text = result.get("answer", "No response generated.")
-                        st.markdown(answer_text)
+        # Display user message and generate assistant response inside messages_container (BEFORE chat input)
+        with messages_container:
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-                        forecasts_df = None
-                        if result.get("status") == "answered" and result.get("forecasts"):
-                            raw_df = pd.DataFrame(result["forecasts"])
-                            show_cols = [c for c in ["origin_quarter", "target_quarter", "horizon_q", "last_value", "y_pred"] if c in raw_df.columns]
-                            forecasts_df = raw_df[show_cols].round(2)
-                            st.dataframe(forecasts_df, use_container_width=True)
+            with st.chat_message("assistant"):
+                if service is None:
+                    err_msg = (
+                        f"**Forecast Service could not be initialized:** `{service_err}`\n\n"
+                        "Please ensure you are connected to a **GPU runtime** in Colab and that the dependencies "
+                        "from `notebooks/12_forecast_chat_with_rag.ipynb` are installed."
+                    )
+                    st.error(err_msg)
+                    st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
+                else:
+                    with st.spinner("Routing query, forecasting with Qwen3-4B, and retrieving bulletin context..."):
+                        try:
+                            result = service.answer_question(prompt, context=st.session_state.chat_context)
+                            if result is None:
+                                raise ValueError("Service returned an empty result.")
+                            st.session_state.chat_context = result.get("context")
+                            answer_text = result.get("answer", "No response generated.")
+                            st.markdown(answer_text)
 
-                        choices = result.get("request", {}).get("choices")
-                        if choices:
-                            st.caption("Available matching series to specify:")
-                            st.dataframe(pd.DataFrame(choices), use_container_width=True)
+                            forecasts_df = None
+                            if result.get("status") == "answered" and result.get("forecasts"):
+                                raw_df = pd.DataFrame(result["forecasts"])
+                                show_cols = [c for c in ["origin_quarter", "target_quarter", "horizon_q", "last_value", "y_pred"] if c in raw_df.columns]
+                                forecasts_df = raw_df[show_cols].round(2)
+                                st.dataframe(forecasts_df, use_container_width=True)
 
-                        rag_info = result.get("rag", {})
-                        if rag_info.get("passages"):
-                            passages = rag_info["passages"]
-                            with st.expander(f"View {len(passages)} Quoted Official Sources"):
-                                for idx, p in enumerate(passages, 1):
-                                    st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
-                                    st.caption(f"> \"{p.get('text', '')[:320]}...\"")
+                            choices = (result.get("request") or {}).get("choices")
+                            if choices:
+                                st.caption("Available matching series to specify:")
+                                st.dataframe(pd.DataFrame(choices), use_container_width=True)
 
-                        st.session_state.messages.append({
-                            "role": "assistant",
-                            "content": answer_text,
-                            "forecasts": forecasts_df,
-                            "choices": choices,
-                            "rag": rag_info
-                        })
-                    except Exception as ex:
-                        fail_msg = f"**An error occurred during inference:** `{ex}`"
-                        st.error(fail_msg)
-                        st.session_state.messages.append({"role": "assistant", "content": fail_msg, "forecasts": None, "choices": None, "rag": None})
+                            rag_info = result.get("rag") or {}
+                            if rag_info.get("passages"):
+                                passages = rag_info["passages"]
+                                with st.expander(f"View {len(passages)} Quoted Official Sources"):
+                                    for idx, p in enumerate(passages, 1):
+                                        st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
+                                        st.caption(f"> \"{p.get('text', '')[:320]}...\"")
+
+                            st.session_state.messages.append({
+                                "role": "assistant",
+                                "content": answer_text,
+                                "forecasts": forecasts_df,
+                                "choices": choices,
+                                "rag": rag_info
+                            })
+                        except Exception as ex:
+                            fail_msg = f"**An error occurred during inference:** `{ex}`"
+                            st.error(fail_msg)
+                            st.session_state.messages.append({"role": "assistant", "content": fail_msg, "forecasts": None, "choices": None, "rag": None})
+
+        # Trigger clean rerun so message history persists neatly in messages_container above input bar
+        if hasattr(st, "rerun"):
+            st.rerun()
+        elif hasattr(st, "experimental_rerun"):
+            st.experimental_rerun()
 
 # Tab 2: Figures & Analytics Dashboard
 with tab_analytics:
