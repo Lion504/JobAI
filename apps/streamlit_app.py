@@ -50,18 +50,18 @@ try:
     import torch
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(0)
-        st.sidebar.success(f"🟢 **GPU Active:** {gpu_name}")
+        st.sidebar.success(f"🟢 **GPU:** {gpu_name}")
     else:
-        st.sidebar.warning("🟡 **CPU Runtime:** For full inference, select GPU in Colab (`Runtime > Change runtime type > T4 GPU`).")
+        st.sidebar.warning("🟡 **CPU Mode:** Select T4 GPU in Colab for full inference.")
 except Exception:
     st.sidebar.warning("⚪ PyTorch not initialized.")
 
 # Check Chroma Vector Store
 chroma_dir = REPO / "data/processed/rag/chroma"
 if chroma_dir.is_dir() and any(chroma_dir.iterdir()):
-    st.sidebar.success("🟢 **RAG Store:** 6,982 passages indexed")
+    st.sidebar.success("🟢 **RAG:** 6,982 docs ready")
 else:
-    st.sidebar.error("🔴 **RAG Store:** Chroma index missing")
+    st.sidebar.error("🔴 **RAG:** Chroma index missing")
 
 # Check Pinned LoRA Adapter
 adapter_dir = REPO / "models/adapters/qwen-qwen3-4b__20260919T125120Z/final_adapter"
@@ -71,7 +71,7 @@ else:
     st.sidebar.error("🔴 **Adapter:** Checkpoint missing")
 
 st.sidebar.markdown("---")
-st.sidebar.info("Tip: Use the tabs above to toggle between the **Chatbot** and **Analytics**.")
+st.sidebar.info("Tip: Switch tabs above for **Analytics**.")
 
 # Custom Styling: RGB Animated Gradient Border & Theme Tokens
 theme_vars = """
@@ -94,6 +94,49 @@ custom_css = f"""
 <style>
 :root {{
     {theme_vars}
+}}
+
+/* Sidebar Width: exactly 1.5 out of 9 (16.67% of page width) */
+section[data-testid="stSidebar"], [data-testid="stSidebar"] {{
+    width: calc(100vw * 1.5 / 9) !important;
+    min-width: 220px !important;
+    max-width: calc(100vw * 1.5 / 9) !important;
+}}
+
+/* Sidebar typography & padding for compact 1.5/9 layout */
+section[data-testid="stSidebar"] .block-container {{
+    padding-top: 1.8rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}}
+
+section[data-testid="stSidebar"] h1 {{
+    font-size: 1.25rem !important;
+    margin-bottom: 0.3rem !important;
+}}
+
+section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {{
+    font-size: 1rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.3rem !important;
+}}
+
+section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] li {{
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+}}
+
+section[data-testid="stSidebar"] .stAlert {{
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+}}
+
+/* Main container: expands cleanly to fill the remaining 7.5 out of 9 */
+.main .block-container {{
+    padding-top: 1.8rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 100% !important;
 }}
 
 /* RGB Animated Gradient Border around main container */
