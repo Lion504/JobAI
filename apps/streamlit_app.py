@@ -7,6 +7,7 @@ from pathlib import Path
 import json
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Locate JobAI repository root
 def find_repo_root():
@@ -243,6 +244,22 @@ section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid=
 
 div[data-testid="stBottom"] {{
     background-color: transparent !important;
+}}
+
+/* Auto-scroll helper iframe: zero height and out of flow */
+iframe[height="0"] {{
+    position: absolute !important;
+    height: 0px !important;
+    width: 0px !important;
+    border: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}}
+
+#chat-bottom-anchor {{
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }}
 
 /* Main container: expands cleanly to fill the remaining 7.5 out of 9 */
@@ -507,6 +524,33 @@ with tab_chat:
     if "chat_context" not in st.session_state:
         st.session_state.chat_context = None
 
+    # Helper to smoothly scroll the chat viewport to the latest conversation end
+    def scroll_to_bottom():
+        components.html(
+            f"""
+            <div id="scroll-marker-{len(st.session_state.messages)}"></div>
+            <script>
+            function scrollToLatest() {{
+                try {{
+                    const doc = window.parent.document;
+                    const main = doc.querySelector('section.main') || doc.querySelector('[data-testid="stMain"]');
+                    if (main) {{
+                        main.scrollTo({{ top: main.scrollHeight, behavior: 'smooth' }});
+                    }}
+                    const anchor = doc.getElementById('chat-bottom-anchor');
+                    if (anchor) {{
+                        anchor.scrollIntoView({{ behavior: 'smooth', block: 'end' }});
+                    }}
+                }} catch (e) {{}}
+            }}
+            setTimeout(scrollToLatest, 50);
+            setTimeout(scrollToLatest, 250);
+            </script>
+            """,
+            height=0,
+            width=0,
+        )
+
     # Container for all chat messages: ensures all messages appear BEFORE the typing text bar
     messages_container = st.container()
 
@@ -526,6 +570,11 @@ with tab_chat:
                         for idx, p in enumerate(passages, 1):
                             st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
                             st.caption(f"> \"{p.get('text', '')[:320]}...\"")
+        # Hidden bottom anchor to scroll latest conversation into view
+        st.markdown('<div id="chat-bottom-anchor"></div>', unsafe_allow_html=True)
+
+    # Automatically scroll chat to latest conversation end on load / update
+    scroll_to_bottom()
 
     # Chat Input Box (Fixed to stay docked at the bottom of the viewport)
     if prompt := st.chat_input("Ask a forecast question (e.g., 'What is the outlook for nurses in Uusimaa?')..."):
@@ -536,6 +585,7 @@ with tab_chat:
         with messages_container:
             with st.chat_message("user"):
                 st.markdown(prompt)
+            scroll_to_bottom()
 
             with st.chat_message("assistant"):
                 if service is None:
