@@ -116,11 +116,18 @@ section[data-testid="stSidebar"], [data-testid="stSidebar"] {{
     background-color: #F8FAFC !important; /* Crisp light background */
 }}
 
-/* Sidebar typography & padding for compact 1.5/9 layout */
+/* Sidebar compact layout: tight vertical spacing so everything fits on one screen */
 section[data-testid="stSidebar"] .block-container {{
-    padding-top: 1.8rem !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding-top: 1rem !important;
+}}
+
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+    gap: 0.35rem !important;
+}}
+
+section[data-testid="stSidebar"] hr {{
+    margin: 0.35rem 0 !important;
+    border-color: #CBD5E1 !important;
 }}
 
 /* All white/light background elements: crisp black text in dark mode & light mode */
@@ -145,10 +152,8 @@ section[data-testid="stSidebar"] code {{
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
     background-color: #E2E8F0 !important;
-}}
-
-section[data-testid="stSidebar"] hr {{
-    border-color: #CBD5E1 !important;
+    font-size: 0.76rem !important;
+    padding: 1px 4px !important;
 }}
 
 /* Chat input typing bar: pinned to bottom, pure black text, black caret, readable placeholder & black send icon */
