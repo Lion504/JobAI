@@ -72,6 +72,7 @@ Run the preparation notebooks in order when rebuilding inputs; reuse saved outpu
 | 10   | [Search and explain](notebooks/10_search_and_explain.ipynb)              | Demonstrate saved-model forecasts and bulletin context |
 | 11   | [Evaluate RAG](notebooks/11_evaluate_rag.ipynb)                          | Check retrieval quality and review citations |
 | 12   | [Forecast chat with RAG](notebooks/12_forecast_chat_with_rag.ipynb)        | Route text questions to forecasts and cited explanations |
+| 13   | [Streamlit dashboard](notebooks/13_streamlit_dashboard.ipynb)              | Launch interactive web interface for AI chat and figures |
 
 The classification notebook, separate horizon profiles, and larger-model experiment are optional work outside this main sequence.
 
@@ -79,7 +80,14 @@ The classification notebook, separate horizon profiles, and larger-model experim
 
 Run **12** in a GPU runtime with the full `jobai/` folder, configs, saved data/metadata, pinned adapter and its evaluation manifest, and cached base model restored. Also keep `data/processed/rag/chroma/` and `models/embeddings/BAAI--bge-m3/`. Run **08 → 09** if the index is missing; 10 and 11 are separate demo/evaluation notebooks, not prerequisites for 12. If the embedding model is absent from both saved and runtime caches, set `ALLOW_EMBEDDING_DOWNLOAD = True` once in 12 to save it.
 
-Edit `USER_QUESTION` in the last cell and rerun it; `CHAT_CONTEXT` carries follow-up questions. Supported requests cover selected `12tu`/`12tw` province/occupation or province/industry series at 1Q/2Q/4Q. The reusable backend is [jobai/chat.py](jobai/chat.py), with question routing in [jobai/question_routing.py](jobai/question_routing.py); a Streamlit interface is not yet implemented. Using saved assets requires no fine-tuning.
+Edit `USER_QUESTION` in the last cell and rerun it; `CHAT_CONTEXT` carries follow-up questions. Supported requests cover selected `12tu`/`12tw` province/occupation or province/industry series at 1Q/2Q/4Q. The reusable backend is [jobai/chat.py](jobai/chat.py), with question routing in [jobai/question_routing.py](jobai/question_routing.py). Using saved assets requires no fine-tuning.
+
+### Use the Streamlit dashboard in Colab
+
+Run **13** ([notebooks/13_streamlit_dashboard.ipynb](notebooks/13_streamlit_dashboard.ipynb)) in a GPU runtime. It launches the dashboard ([apps/streamlit_app.py](apps/streamlit_app.py)) in the background on port 8501 and exposes it using Colab's native tunnel without needing external tools like ngrok. The dashboard includes:
+- **AI Agent Chatbot**: Natural language forecast queries with Qwen3-4B predictions and cited official bulletins.
+- **Figures & Analytics**: Primary national and regional vacancy charts, plus an interactive dropdown to inspect model comparison graphs.
+- **Theme toggle**: Dark and Light modes with an animated RGB gradient border.
 
 ### Use the final model or run a new shared experiment in Colab
 
@@ -119,6 +127,7 @@ The existing test cases have been used repeatedly during development. A final pe
 ```text
 MLProject-JobAI/
 ├── notebooks/                    # ordered pipeline and optional experiments
+├── apps/                         # Streamlit interactive web dashboard
 ├── jobai/                        # shared forecasting and model helpers
 ├── configs/                      # data, evaluation, training, and RAG settings
 ├── data/raw/                     # saved PxWeb responses
