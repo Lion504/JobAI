@@ -112,12 +112,31 @@ custom_css = f"""
     {theme_vars}
 }}
 
-/* Sidebar Width: exactly 1.5 out of 9 (16.67% of page width) */
+/* Sidebar radiant animated border glow */
+@keyframes radiantSidebarGlow {{
+    0% {{
+        border-right-color: #F08080;
+        box-shadow: 4px 0 16px rgba(240, 128, 128, 0.45);
+    }}
+    50% {{
+        border-right-color: #ADD8E6;
+        box-shadow: 4px 0 18px rgba(173, 216, 230, 0.55);
+    }}
+    100% {{
+        border-right-color: #F08080;
+        box-shadow: 4px 0 16px rgba(240, 128, 128, 0.45);
+    }}
+}}
+
+/* Sidebar Width: exactly 1.5 out of 9 with radiant color-changing border */
 section[data-testid="stSidebar"], [data-testid="stSidebar"] {{
     width: calc(100vw * 1.5 / 9) !important;
     min-width: 220px !important;
     max-width: calc(100vw * 1.5 / 9) !important;
     background-color: #F8FAFC !important; /* Crisp light background */
+    border-right-width: 2.5px !important;
+    border-right-style: solid !important;
+    animation: radiantSidebarGlow 4s ease-in-out infinite !important;
 }}
 
 /* Sidebar compact layout: tight vertical spacing so everything fits on one screen */
@@ -188,7 +207,8 @@ div[data-testid="stChatInput"] {{
     background-color: var(--chat-input-bg) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
-    border: 2px solid #F08080 !important;
+    border-width: 2.5px !important;
+    border-style: solid !important;
     border-radius: 14px !important;
     animation: gradientBorderAnimation 4s ease-in-out infinite !important;
 }}
@@ -239,7 +259,8 @@ header[data-testid="stHeader"] {{
     background-color: var(--header-bg) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
-    border-bottom: 2.5px solid #F08080 !important;
+    border-bottom-width: 2.5px !important;
+    border-bottom-style: solid !important;
     animation: radiantHeaderGlow 4s ease-in-out infinite !important;
     z-index: 999990 !important;
 }}
@@ -291,8 +312,14 @@ div[data-baseweb="tab-border"] {{
 }}
 
 /* Active tab highlight line sits properly UNDER the tab text */
+@keyframes radiantTabLine {{
+    0% {{ background-color: #F08080; }}
+    50% {{ background-color: #ADD8E6; }}
+    100% {{ background-color: #F08080; }}
+}}
+
 div[data-baseweb="tab-highlight"] {{
-    background-color: var(--tab-border-active) !important;
+    animation: radiantTabLine 4s ease-in-out infinite !important;
     top: auto !important;
     bottom: 0px !important;
     height: 3px !important;
