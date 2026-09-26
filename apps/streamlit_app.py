@@ -87,6 +87,8 @@ theme_vars = """
     --tab-text: #CBD5E1;
     --tab-text-active: #FFFFFF;
     --tab-border-active: #F08080;
+    --header-bg: rgba(14, 17, 23, 0.82);
+    --chat-input-bg: rgba(255, 255, 255, 0.90);
 """ if dark_mode else """
     --bg-color: #F8FAFC;
     --text-color: #000000;
@@ -100,6 +102,8 @@ theme_vars = """
     --tab-text: #334155;
     --tab-text-active: #000000;
     --tab-border-active: #2563EB;
+    --header-bg: rgba(248, 250, 252, 0.85);
+    --chat-input-bg: rgba(255, 255, 255, 0.92);
 """
 
 custom_css = f"""
@@ -156,7 +160,23 @@ section[data-testid="stSidebar"] code {{
     padding: 1px 4px !important;
 }}
 
-/* Chat input typing bar: pinned to bottom, pure black text, black caret, readable placeholder & black send icon */
+/* Radiant animated glow for fixed top header bar */
+@keyframes radiantHeaderGlow {{
+    0% {{
+        border-bottom-color: #F08080;
+        box-shadow: 0 4px 14px rgba(240, 128, 128, 0.35);
+    }}
+    50% {{
+        border-bottom-color: #ADD8E6;
+        box-shadow: 0 4px 16px rgba(173, 216, 230, 0.45);
+    }}
+    100% {{
+        border-bottom-color: #F08080;
+        box-shadow: 0 4px 14px rgba(240, 128, 128, 0.35);
+    }}
+}}
+
+/* Chat input typing bar: radiant glowing border, translucent frosted glass, pinned to bottom */
 div[data-testid="stChatInput"] {{
     position: fixed !important;
     bottom: 20px !important;
@@ -165,9 +185,12 @@ div[data-testid="stChatInput"] {{
     width: calc(100vw - max(220px, 100vw * 1.5 / 9) - 4rem) !important;
     max-width: 100% !important;
     z-index: 999 !important;
-    background-color: #FFFFFF !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+    background-color: var(--chat-input-bg) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 2px solid #F08080 !important;
+    border-radius: 14px !important;
+    animation: gradientBorderAnimation 4s ease-in-out infinite !important;
 }}
 
 section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid="stChatInput"] {{
@@ -176,14 +199,15 @@ section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid=
 }}
 
 [data-testid="stChatInput"] > div {{
-    background-color: #FFFFFF !important;
+    background-color: transparent !important;
+    border: none !important;
 }}
 
 [data-testid="stChatInput"] textarea {{
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
     caret-color: #000000 !important;
-    background-color: #FFFFFF !important;
+    background-color: transparent !important;
 }}
 
 [data-testid="stChatInput"] textarea::placeholder {{
@@ -201,40 +225,47 @@ div[data-testid="stBottom"] {{
     background-color: transparent !important;
 }}
 
-/* Main container: expands cleanly to fill the remaining 7.5 out of 9 with bottom padding for fixed chat bar */
+/* Main container: expands cleanly to fill the remaining 7.5 out of 9 with padding for fixed top bar and bottom chat bar */
 .main .block-container {{
-    padding-top: 1.8rem !important;
+    padding-top: 3.6rem !important;
     padding-left: 2rem !important;
     padding-right: 2rem !important;
     padding-bottom: 6.5rem !important;
     max-width: 100% !important;
 }}
 
-/* Make Streamlit top header bar transparent to prevent unwanted white bar */
+/* Top header bar: translucent frosted glass with radiant bottom glow */
 header[data-testid="stHeader"] {{
-    background-color: transparent !important;
-    pointer-events: none !important;
+    background-color: var(--header-bg) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 2.5px solid #F08080 !important;
+    animation: radiantHeaderGlow 4s ease-in-out infinite !important;
+    z-index: 999990 !important;
 }}
 
-header[data-testid="stHeader"] * {{
-    pointer-events: auto !important;
-}}
-
-/* Tabs Navigation: clearly positioned above the dashboard box and sticky at the top */
+/* Tabs Navigation: Fixed inside the top header bar next to three dots option */
 div[data-testid="stTabs"] {{
-    margin-top: 0.5rem !important;
+    margin-top: 0 !important;
 }}
 
 div[data-baseweb="tab-list"] {{
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
-    z-index: 998 !important;
-    background-color: var(--bg-color) !important;
-    border-bottom: 2px solid var(--border-color) !important;
-    gap: 20px !important;
-    padding-top: 0.6rem !important;
-    padding-bottom: 4px !important;
-    margin-bottom: 1.25rem !important;
+    left: calc(max(220px, 100vw * 1.5 / 9) + 2rem) !important;
+    height: 2.875rem !important;
+    z-index: 999992 !important;
+    background-color: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    border-bottom: none !important;
+    gap: 16px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}}
+
+section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-baseweb="tab-list"] {{
+    left: 4rem !important;
 }}
 
 /* Remove default rogue white/gray tab border */
@@ -242,11 +273,11 @@ div[data-baseweb="tab-border"] {{
     display: none !important;
 }}
 
-/* Active tab highlight line sits properly UNDER the tab text, never above */
+/* Active tab highlight line sits properly UNDER the tab text */
 div[data-baseweb="tab-highlight"] {{
     background-color: var(--tab-border-active) !important;
     top: auto !important;
-    bottom: -2px !important;
+    bottom: 0px !important;
     height: 3px !important;
     border-radius: 2px !important;
 }}
