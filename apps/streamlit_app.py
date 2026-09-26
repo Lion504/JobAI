@@ -113,6 +113,7 @@ section[data-testid="stSidebar"], [data-testid="stSidebar"] {{
     width: calc(100vw * 1.5 / 9) !important;
     min-width: 220px !important;
     max-width: calc(100vw * 1.5 / 9) !important;
+    background-color: #F8FAFC !important; /* Crisp light background */
 }}
 
 /* Sidebar typography & padding for compact 1.5/9 layout */
@@ -122,28 +123,60 @@ section[data-testid="stSidebar"] .block-container {{
     padding-right: 1rem !important;
 }}
 
-section[data-testid="stSidebar"] h1 {{
-    font-size: 1.25rem !important;
-    margin-bottom: 0.3rem !important;
-    color: var(--text-color) !important;
+/* All white/light background elements: crisp black text in dark mode & light mode */
+section[data-testid="stSidebar"],
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] h4,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] li,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] strong,
+section[data-testid="stSidebar"] b,
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] *,
+section[data-testid="stSidebar"] [data-testid="stAlert"] * {{
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }}
 
-section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {{
-    font-size: 1rem !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.3rem !important;
-    color: var(--text-color) !important;
+section[data-testid="stSidebar"] code {{
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    background-color: #E2E8F0 !important;
 }}
 
-section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] li {{
-    font-size: 0.84rem !important;
-    line-height: 1.35 !important;
-    color: var(--text-color) !important;
+section[data-testid="stSidebar"] hr {{
+    border-color: #CBD5E1 !important;
 }}
 
-section[data-testid="stSidebar"] .stAlert {{
-    padding: 6px 10px !important;
-    font-size: 0.8rem !important;
+/* Chat input typing bar: pure black text, black caret, readable placeholder & black send icon */
+[data-testid="stChatInput"],
+[data-testid="stChatInput"] > div {{
+    background-color: #FFFFFF !important;
+}}
+
+[data-testid="stChatInput"] textarea {{
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    caret-color: #000000 !important;
+    background-color: #FFFFFF !important;
+}}
+
+[data-testid="stChatInput"] textarea::placeholder {{
+    color: #4B5563 !important;
+    -webkit-text-fill-color: #4B5563 !important;
+    opacity: 1 !important;
+}}
+
+[data-testid="stChatInput"] button svg {{
+    fill: #000000 !important;
+    color: #000000 !important;
+}}
+
+div[data-testid="stBottom"] {{
+    background-color: transparent !important;
 }}
 
 /* Main container: expands cleanly to fill the remaining 7.5 out of 9 */
@@ -154,6 +187,39 @@ section[data-testid="stSidebar"] .stAlert {{
     max-width: 100% !important;
 }}
 
+/* Make Streamlit top header bar transparent to prevent unwanted white bar */
+header[data-testid="stHeader"] {{
+    background-color: transparent !important;
+}}
+
+/* Tabs Navigation: clearly positioned above the dashboard box with proper spacing */
+div[data-testid="stTabs"] {{
+    margin-top: 0.5rem !important;
+}}
+
+div[data-baseweb="tab-list"] {{
+    border-bottom: 2px solid var(--border-color) !important;
+    background-color: transparent !important;
+    gap: 20px !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 1.25rem !important;
+    position: relative !important;
+}}
+
+/* Remove default rogue white/gray tab border */
+div[data-baseweb="tab-border"] {{
+    display: none !important;
+}}
+
+/* Active tab highlight line sits properly UNDER the tab text, never above */
+div[data-baseweb="tab-highlight"] {{
+    background-color: var(--tab-border-active) !important;
+    top: auto !important;
+    bottom: -2px !important;
+    height: 3px !important;
+    border-radius: 2px !important;
+}}
+
 /* Tabs Styling: Crisp text, 100% opacity, zero blur or washed-out look */
 button[data-baseweb="tab"] {{
     color: var(--tab-text) !important;
@@ -161,6 +227,8 @@ button[data-baseweb="tab"] {{
     font-size: 1.05rem !important;
     font-weight: 600 !important;
     background: transparent !important;
+    border: none !important;
+    padding: 8px 14px !important;
     transition: all 0.2s ease-in-out !important;
 }}
 
@@ -263,8 +331,8 @@ button[data-baseweb="tab"]:hover span {{
     text-align: center;
 }}
 
-.stApp {{
-    background-color: var(--bg-color);
+.stApp, [data-testid="stAppViewContainer"], .main {{
+    background-color: var(--bg-color) !important;
     color: var(--text-color);
 }}
 
