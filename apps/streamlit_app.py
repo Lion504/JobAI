@@ -244,17 +244,33 @@ header[data-testid="stHeader"] {{
     z-index: 999990 !important;
 }}
 
+header[data-testid="stHeader"] > div {{
+    background-color: transparent !important;
+}}
+
+/* Prevent parent containers from trapping fixed tabs inside main area */
+[data-testid="stAppViewContainer"],
+section.main,
+.main,
+.block-container,
+div[data-testid="stTabs"] {{
+    contain: none !important;
+}}
+
 /* Tabs Navigation: Fixed inside the top header bar next to three dots option */
 div[data-testid="stTabs"] {{
     margin-top: 0 !important;
+    position: static !important;
 }}
 
+div[data-testid="stTabs"] > div:first-child,
 div[data-baseweb="tab-list"] {{
     position: fixed !important;
     top: 0 !important;
-    left: calc(max(220px, 100vw * 1.5 / 9) + 2rem) !important;
+    left: calc(max(220px, 100vw * 1.5 / 9) + 1.5rem) !important;
+    right: 80px !important;
     height: 2.875rem !important;
-    z-index: 999992 !important;
+    z-index: 999999 !important;
     background-color: transparent !important;
     display: flex !important;
     align-items: center !important;
@@ -264,7 +280,8 @@ div[data-baseweb="tab-list"] {{
     margin: 0 !important;
 }}
 
-section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-baseweb="tab-list"] {{
+section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-baseweb="tab-list"],
+section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid="stTabs"] > div:first-child {{
     left: 4rem !important;
 }}
 
@@ -286,11 +303,13 @@ div[data-baseweb="tab-highlight"] {{
 button[data-baseweb="tab"] {{
     color: var(--tab-text) !important;
     opacity: 1 !important;
-    font-size: 1.05rem !important;
+    font-size: 1rem !important;
     font-weight: 600 !important;
     background: transparent !important;
     border: none !important;
-    padding: 8px 14px !important;
+    padding: 6px 14px !important;
+    height: 2.875rem !important;
+    line-height: 2.875rem !important;
     transition: all 0.2s ease-in-out !important;
 }}
 
