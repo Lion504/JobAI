@@ -72,7 +72,7 @@ else:
     st.sidebar.error("🔴 **Adapter:** Checkpoint missing")
 
 st.sidebar.markdown("---")
-st.sidebar.info("Tip: Switch tabs above for **Analytics**.")
+st.sidebar.info("Tip: Switch tabs above for **Analytics** or **Chatbot Forecast**.")
 
 # Custom Styling: RGB Animated Gradient Border & Theme Tokens
 theme_vars = """
@@ -142,7 +142,7 @@ section[data-testid="stSidebar"], [data-testid="stSidebar"] {{
 
 /* Sidebar compact layout: tight vertical spacing so everything fits on one screen */
 section[data-testid="stSidebar"] .block-container {{
-    padding-top: 1rem !important;
+    padding-top: 0rem !important;
 }}
 
 section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
