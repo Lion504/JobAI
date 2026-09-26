@@ -245,17 +245,19 @@ div[data-testid="stBottom"] {{
     background-color: transparent !important;
 }}
 
-/* Main container: expands cleanly to fill the remaining 7.5 out of 9 with padding for fixed top bar and bottom chat bar */
-.main .block-container {{
-    padding-top: 3.6rem !important;
+/* Main container: expands cleanly to fill the remaining 7.5 out of 9 */
+.main .block-container,
+[data-testid="stMainBlockContainer"] {{
+    padding-top: 0rem !important;
     padding-left: 2rem !important;
     padding-right: 2rem !important;
     padding-bottom: 6.5rem !important;
     max-width: 100% !important;
 }}
 
-/* Top header bar: translucent frosted glass with radiant bottom glow */
-header[data-testid="stHeader"] {{
+/* Top header bar: translucent frosted glass with radiant bottom glow, unified with tabs */
+header[data-testid="stHeader"],
+.stApp > header {{
     background-color: var(--header-bg) !important;
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
@@ -263,47 +265,51 @@ header[data-testid="stHeader"] {{
     border-bottom-style: solid !important;
     animation: radiantHeaderGlow 4s ease-in-out infinite !important;
     z-index: 999990 !important;
+    pointer-events: none !important;
 }}
 
 header[data-testid="stHeader"] > div {{
     background-color: transparent !important;
 }}
 
-/* Prevent parent containers from trapping fixed tabs inside main area */
-[data-testid="stAppViewContainer"],
-section.main,
+header[data-testid="stHeader"] [data-testid="stToolbar"],
+header[data-testid="stHeader"] button {{
+    pointer-events: auto !important;
+    z-index: 1000000 !important;
+}}
+
+/* Prevent parent containers from trapping fixed tabs */
 .main,
-.block-container,
-div[data-testid="stTabs"] {{
+[data-testid="stMainBlockContainer"],
+div[data-testid="stVerticalBlock"],
+div[data-testid="stElementContainer"] {{
     contain: none !important;
+    transform: none !important;
 }}
 
-/* Tabs Navigation: Fixed inside the top header bar next to three dots option */
-div[data-testid="stTabs"] {{
-    margin-top: 0 !important;
-    position: static !important;
-}}
-
-div[data-testid="stTabs"] > div:first-child,
-div[data-baseweb="tab-list"] {{
+/* Dock tabs directly inside top header bar next to three dots menu */
+div[data-testid="stTabs"] [role="tablist"] {{
     position: fixed !important;
     top: 0 !important;
     left: calc(max(220px, 100vw * 1.5 / 9) + 1.5rem) !important;
-    right: 80px !important;
+    right: 90px !important;
     height: 2.875rem !important;
     z-index: 999999 !important;
-    background-color: transparent !important;
     display: flex !important;
     align-items: center !important;
-    border-bottom: none !important;
     gap: 16px !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    pointer-events: auto !important;
 }}
 
-section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-baseweb="tab-list"],
-section[data-testid="stSidebar"][aria-expanded="false"] ~ .main div[data-testid="stTabs"] > div:first-child {{
+section[data-testid="stSidebar"][aria-expanded="false"] ~ .main [role="tablist"] {{
     left: 4rem !important;
+}}
+
+/* Ensure tab panels start cleanly below the fixed top header bar */
+div[data-testid="stTabContent"],
+div[role="tabpanel"] {{
+    margin-top: 3.4rem !important;
+    padding-top: 0 !important;
 }}
 
 /* Remove default rogue white/gray tab border */
@@ -320,16 +326,14 @@ div[data-baseweb="tab-border"] {{
 
 div[data-baseweb="tab-highlight"] {{
     animation: radiantTabLine 4s ease-in-out infinite !important;
-    top: auto !important;
     bottom: 0px !important;
     height: 3px !important;
     border-radius: 2px !important;
 }}
 
-/* Tabs Styling: Crisp text, 100% opacity, zero blur or washed-out look */
-button[data-baseweb="tab"] {{
+/* Tabs Styling: Crisp text, 100% opacity, zero blur */
+button[role="tab"] {{
     color: var(--tab-text) !important;
-    opacity: 1 !important;
     font-size: 1rem !important;
     font-weight: 600 !important;
     background: transparent !important;
@@ -338,30 +342,23 @@ button[data-baseweb="tab"] {{
     height: 2.875rem !important;
     line-height: 2.875rem !important;
     transition: all 0.2s ease-in-out !important;
+    pointer-events: auto !important;
 }}
 
-button[data-baseweb="tab"] div,
-button[data-baseweb="tab"] p,
-button[data-baseweb="tab"] span {{
+button[role="tab"],
+button[role="tab"] * {{
     color: var(--tab-text) !important;
     opacity: 1 !important;
 }}
 
-button[data-baseweb="tab"][aria-selected="true"] {{
+button[role="tab"][aria-selected="true"],
+button[role="tab"][aria-selected="true"] * {{
     color: var(--tab-text-active) !important;
     font-weight: 700 !important;
 }}
 
-button[data-baseweb="tab"][aria-selected="true"] div,
-button[data-baseweb="tab"][aria-selected="true"] p,
-button[data-baseweb="tab"][aria-selected="true"] span {{
-    color: var(--tab-text-active) !important;
-    opacity: 1 !important;
-}}
-
-button[data-baseweb="tab"]:hover div,
-button[data-baseweb="tab"]:hover p,
-button[data-baseweb="tab"]:hover span {{
+button[role="tab"]:hover,
+button[role="tab"]:hover * {{
     color: var(--tab-text-active) !important;
 }}
 
