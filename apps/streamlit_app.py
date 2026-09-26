@@ -208,20 +208,28 @@ div[data-testid="stBottom"] {{
 /* Make Streamlit top header bar transparent to prevent unwanted white bar */
 header[data-testid="stHeader"] {{
     background-color: transparent !important;
+    pointer-events: none !important;
 }}
 
-/* Tabs Navigation: clearly positioned above the dashboard box with proper spacing */
+header[data-testid="stHeader"] * {{
+    pointer-events: auto !important;
+}}
+
+/* Tabs Navigation: clearly positioned above the dashboard box and sticky at the top */
 div[data-testid="stTabs"] {{
     margin-top: 0.5rem !important;
 }}
 
 div[data-baseweb="tab-list"] {{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 998 !important;
+    background-color: var(--bg-color) !important;
     border-bottom: 2px solid var(--border-color) !important;
-    background-color: transparent !important;
     gap: 20px !important;
-    padding-bottom: 2px !important;
+    padding-top: 0.6rem !important;
+    padding-bottom: 4px !important;
     margin-bottom: 1.25rem !important;
-    position: relative !important;
 }}
 
 /* Remove default rogue white/gray tab border */
