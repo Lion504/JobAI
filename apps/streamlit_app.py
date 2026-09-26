@@ -76,18 +76,30 @@ st.sidebar.info("Tip: Switch tabs above for **Analytics**.")
 # Custom Styling: RGB Animated Gradient Border & Theme Tokens
 theme_vars = """
     --bg-color: #0E1117;
-    --text-color: #F3F4F6;
+    --text-color: #FFFFFF;
+    --subtext-color: #E2E8F0;
     --container-bg: #161B22;
     --card-bg: #1F2937;
     --border-color: #374151;
     --table-header: #374151;
+    --chat-bg: #161B22;
+    --chat-text: #FFFFFF;
+    --tab-text: #CBD5E1;
+    --tab-text-active: #FFFFFF;
+    --tab-border-active: #F08080;
 """ if dark_mode else """
     --bg-color: #F8FAFC;
-    --text-color: #0F172A;
+    --text-color: #000000;
+    --subtext-color: #1E293B;
     --container-bg: #FFFFFF;
     --card-bg: #F1F5F9;
-    --border-color: #E2E8F0;
+    --border-color: #CBD5E1;
     --table-header: #E2E8F0;
+    --chat-bg: #FFFFFF;
+    --chat-text: #000000;
+    --tab-text: #334155;
+    --tab-text-active: #000000;
+    --tab-border-active: #2563EB;
 """
 
 custom_css = f"""
@@ -113,17 +125,20 @@ section[data-testid="stSidebar"] .block-container {{
 section[data-testid="stSidebar"] h1 {{
     font-size: 1.25rem !important;
     margin-bottom: 0.3rem !important;
+    color: var(--text-color) !important;
 }}
 
 section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {{
     font-size: 1rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.3rem !important;
+    color: var(--text-color) !important;
 }}
 
 section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] li {{
     font-size: 0.84rem !important;
     line-height: 1.35 !important;
+    color: var(--text-color) !important;
 }}
 
 section[data-testid="stSidebar"] .stAlert {{
@@ -137,6 +152,77 @@ section[data-testid="stSidebar"] .stAlert {{
     padding-left: 2rem !important;
     padding-right: 2rem !important;
     max-width: 100% !important;
+}}
+
+/* Tabs Styling: Crisp text, 100% opacity, zero blur or washed-out look */
+button[data-baseweb="tab"] {{
+    color: var(--tab-text) !important;
+    opacity: 1 !important;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    transition: all 0.2s ease-in-out !important;
+}}
+
+button[data-baseweb="tab"] div,
+button[data-baseweb="tab"] p,
+button[data-baseweb="tab"] span {{
+    color: var(--tab-text) !important;
+    opacity: 1 !important;
+}}
+
+button[data-baseweb="tab"][aria-selected="true"] {{
+    color: var(--tab-text-active) !important;
+    font-weight: 700 !important;
+}}
+
+button[data-baseweb="tab"][aria-selected="true"] div,
+button[data-baseweb="tab"][aria-selected="true"] p,
+button[data-baseweb="tab"][aria-selected="true"] span {{
+    color: var(--tab-text-active) !important;
+    opacity: 1 !important;
+}}
+
+button[data-baseweb="tab"]:hover div,
+button[data-baseweb="tab"]:hover p,
+button[data-baseweb="tab"]:hover span {{
+    color: var(--tab-text-active) !important;
+}}
+
+/* Chat Messages: Pure black/white contrast matching active theme */
+[data-testid="stChatMessage"] {{
+    background-color: var(--chat-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    color: var(--chat-text) !important;
+}}
+
+[data-testid="stChatMessageContent"] {{
+    color: var(--chat-text) !important;
+}}
+
+[data-testid="stChatMessageContent"] p,
+[data-testid="stChatMessageContent"] li,
+[data-testid="stChatMessageContent"] span,
+[data-testid="stChatMessageContent"] div {{
+    color: var(--chat-text) !important;
+    opacity: 1 !important;
+    font-size: 0.96rem !important;
+    line-height: 1.6 !important;
+}}
+
+[data-testid="stChatMessageContent"] strong,
+[data-testid="stChatMessageContent"] b {{
+    color: var(--text-color) !important;
+}}
+
+/* Subtitles in Header Containers */
+.container-subtitle {{
+    color: var(--subtext-color) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+    opacity: 1 !important;
+    margin-bottom: 0 !important;
 }}
 
 /* RGB Animated Gradient Border around main container */
@@ -165,6 +251,10 @@ section[data-testid="stSidebar"] .stAlert {{
     transition: all 0.3s ease-in-out;
 }}
 
+.animated-main-container h2 {{
+    color: var(--text-color) !important;
+}}
+
 .metric-card {{
     background-color: var(--card-bg);
     border-radius: 10px;
@@ -175,6 +265,10 @@ section[data-testid="stSidebar"] .stAlert {{
 
 .stApp {{
     background-color: var(--bg-color);
+    color: var(--text-color);
+}}
+
+.stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp h4 {{
     color: var(--text-color);
 }}
 </style>
@@ -190,7 +284,7 @@ with tab_chat:
         """
         <div class="animated-main-container">
             <h2 style="margin-top:0;">Labour Market Forecasting Assistant</h2>
-            <p style="color:gray;">
+            <p class="container-subtitle">
                 Ask questions about Finnish quarterly job vacancy forecasts (1Q, 2Q, 4Q) by region, occupation, or industry.
                 The AI agent computes numerical predictions using the fine-tuned <b>Qwen3-4B</b> adapter and cites official 
                 <b>Ministry of Economic Affairs & Employment (TEM)</b> bulletins to explain the forecast.
@@ -319,7 +413,7 @@ with tab_analytics:
         """
         <div class="animated-main-container">
             <h2 style="margin-top:0;">Labour Market Figures & Model Analytics</h2>
-            <p style="color:gray;">
+            <p class="container-subtitle">
                 Explore Statistics Finland data trends, baseline comparisons, and the fine-tuned model's evaluation metrics.
             </p>
         </div>
