@@ -8,6 +8,7 @@ import json
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
+import yaml
 
 # Locate JobAI repository root
 def find_repo_root():
@@ -485,11 +486,13 @@ with tab_chat:
     )
 
     # Cached service loader to ensure GPU weights load once
-    @st.cache_resource(show_spinner="Connecting to AI Agent & Vector Index...")
+    @st.cache_resource(show_spinner="Loading the saved model onto GPU and opening the bulletin index...")
     def load_forecast_service(repo_dir):
         try:
             from jobai.chat import ForecastService
-            service = ForecastService(repo_dir, allow_embedding_download=True, allow_base_download=True)
+            service = ForecastService(repo_dir, allow_embedding_download=True)
+            service.load_model()
+            service.load_retriever()
             return service, None
         except Exception as e:
             return None, str(e)
@@ -502,6 +505,8 @@ with tab_chat:
             "- Ensure you are connected to a **GPU runtime** in Google Colab (`Runtime > Change runtime type > T4 GPU`).\n"
             "- Ensure the required packages are installed (`pip install -r requirements.txt`)."
         )
+    else:
+        st.sidebar.success("Forecast model loaded on GPU")
 
     # Initialize chat session state
     if "messages" not in st.session_state:
@@ -562,13 +567,13 @@ with tab_chat:
                 if isinstance(msg.get("forecasts"), pd.DataFrame) and not msg["forecasts"].empty:
                     st.dataframe(msg["forecasts"], use_container_width=True)
                 if msg.get("choices"):
-                    st.caption("Available matching series to specify:")
-                    st.dataframe(pd.DataFrame(msg["choices"]), use_container_width=True)
+                    st.caption("Reply with a listed number or name:")
+                    st.dataframe(pd.DataFrame(msg["choices"], index=range(1, len(msg["choices"]) + 1)), use_container_width=True)
                 if (msg.get("rag") or {}).get("passages"):
                     passages = msg["rag"]["passages"]
-                    with st.expander(f"View {len(passages)} Quoted Official Sources"):
+                    with st.expander(f"View {len(passages)} retrieved bulletin passages"):
                         for idx, p in enumerate(passages, 1):
-                            st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
+                            st.markdown(f"**Passage {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
                             st.caption(f"> \"{p.get('text', '')[:320]}...\"")
         # Hidden bottom anchor to scroll latest conversation into view
         st.markdown('<div id="chat-bottom-anchor"></div>', unsafe_allow_html=True)
@@ -577,7 +582,7 @@ with tab_chat:
     scroll_to_bottom()
 
     # Chat Input Box (Fixed to stay docked at the bottom of the viewport)
-    if prompt := st.chat_input("Ask a forecast question (e.g., 'What is the outlook for nurses in Uusimaa?')..."):
+    if prompt := st.chat_input("Ask JobAI a question or request a vacancy forecast..."):
         # Record user message
         st.session_state.messages.append({"role": "user", "content": prompt, "forecasts": None, "choices": None, "rag": None})
 
@@ -597,9 +602,13 @@ with tab_chat:
                     st.error(err_msg)
                     st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
                 else:
-                    with st.spinner("Routing query, forecasting with Qwen3-4B, and retrieving bulletin context..."):
+                    with st.spinner("JobAI is responding..."):
                         try:
-                            result = service.answer_question(prompt, context=st.session_state.chat_context)
+                            recent = [{"role": msg["role"], "content": msg["content"]}
+                                      for msg in st.session_state.messages[-7:-1]
+                                      if msg["role"] in ("user", "assistant")]
+                            result = service.answer_question(prompt, context=st.session_state.chat_context,
+                                                             history=recent)
                             if result is None:
                                 raise ValueError("Service returned an empty result.")
                             st.session_state.chat_context = result.get("context")
@@ -615,15 +624,15 @@ with tab_chat:
 
                             choices = (result.get("request") or {}).get("choices")
                             if choices:
-                                st.caption("Available matching series to specify:")
-                                st.dataframe(pd.DataFrame(choices), use_container_width=True)
+                                st.caption("Reply with a listed number or name:")
+                                st.dataframe(pd.DataFrame(choices, index=range(1, len(choices) + 1)), use_container_width=True)
 
                             rag_info = result.get("rag") or {}
                             if rag_info.get("passages"):
                                 passages = rag_info["passages"]
-                                with st.expander(f"View {len(passages)} Quoted Official Sources"):
+                                with st.expander(f"View {len(passages)} retrieved bulletin passages"):
                                     for idx, p in enumerate(passages, 1):
-                                        st.markdown(f"**Source {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
+                                        st.markdown(f"**Passage {idx}:** [{p.get('title', 'Bulletin')}]({p.get('url', '#')}) *({p.get('published', 'N/A')})*")
                                         st.caption(f"> \"{p.get('text', '')[:320]}...\"")
 
                             st.session_state.messages.append({
@@ -646,6 +655,16 @@ with tab_chat:
 
 # Tab 2: Figures & Analytics Dashboard
 with tab_analytics:
+    selection = yaml.safe_load((REPO / "configs/final_model.yaml").read_text())
+    comparison_manifest_path = REPO / selection["comparison_evidence"]
+    comparison_dir = None
+    if comparison_manifest_path.is_file():
+        comparison = json.loads(comparison_manifest_path.read_text())
+        if selection["run_id"] in comparison.get("selected_run_ids", []):
+            comparison_dir = comparison_manifest_path.parent
+        else:
+            st.error("The selected model is absent from its pinned comparison report.")
+
     st.markdown(
         """
         <div class="animated-main-container">
@@ -708,11 +727,7 @@ with tab_analytics:
     st.subheader("Inspect Additional Model & Data Analytics")
 
     FIGURE_CATALOG = {
-        "Forecasting Comparison: Model vs Baselines": [
-            "forecasting_comparison.png",
-            "model_vs_baselines_test_mae_old.png",
-            "shared_models_smape_mae.png"
-        ],
+        "Forecasting Comparison: Model vs Baselines": None,
         "Regional Breakdown: Dataset A Target Series": [
             "regional_breakdown.png",
             "03_dataset_a_targets.png",
@@ -747,9 +762,15 @@ with tab_analytics:
 
     if selected_option and selected_option != "-- Select a figure to inspect --":
         target_files = FIGURE_CATALOG[selected_option]
-        found_file = find_figure_path(target_files)
+        if target_files is None:
+            pinned_figure = comparison_dir / "shared_models_smape_mae.png" if comparison_dir else None
+            found_file = pinned_figure if pinned_figure and pinned_figure.is_file() else None
+        else:
+            found_file = find_figure_path(target_files)
         if found_file:
             st.image(str(found_file), caption=selected_option, use_container_width=True)
+        elif target_files is None:
+            st.warning(f"Pinned comparison figure missing: `{comparison_manifest_path.parent / 'shared_models_smape_mae.png'}`.")
         else:
             st.warning(f"Image file for '{selected_option}' not found. Searched for: {target_files} in `figures/` and `reports/figures/`.")
 
@@ -757,20 +778,9 @@ with tab_analytics:
     st.markdown("---")
     st.subheader("Baselines & Model Performance Scorecard")
 
-    baseline_csv_candidates = [
-        REPO / "reports" / "model_vs_baselines.csv",
-        REPO / "reports" / "baselines.csv",
-        REPO / "reports" / "model_evaluations" / "comparisons" / "comparison_c64a6d3e5c17" / "adapter_test_predictions.csv"
-    ]
-    loaded_table = None
-    for b_path in baseline_csv_candidates:
-        if b_path.is_file():
-            try:
-                loaded_table = pd.read_csv(b_path)
-                st.caption(f"Loaded scorecard from `{b_path.relative_to(REPO)}`")
-                st.dataframe(loaded_table, use_container_width=True)
-                break
-            except Exception:
-                pass
-    if loaded_table is None:
-        st.info("Baseline scorecard CSV not found in `reports/`. Run Notebook 04 or 07 to generate detailed metrics tables.")
+    scorecard_path = comparison_dir / "adapter_and_baseline_metrics.csv" if comparison_dir else None
+    if scorecard_path and scorecard_path.is_file():
+        st.caption(f"Loaded scorecard from `{scorecard_path.relative_to(REPO)}`")
+        st.dataframe(pd.read_csv(scorecard_path), use_container_width=True)
+    else:
+        st.info("The pinned comparison's metric table is missing. Restore its `adapter_and_baseline_metrics.csv` from notebook 07.")
