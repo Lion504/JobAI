@@ -486,13 +486,11 @@ with tab_chat:
     )
 
     # Cached service loader to ensure GPU weights load once
-    @st.cache_resource(show_spinner="Loading the saved model onto GPU and opening the bulletin index...")
+    @st.cache_resource(show_spinner="Connecting to AI Agent & Vector Index...")
     def load_forecast_service(repo_dir):
         try:
             from jobai.chat import ForecastService
-            service = ForecastService(repo_dir, allow_embedding_download=True)
-            service.load_model()
-            service.load_retriever()
+            service = ForecastService(repo_dir, allow_embedding_download=True, allow_base_download=True)
             return service, None
         except Exception as e:
             return None, str(e)
@@ -506,7 +504,7 @@ with tab_chat:
             "- Ensure the required packages are installed (`pip install -r requirements.txt`)."
         )
     else:
-        st.sidebar.success("Forecast model loaded on GPU")
+        st.sidebar.success("Forecast service connected (lazy loading)")
 
     # Initialize chat session state
     if "messages" not in st.session_state:
@@ -602,7 +600,8 @@ with tab_chat:
                     st.error(err_msg)
                     st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
                 else:
-                    with st.spinner("JobAI is responding..."):
+                    spinner_text = "Initializing Qwen3-4B on GPU (first-time only) & thinking..." if getattr(service, "model", None) is None else "JobAI is responding..."
+                    with st.spinner(spinner_text):
                         try:
                             recent = [{"role": msg["role"], "content": msg["content"]}
                                       for msg in st.session_state.messages[-7:-1]
@@ -655,15 +654,22 @@ with tab_chat:
 
 # Tab 2: Figures & Analytics Dashboard
 with tab_analytics:
-    selection = yaml.safe_load((REPO / "configs/final_model.yaml").read_text())
-    comparison_manifest_path = REPO / selection["comparison_evidence"]
-    comparison_dir = None
-    if comparison_manifest_path.is_file():
-        comparison = json.loads(comparison_manifest_path.read_text())
-        if selection["run_id"] in comparison.get("selected_run_ids", []):
-            comparison_dir = comparison_manifest_path.parent
-        else:
-            st.error("The selected model is absent from its pinned comparison report.")
+    @st.cache_data
+    def load_comparison_meta(repo_dir):
+        sel = yaml.safe_load((repo_dir / "configs/final_model.yaml").read_text())
+        manifest = repo_dir / sel["comparison_evidence"]
+        c_dir, err = None, None
+        if manifest.is_file():
+            comp = json.loads(manifest.read_text())
+            if sel["run_id"] in comp.get("selected_run_ids", []):
+                c_dir = manifest.parent
+            else:
+                err = "The selected model is absent from its pinned comparison report."
+        return sel, manifest, c_dir, err
+
+    selection, comparison_manifest_path, comparison_dir, comparison_err = load_comparison_meta(REPO)
+    if comparison_err:
+        st.error(comparison_err)
 
     st.markdown(
         """
