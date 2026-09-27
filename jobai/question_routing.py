@@ -139,23 +139,41 @@ class QuestionRouter:
         """Return ready/clarification/unsupported, a validated request, and new context."""
         question = question.strip()
         state = dict(context or {})
+        suggestion = state.pop("pending_suggestion", None)
+        if suggestion and re.match(r"^(?:ok(?:ay)?|yes|sure|go ahead|please do|as suggested)\b",
+                                   question, re.IGNORECASE):
+            question = suggestion
         choices = []
 
         def result(status, message, sid=None):
             return {"status": status, "message": message, "series_id": sid,
                     "horizons": list(state.get("horizons", self.horizons)),
-                    "context": dict(state), "choices": choices}
+                    "context": dict(state), "choices": choices,
+                    "interpreted_question": question}
 
         if not question:
             return result("clarification", "Enter a vacancy forecast question.")
-        explicit_ids = re.findall(r"12[a-z0-9]+::[^\s?]+", question)
-        if len(explicit_ids) > 1:
-            return result("clarification", "Choose one series at a time.")
-        if explicit_ids:
-            series_id = explicit_ids[0].rstrip(".,")
-            question_for_matching = question.replace(explicit_ids[0], "")
+        pending = state.pop("pending_choices", [])
+        if question.isdecimal():
+            index = int(question) - 1
+            if not 0 <= index < len(pending):
+                state["pending_choices"] = pending
+                return result("clarification", "Choose a listed number, or name a province and occupation/industry.")
+            choice = pending[index]
+            if "series_id" in choice:
+                series_id = choice["series_id"]
+            else:
+                state.update({key: choice[key] for key in ("region", "table_id", "target_code") if key in choice})
+            question_for_matching = ""
         else:
-            question_for_matching = question
+            explicit_ids = re.findall(r"12[a-z0-9]+::[^\s?]+", question)
+            if len(explicit_ids) > 1:
+                return result("clarification", "Choose one series at a time.")
+            if explicit_ids:
+                series_id = explicit_ids[0].rstrip(".,")
+                question_for_matching = question.replace(explicit_ids[0], "")
+            else:
+                question_for_matching = question
         if series_id is not None:
             if series_id not in self.series:
                 return result("unsupported", "That series is not a selected 12tu/12tw forecast target.")
@@ -166,7 +184,13 @@ class QuestionRouter:
         if error:
             return result("unsupported", error)
         state["horizons"] = hs
-        text = normalized(without_time)
+        text = re.sub(r"\bjob market\b", "job vacancy", normalized(without_time))
+        if series_id is None and "helsinki" in text.split():
+            state.clear()
+            state["horizons"] = hs
+            state["pending_suggestion"] = re.sub(r"\bhelsinki\b", "Uusimaa", question_for_matching,
+                                                  flags=re.IGNORECASE)
+            return result("unsupported", "Helsinki city is outside this model's forecast scope. I can check the same question for Uusimaa province instead. Reply 'yes' to use Uusimaa; it is not a city forecast.")
         regions, region_words, _ = self._matches(text, self.regions)
         if re.search(r"\b(national|nationwide|whole country|all finland)\b", text) or (
                 "finland" in text.split() and not regions):
@@ -175,6 +199,7 @@ class QuestionRouter:
         if len(regions) > 1:
             state.pop("region", None)
             choices.extend({"region": c, "label": self.regions[c]} for c in regions)
+            state["pending_choices"] = choices
             return result("clarification", "Which single province should I forecast?")
         if regions:
             state["region"] = regions[0]
@@ -198,6 +223,10 @@ class QuestionRouter:
             candidates = [("12tw", "SSS", {"all", "total", "industry"}, True)]
         target_words = set().union(*(c[2] for c in candidates)) if candidates else set()
         unknown = set(text.split()) - FILLER - region_words - target_words
+        if series_id is None and not any(candidate[3] for candidate in candidates) and re.search(
+                r"\bit\s+(?:jobs?|roles?|careers?|vacanc(?:y|ies))\b",
+                question_for_matching, re.IGNORECASE):
+            unknown.add("IT")
         if unknown:
             # Do not silently reuse an earlier occupation or province for an unrecognized new request.
             state.clear()
@@ -213,14 +242,15 @@ class QuestionRouter:
             state.pop("target_code", None)
             choices.extend({"table_id": t, "target_code": c, "label": self.targets[t][c]}
                            for t, c, _, _ in candidates)
-            return result("clarification", "Which occupation or industry do you mean? Choose one of the matches.")
+            state["pending_choices"] = choices
+            return result("clarification", "Which occupation or industry do you mean? Reply with its number or name.")
         if candidates:
             state.update(table_id=candidates[0][0], target_code=candidates[0][1])
         if state.get("region") not in self.regions:
             state.pop("region", None)
             return result("clarification", "Which province, for example Uusimaa or Pirkanmaa?")
         if state.get("table_id") not in self.targets or state.get("target_code") not in self.targets[state["table_id"]]:
-            return result("clarification", "Which occupation or industry should I forecast?")
+            return result("clarification", "Which occupation or industry should I forecast? For total vacancies, ask 'all occupations in Uusimaa next quarter'.")
         table, code, region = state["table_id"], state["target_code"], state["region"]
         matches = [sid for sid, row in self.series.items() if row["table_id"] == table
                    and self.dimensions[sid].get("Alue") == region
@@ -229,5 +259,6 @@ class QuestionRouter:
             return result("unsupported", f"No selected forecast series is available for {self.targets[table][code]} in {self.regions[region]}.")
         if len(matches) > 1:
             choices.extend({"series_id": sid, "label": sid} for sid in matches)
-            return result("clarification", "Choose a specific series; this request matches more than one target.")
+            state["pending_choices"] = choices
+            return result("clarification", "Choose a specific series by number or ID; this request matches more than one target.")
         return result("ready", self.label(matches[0]), matches[0])

@@ -24,10 +24,13 @@ def repo(tmp_path):
     processed = tmp_path / "data/processed"
     processed.mkdir()
     regions = {"MK01": "MK01 Uusimaa", "MK06": "MK06 Pirkanmaa", "MK02": "MK02 Southwest Finland"}
-    targets = {"12tu": {"2142": "2142 Civil engineers", "2512": "2512 Software developers",
+    targets = {"12tu": {"SSS": "All occupations", "2142": "2142 Civil engineers", "2512": "2512 Software developers",
+                        "2511": "2511 Systems analysts",
                         "2141": "2141 Industrial engineers", "3221": "3221 Nurses",
-                        "1321": "1321 Manufacturing managers", "9999": "9999 Absent specialists"},
-               "12tw": {"C": "C Manufacturing", "F": "F Construction"}}
+                        "1321": "1321 Manufacturing managers", "4227": "4227 Survey and market research interviewers",
+                        "9999": "9999 Absent specialists"},
+               "12tw": {"SSS": "All industries", "C": "C Manufacturing", "F": "F Construction",
+                        "M73": "M73 Advertising and market research"}}
     catalog = []
     for table, labels in targets.items():
         dimension = "Ammattiryhmä" if table == "12tu" else "Toimiala"
@@ -93,6 +96,18 @@ def test_followups_and_clarification_preserve_only_explicit_session_context(rout
     assert router.resolve("What about six months?")["status"] == "clarification"
 
 
+def test_job_market_is_not_treated_as_an_industry_and_numbered_choices_work(router):
+    general = router.resolve("What is the trend of the job market next quarter in Uusimaa?")
+    assert general["status"] == "clarification" and not general["choices"]
+    assert general["context"]["region"] == "MK01" and general["horizons"] == [1]
+    menu = router.resolve("Engineers in Uusimaa")
+    assert len(menu["choices"]) == 2
+    chosen = router.resolve("2", menu["context"])
+    assert chosen["status"] == "ready" and chosen["series_id"] in router.series
+    assert chosen["context"]["target_code"] == menu["choices"][1]["target_code"]
+    assert router.resolve("Helsinki next quarter")["status"] == "unsupported"
+
+
 @pytest.mark.parametrize("question", ["National vacancies next year", "Vacancies in Finland", "Civil engineers in Uusimaa for 9 months",
                                      "Civil engineers in Uusimaa for two years", "Civil engineers in Uusimaa in 2027Q1",
                                      "Civil engineers in Uusimaa next month", "Civil engineers in Uusimaa in 1 and 3 quarters"])
@@ -127,6 +142,12 @@ def service(repo, monkeypatch):
     return ForecastService(repo)
 
 
+def forecast_action(region="MK01", targets=None, horizons=None, needs_choice=False):
+    return {"action": "forecast", "forecast": {
+        "region": region, "targets": ["12tu:2142"] if targets is None else targets,
+        "horizons": [4] if horizons is None else horizons, "needs_choice": needs_choice}}
+
+
 def fake_predictions(inputs):
     return [{"series_id": row["series_id"], "run_id": "saved", "horizon_q": row["horizon_q"],
              "origin_quarter": row["origin_quarter"], "target_quarter": row["target_quarter"],
@@ -134,14 +155,268 @@ def fake_predictions(inputs):
             for row in inputs]
 
 
-def test_clarification_loads_no_models_or_index(service, monkeypatch):
+def test_clarification_runs_no_numeric_inference_or_retrieval(service, monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError("A clarification must not run inference")
     monkeypatch.setattr(service, "forecast", forbidden)
     monkeypatch.setattr(service, "load_retriever", forbidden)
+    actions = iter([forecast_action(region=None), forecast_action(region="Finland")])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(next(actions)))
     result = service.answer_question("Civil engineers next year")
     assert result["status"] == "clarification" and result["forecasts"] == [] and result["rag"] is None
     assert service.answer_question("National vacancies")["status"] == "unsupported"
+
+
+def test_base_model_leads_chat_and_receives_recent_history(service, monkeypatch):
+    monkeypatch.setattr(service, "_decide_action", ForecastService._decide_action.__get__(service))
+    captured = []
+    def generate(messages, **kwargs):
+        captured.append(messages)
+        return '{"action": "reply", "answer": "I can help with vacancy forecasts and ordinary questions."}'
+    monkeypatch.setattr(service, "_generate_base_json", generate)
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("A chat reply needs no forecast"))
+    result = service.answer_question("what you know", history=[
+        {"role": "user", "content": "Hello"}, {"role": "assistant", "content": "Hi there"}])
+    assert result["status"] == "answered" and result["answer"].startswith("I can help")
+    assert [message["role"] for message in captured[0][-3:]] == ["user", "assistant", "user"]
+    assert captured[0][-1]["content"] == "what you know"
+
+
+def test_helsinki_general_outlook_then_yes_forecasts_the_total(service, monkeypatch):
+    actions = iter([forecast_action(region="Helsinki", targets=["12tu:SSS"]),
+                    forecast_action(targets=["12tu:SSS"])])
+    prompts, calls = [], []
+    def generate(messages, **kwargs):
+        prompts.append(copy.deepcopy(messages))
+        return json.dumps(next(actions))
+    def forecast(sid, horizons):
+        calls.append((sid, horizons))
+        return fake_predictions(service.prepare_inputs(sid, horizons))
+    monkeypatch.setattr(service, "_generate_base_json", generate)
+    monkeypatch.setattr(service, "forecast", forecast)
+    monkeypatch.setattr(service, "resolve_question", lambda *args, **kwargs:
+                        pytest.fail("The chat must not reparse the user's wording"))
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "The total vacancy forecast.", "sources": [], "rag": None})
+    question = "what is the trend of job market in helsinki for next year"
+    first = service.answer_question(question)
+    assert first["status"] == "unsupported" and not calls
+    assert first["context"]["suggested_request"] == forecast_action(targets=["12tu:SSS"])["forecast"]
+    second = service.answer_question("yes", first["context"], history=[
+        {"role": "user", "content": question}, {"role": "assistant", "content": first["answer"]}])
+    assert second["status"] == "answered" and len(calls) == 1
+    assert calls[0][1] == [4] and "Ammattiryhmä=SSS" in calls[0][0]
+    assert second["request"]["choices"] == []
+    assert second["forecasts"][0]["target_quarter"] == "2025Q4"
+    assert "12tu:SSS: All occupations" in prompts[0][0]["content"]
+    assert "suggested_request" in prompts[1][0]["content"]
+
+
+def test_explicit_helsinki_cannot_be_silently_mapped_to_uusimaa(service, monkeypatch):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["12tu:SSS"])))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("The province substitution needs a choice"))
+    result = service.answer_question("what is the job market trend for next year in helsinki")
+    assert result["status"] == "unsupported" and not result["forecasts"]
+    assert result["context"]["forecast_request"]["region"] == "Helsinki"
+    assert result["context"]["suggested_request"]["region"] == "MK01"
+
+
+def test_completed_forecast_is_passed_to_followups_even_without_history(service, monkeypatch):
+    captured = []
+    responses = iter([json.dumps(forecast_action(targets=["12tu:SSS"])),
+                      json.dumps({"action": "reply", "answer": "The forecast shown was for Uusimaa."}),
+                      json.dumps(forecast_action(region="Atlantis"))])
+    def generate(messages, **kwargs):
+        captured.append(copy.deepcopy(messages))
+        return next(responses)
+    monkeypatch.setattr(service, "_generate_base_json", generate)
+    monkeypatch.setattr(service, "forecast", lambda sid, hs: fake_predictions(service.prepare_inputs(sid, hs)))
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "60 vacancies in 2025Q4, down from 64 in 2024Q4.",
+                                                          "sources": [], "rag": None})
+    first = service.answer_question("show the job market next year in Uusimaa")
+    saved = copy.deepcopy(first["context"]["last_forecast"])
+    assert saved["status"] == "completed" and saved["scope"] == "All occupations in Uusimaa"
+    assert saved["values"][0]["y_pred"] == 60
+    # Caller-side edits to displayed rows must not corrupt the session's saved result.
+    first["forecasts"][0]["y_pred"] = 999
+    followup = service.answer_question("what forecast did you just show me", first["context"])
+    assert followup["context"]["last_forecast"] == saved
+    assert json.dumps(saved, ensure_ascii=False) in captured[1][0]["content"]
+    unsupported = service.answer_question("what about Atlantis", followup["context"])
+    assert unsupported["context"]["last_forecast"] == saved
+    assert unsupported["status"] == "unsupported"
+
+
+def test_conversational_forecasts_use_arguments_and_can_reset_to_total(service, monkeypatch):
+    actions = iter([forecast_action(targets=["12tu:2512"], horizons=[2]),
+                    forecast_action(targets=["12tu:SSS"], horizons=[2])])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(next(actions)))
+    monkeypatch.setattr(service, "forecast", lambda sid, hs: fake_predictions(service.prepare_inputs(sid, hs)))
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "Forecast", "sources": [], "rag": None})
+    first = service.answer_question("Could you check how things might look for people writing software around Uusimaa six months from now?")
+    assert first["status"] == "answered" and first["context"]["target_code"] == "2512"
+    second = service.answer_question("How about the whole job market there, over the same period?", first["context"])
+    assert second["status"] == "answered" and second["context"]["target_code"] == "SSS"
+    assert second["context"]["horizons"] == [2]
+
+
+def test_named_choice_uses_saved_context_without_requiring_exact_phrase(service, monkeypatch):
+    actions = iter([forecast_action(targets=["12tu:3221"], needs_choice=True),
+                    forecast_action(targets=["12tu:3221"])])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(next(actions)))
+    calls = []
+    def forecast(sid, hs):
+        calls.append(sid)
+        return fake_predictions(service.prepare_inputs(sid, hs))
+    monkeypatch.setattr(service, "forecast", forecast)
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "Forecast", "sources": [], "rag": None})
+    first = service.answer_question("Healthcare work around Uusimaa a year ahead?")
+    assert first["status"] == "clarification" and not calls
+    second = service.answer_question("The nursing one would be useful, thanks", first["context"])
+    assert second["status"] == "answered" and len(calls) == 1
+    assert second["context"]["target_code"] == "3221"
+
+
+def test_choice_is_remembered_while_waiting_for_the_province(service, monkeypatch):
+    actions = iter([forecast_action(region=None, targets=["12tu:2512", "12tu:2511"], needs_choice=True),
+                    forecast_action(targets=["12tu:2511"])])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(next(actions)))
+    monkeypatch.setattr(service, "forecast", lambda sid, hs: fake_predictions(service.prepare_inputs(sid, hs)))
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "Forecast", "sources": [], "rag": None})
+    first = service.answer_question("IT jobs next year?")
+    before = copy.deepcopy(first["context"])
+    second = service.answer_question("2", first["context"])
+    assert first["context"] == before
+    assert second["status"] == "clarification" and "province" in second["answer"]
+    assert second["context"]["forecast_request"]["targets"] == ["12tu:2511"]
+    assert second["context"]["forecast_request"]["needs_choice"] is False
+    third = service.answer_question("Uusimaa, please", second["context"])
+    assert third["status"] == "answered" and third["context"]["target_code"] == "2511"
+
+
+def test_choices_exclude_series_missing_in_the_requested_province(service, monkeypatch):
+    service.router.series = {sid: row for sid, row in service.router.series.items()
+                             if not (service.router.dimensions[sid]["Alue"] == "MK01"
+                                     and service.router.dimensions[sid].get("Ammattiryhmä") == "2512")}
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["12tu:2512", "12tu:2511"], needs_choice=True)))
+    result = service.answer_question("IT jobs in Uusimaa next year")
+    assert result["status"] == "clarification"
+    assert [choice["target_code"] for choice in result["request"]["choices"]] == ["2511"]
+
+
+@pytest.mark.parametrize("action", [
+    forecast_action(region="Atlantis"), forecast_action(targets=["12tu:9999"]),
+    forecast_action(horizons=[3]), forecast_action(horizons=[True]), forecast_action(targets=[]),
+])
+def test_tool_arguments_cannot_bypass_catalog_or_horizon_checks(service, monkeypatch, action):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(action))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("Unsupported arguments must not run the adapter"))
+    old = service.resolve_question("Civil engineers in Uusimaa")["context"]
+    result = service.answer_question("Check this new request", old)
+    assert result["status"] in {"clarification", "unsupported"} and not result["forecasts"]
+    assert "target_code" not in result["context"]
+
+
+def test_incomplete_tool_request_is_retried_before_inference(service, monkeypatch):
+    responses = iter([json.dumps({"action": "forecast"}), json.dumps(forecast_action(region=None))])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: next(responses))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("The province still needs clarification"))
+    result = service.answer_question("Civil engineer vacancies next year")
+    assert result["status"] == "clarification" and "province" in result["answer"]
+    assert result["context"]["target_code"] == "2142"
+
+
+def test_model_selected_catalog_uses_only_saved_series(service, monkeypatch):
+    monkeypatch.setattr(service, "_decide_action", lambda *args: {"action": "catalog", "kind": "occupation"})
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("A catalog question needs no forecast"))
+    result = service.answer_question("what occupation you know")
+    assert result["status"] == "answered" and not result["forecasts"]
+    assert "Software developers" in result["answer"] and "Absent specialists" not in result["answer"]
+    scoped = service.answer_question("list all occupations in Uusimaa")
+    assert scoped["context"]["region"] == "MK01" and "Software developers" in scoped["answer"]
+
+
+def test_pending_choice_cannot_be_answered_as_unrelated_chat(service, monkeypatch):
+    menu = service.resolve_question("Engineers in Uusimaa")
+    monkeypatch.setattr(service, "_decide_action", lambda *args: {"action": "reply", "answer": "Hello"})
+    monkeypatch.setattr(service, "forecast", lambda sid, horizons: fake_predictions(
+        service.prepare_inputs(sid, horizons)))
+    seen = []
+    def explain(question, forecasts):
+        seen.append(question)
+        return {"answer": "A verified forecast response", "sources": [], "rag": None}
+    monkeypatch.setattr(service, "explain", explain)
+    result = service.answer_question("1", menu["context"], history=[
+        {"role": "user", "content": "Engineers in Uusimaa"}])
+    assert result["status"] == "answered" and result["forecasts"]
+    assert result["request"]["series_id"] in service.router.series
+    assert seen == ["Engineers in Uusimaa"]
+    assert result["context"]["forecast_request"]["targets"] == [
+        f"{result['context']['table_id']}:{result['context']['target_code']}"]
+
+
+def test_natural_language_target_choices_are_catalog_checked(service, monkeypatch):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["12tu:2512", "12tu:2511"], needs_choice=True)))
+    question = "I want to know the next year IT jobs trend in Uusimaa area"
+    route = service.answer_question(question)["request"]
+    assert route["status"] == "clarification" and route["horizons"] == [4]
+    assert route["context"]["region"] == "MK01" and len(route["choices"]) == 2
+    assert [choice["target_code"] for choice in route["choices"]] == ["2512", "2511"]
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("Choose a target before forecasting"))
+    assert service.answer_question(question)["status"] == "clarification"
+    selected = service.resolve_question("1", route["context"])
+    assert selected["status"] == "ready" and selected["horizons"] == [4]
+    assert selected["context"]["target_code"] == "2512"
+    previous = service.router.resolve("Civil engineers in Uusimaa")
+    changed = service.answer_question(question, previous["context"])["request"]
+    assert changed["status"] == "clarification" and len(changed["choices"]) == 2
+    assert "target_code" not in changed["context"]
+
+
+def test_helsinki_suggestion_keeps_the_requested_target_and_horizon(service, monkeypatch):
+    actions = iter([
+        forecast_action(region="Helsinki", targets=["12tu:2512", "12tu:2511"], needs_choice=True),
+        forecast_action(targets=["12tu:2512", "12tu:2511"], needs_choice=True)])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(next(actions)))
+    first = service.answer_question("what is next year it job trend in helsinki")["request"]
+    assert first["status"] == "unsupported" and first["horizons"] == [4]
+    assert "Uusimaa" in first["message"] and "next quarter" not in first["message"]
+    second = service.answer_question("ok, as your suggested check for me", first["context"])["request"]
+    assert second["status"] == "clarification" and second["horizons"] == [4]
+    assert second["context"]["region"] == "MK01" and len(second["choices"]) == 2
+    chosen = service.resolve_question("1", second["context"])
+    assert chosen["status"] == "ready" and chosen["horizons"] == [4]
+
+
+def test_natural_language_target_must_be_selected_and_unambiguous(service, monkeypatch):
+    question = "Tech jobs in Uusimaa next year"
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["12tu:9999"])))
+    assert service.answer_question(question)["status"] == "clarification"
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["12tu:2512"], needs_choice=True)))
+    route = service.answer_question(question)["request"]
+    assert route["status"] == "clarification" and route["choices"][0]["target_code"] == "2512"
+    selected = service.resolve_question("1", route["context"])
+    assert selected["status"] == "ready" and selected["context"]["target_code"] == "2512"
+
+
+def test_missing_latest_quarter_returns_data_limit_before_model_load(service, monkeypatch):
+    path = service.repo / "data/processed/12tu__normalized.csv"
+    frame = pd.read_csv(path)
+    missing = (frame.Alue.eq("MK01") & frame["Ammattiryhmä"].astype(str).eq("2142")
+               & frame.timeperiod_q.eq("2024Q4"))
+    assert missing.sum() == 1
+    frame.loc[missing, "value"] = np.nan
+    frame.to_csv(path, index=False)
+    monkeypatch.setattr(service, "load_model", lambda: pytest.fail("Missing data must not load the GPU model"))
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(horizons=[1])))
+    result = service.answer_question("Civil engineers in Uusimaa next quarter")
+    assert result["status"] == "unsupported" and "2024Q4" in result["answer"]
+    assert result["forecasts"] == []
 
 
 def test_forecast_cache_reuses_all_horizons_but_invalidates_changed_history(service, monkeypatch):
@@ -168,10 +443,28 @@ PASSAGE = {"doc_id": "a", "title": "Bulletin", "published": "2024-11-22", "url":
            "text": "Vacancies decreased in the professional occupational groups."}
 
 
+def test_model_selected_bulletin_tool_checks_citation(service, monkeypatch):
+    monkeypatch.setattr(service, "_decide_action", lambda *args: {"action": "bulletins"})
+    monkeypatch.setattr(service, "retrieve_bulletins", lambda *args: [PASSAGE])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        {"answer": "The bulletin reports fewer vacancies.",
+         "citations": [{"source_id": 1, "quote": PASSAGE["text"]}]}))
+    result = service.answer_question("What do the bulletins say about vacancies?")
+    assert result["status"] == "answered" and result["rag"]["status"] == "verified"
+    assert result["sources"][0]["doc_id"] == "a" and PASSAGE["text"] in result["answer"]
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        {"answer": "An unsupported claim", "citations": [{"source_id": 1, "quote": "Invented quote"}]}))
+    invalid = service.answer_question("What do the bulletins say about vacancies?")
+    assert invalid["rag"]["status"] == "invalid_citation" and "unsupported claim" not in invalid["answer"]
+
+
 def test_answer_returns_data_and_keeps_user_sessions_separate(service, monkeypatch):
     monkeypatch.setattr(service, "load_model", lambda: None)
     monkeypatch.setattr(service, "_predict", fake_predictions)
     monkeypatch.setattr(service, "retrieve_asof", lambda *args: [PASSAGE])
+    actions = iter([forecast_action(), forecast_action(region="MK06", targets=["12tu:2512"], horizons=[1]),
+                    forecast_action(horizons=[2])])
+    monkeypatch.setattr(service, "_decide_action", lambda *args: next(actions))
     captured = []
     def generate(messages, **kwargs):
         captured.append(messages)
@@ -186,6 +479,9 @@ def test_answer_returns_data_and_keeps_user_sessions_separate(service, monkeypat
     assert [r["horizon_q"] for r in followup["forecasts"]] == [2]
     assert followup["rag"]["status"] == "verified" and followup["sources"][0]["quote"] == PASSAGE["text"]
     assert PASSAGE["text"] in captured[-1][1]["content"] and "62.00" in followup["answer"]
+    assert "The saved model forecasts" in one["answer"] and "down 4.00" in one["answer"]
+    assert one["context"]["last_forecast"]["scope"] == "Civil engineers in Uusimaa"
+    assert two["context"]["last_forecast"]["scope"] == "Software developers in Pirkanmaa"
     json.dumps(followup)
     assert not (service.repo / "reports").exists()  # The caller, not this shared backend, owns output files.
 
@@ -209,6 +505,24 @@ def test_citation_failure_retry_and_missing_evidence(service, monkeypatch):
     assert service.explain("What is the outlook?", rows)["rag"]["status"] == "no_dated_passages"
     assert rows == original
     assert verified_quote({"source_id": True, "quote": PASSAGE["text"]}, [PASSAGE]) is None
+
+
+def test_unemployment_quote_cannot_be_cited_as_vacancy_context(service, monkeypatch):
+    unrelated = {**PASSAGE, "doc_id": "unemployment",
+                 "text": "The number of unemployed job seekers increased in Uusimaa compared with last year."}
+    sid = service.resolve_question("Civil engineers in Uusimaa")["series_id"]
+    rows = fake_predictions(service.prepare_inputs(sid))[:1]
+    monkeypatch.setattr(service, "retrieve_asof", lambda *args: [unrelated, PASSAGE])
+    responses = iter([
+        json.dumps({"source_id": 1, "quote": unrelated["text"], "trend_sentence": "The forecast falls."}),
+        json.dumps({"source_id": 2, "quote": PASSAGE["text"], "trend_sentence": "The forecast falls."}),
+    ])
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: next(responses))
+    result = service.explain("What is the outlook?", rows)
+    assert result["rag"]["status"] == "verified" and len(result["rag"]["responses"]) == 2
+    assert result["sources"][0]["doc_id"] == "a"
+    assert "unemployed job seekers" not in result["answer"]
+    assert "The saved model forecasts" in result["answer"]
 
 
 def test_numeric_and_text_generation_use_the_right_adapter_state(service, monkeypatch):
@@ -266,6 +580,22 @@ def test_retrieval_enforces_origin_cutoff_and_source_metadata(service):
     sid = service.resolve_question("Civil engineers in Uusimaa")["series_id"]
     passages = service.retrieve_asof({"series_id": sid, "origin_quarter": "2024Q4"})
     assert [p["doc_id"] for p in passages] == ["a"]
+
+
+def test_bulletin_retrieval_rejects_future_and_unlinked_passages(service):
+    today = pd.Timestamp.now(tz="UTC").date()
+    tomorrow = (pd.Timestamp(today) + pd.Timedelta(days=1)).date().isoformat()
+    class Encoder:
+        def encode(self, queries, **kwargs):
+            return np.array([[1.0, 0.0]])
+    class Collection:
+        def query(self, **kwargs):
+            assert kwargs["where"] == {"published_number": {"$lte": int(today.strftime("%Y%m%d"))}}
+            return {"documents": [[PASSAGE["text"]] * 4], "metadatas": [[
+                PASSAGE, {**PASSAGE, "doc_id": "future", "published": tomorrow},
+                {**PASSAGE, "doc_id": "no-url", "url": ""}, PASSAGE]]}
+    service.collection, service.embedding_model = Collection(), Encoder()
+    assert [passage["doc_id"] for passage in service.retrieve_bulletins("vacancies")] == ["a"]
 
 
 def test_embedding_cache_is_persistent_and_never_downloads_by_default(service, monkeypatch):
