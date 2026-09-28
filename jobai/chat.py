@@ -93,7 +93,7 @@ class ForecastService:
     def resolve_question(self, question, context=None, *, series_id=None, horizons=None):
         return self.router.resolve(question, context, series_id=series_id, horizons=horizons)
 
-    def _resolve_forecast_request(self, request, question=None):
+    def _resolve_forecast_request(self, request):
         """Validate Qwen's arguments, without matching the user's sentence again."""
         state = {"forecast_request": copy.deepcopy(request)}
 
@@ -102,57 +102,28 @@ class ForecastService:
                     "horizons": state.get("horizons", []), "context": state,
                     "choices": choices or []}
 
-        if request.get("horizons") is not None:
-            try:
-                state["horizons"] = self._horizons(request["horizons"])
-            except (ValueError, TypeError):
-                return result("unsupported", "I can forecast 1, 2, or 4 quarters ahead (3, 6, or 12 months). Which would you like?")
-        else:
-            if question:
-                hs, _, _ = self.router._time(question, [1, 2, 4])
-                state["horizons"] = hs or [1, 2, 4]
-            else:
-                state["horizons"] = [1, 2, 4]
-        region = request.get("region")
+        try:
+            state["horizons"] = self._horizons(request["horizons"])
+        except (ValueError, TypeError):
+            return result("unsupported", "I can forecast 1, 2, or 4 quarters ahead (3, 6, or 12 months). Which would you like?")
+        region = request["region"]
         if isinstance(region, str):
             region = next((code for code, label in self.router.regions.items()
                            if normalized(region) in {normalized(code), normalized(label)}), region)
-        if (region is None or region not in self.router.regions) and question:
-            q_norm = normalized(question)
-            if "helsinki" in q_norm.split():
-                region = "Helsinki"
-            else:
-                q_regs, _, _ = self.router._matches(q_norm, self.router.regions)
-                if len(q_regs) == 1:
-                    region = q_regs[0]
-        raw_targets = list(dict.fromkeys(request.get("targets", [])))
-        normalized_targets = []
-        for t in raw_targets:
-            if not isinstance(t, str):
-                continue
-            if t in self.forecast_targets:
-                normalized_targets.append(t)
-            elif f"12tu:{t}" in self.forecast_targets:
-                normalized_targets.append(f"12tu:{t}")
-            elif f"12tw:{t}" in self.forecast_targets:
-                normalized_targets.append(f"12tw:{t}")
-            else:
-                norm_t = normalized(t)
-                matched = [f"12tu:{c}" for c in self.router._matches(norm_t, self.router.targets.get("12tu", {}), partial=True)
-                           if f"12tu:{c}" in self.forecast_targets]
-                if not matched:
-                    matched = [f"12tw:{c}" for c in self.router._matches(norm_t, self.router.targets.get("12tw", {}), partial=True)
-                               if f"12tw:{c}" in self.forecast_targets]
-                if not matched:
-                    exact = next((k for k, v in self.forecast_targets.items()
-                                  if norm_t in {normalized(k), normalized(v), normalized(k.split(":", 1)[-1])}), None)
-                    if exact:
-                        matched = [exact]
-                if matched:
-                    normalized_targets.extend(matched)
-                else:
-                    normalized_targets.append(t)
-        targets = list(dict.fromkeys(normalized_targets))
+        targets = []
+        for target in request["targets"]:
+            if target not in self.forecast_targets:
+                # Accept alternate representations only when exactly one catalog ID matches.
+                key = normalized(target)
+                matches = [code for code, label in self.forecast_targets.items()
+                           if key in {normalized(code), normalized(code.split(":", 1)[-1]), normalized(label),
+                                      normalized(f"{code}: {label}")}]
+                if len(matches) == 1:
+                    target = matches[0]
+            if target not in targets:
+                targets.append(target)
+        if any(target not in self.forecast_targets for target in targets):
+            return result("clarification", "I couldn't identify a supported forecast series for that request. Which occupation or industry do you mean?")
         if normalized(region) == "helsinki":
             state["suggested_request"] = {**request, "region": "MK01"}
             return result("unsupported", "I can forecast Uusimaa province, which includes Helsinki, but not Helsinki city separately. Would you like the Uusimaa forecast?")
@@ -165,54 +136,13 @@ class ForecastService:
                      for sid, row in self.router.series.items()
                      if region is None or self.router.dimensions[sid]["Alue"] == region}
         targets = [target for target in targets if target in available]
-        if not targets and question:
-            # Fallback to question matching if Qwen provided empty or unrecognized targets
-            q_norm = normalized(question)
-            codes_tu, _, exact_tu = self.router._matches(q_norm, self.router.targets.get("12tu", {}), partial=True)
-            cand_tu = [f"12tu:{c}" for c in codes_tu if f"12tu:{c}" in available and c != "SSS"]
-            codes_tw, _, exact_tw = self.router._matches(q_norm, self.router.targets.get("12tw", {}), partial=True)
-            cand_tw = [f"12tw:{c}" for c in codes_tw if f"12tw:{c}" in available and c != "SSS"]
-
-            if exact_tu and not exact_tw:
-                cand = cand_tu
-            elif exact_tw and not exact_tu:
-                cand = cand_tw
-            else:
-                cand = cand_tu or cand_tw
-
-            if not cand and any(w in q_norm.split() for w in ("total", "all", "market", "vacancies", "vacancy")):
-                cand = [target for target in ("12tu:SSS", "12tw:SSS") if target in available]
-            if cand:
-                targets = list(dict.fromkeys(cand))
         if not targets:
-            if raw_targets and any(t not in self.forecast_targets for t in raw_targets):
-                return result("clarification", "I couldn't identify a supported forecast series for that request. Which occupation or industry do you mean?")
             return result("clarification", "There is no selected series for that target and province. Would you like total vacancies or a different occupation or industry?")
-        if any(target not in self.forecast_targets for target in targets):
-            return result("clarification", "I couldn't identify a supported forecast series for that request. Which occupation or industry do you mean?")
-        if len(targets) > 1 and question:
-            q_norm = normalized(question)
-            exact_in_q = [t for t in targets if normalized(self.forecast_targets[t]) in q_norm or
-                          normalized(self.forecast_targets[t].split(" ", 1)[-1]) in q_norm]
-            if len(exact_in_q) == 1:
-                targets = exact_in_q
-        if len(targets) > 1 or request.get("needs_choice"):
-            if len(targets) == 1 and question:
-                q_norm = normalized(question)
-                lbl_norm = normalized(self.forecast_targets[targets[0]])
-                lbl_word = normalized(self.forecast_targets[targets[0]].split(" ", 1)[-1])
-                if lbl_norm in q_norm or lbl_word in q_norm:
-                    pass
-                else:
-                    choices = [{"table_id": target.split(":", 1)[0], "target_code": target.split(":", 1)[1],
-                                "label": self.forecast_targets[target]} for target in targets]
-                    state["pending_choices"] = choices
-                    return result("clarification", "These are the available matches. Which would you like? Reply with its number or name.", choices)
-            else:
-                choices = [{"table_id": target.split(":", 1)[0], "target_code": target.split(":", 1)[1],
-                            "label": self.forecast_targets[target]} for target in targets]
-                state["pending_choices"] = choices
-                return result("clarification", "These are the available matches. Which would you like? Reply with its number or name.", choices)
+        if len(targets) > 1 or request["needs_choice"]:
+            choices = [{"table_id": target.split(":", 1)[0], "target_code": target.split(":", 1)[1],
+                        "label": self.forecast_targets[target]} for target in targets]
+            state["pending_choices"] = choices
+            return result("clarification", "These are the available matches. Which would you like? Reply with its number or name.", choices)
         state["table_id"], state["target_code"] = targets[0].split(":", 1)
         # The existing router checks the exact region/target combination and series ID.
         return self.router.resolve("forecast", state, horizons=state["horizons"])
@@ -239,9 +169,9 @@ class ForecastService:
                      "targets contains exact IDs from the catalog. A general job-market/vacancy outlook "
                      "uses total vacancies, 12tu:SSS; it does NOT require an occupation. Interpret it as "
                      "a vacancy outlook. For explicit wage or unemployment forecasts, explain that the "
-                     "saved model predicts vacancies instead of substituting a vacancy forecast. For a general broad field "
-                     "such as IT, tech, or healthcare (when no specific occupation or industry is named), offer up to six relevant targets and needs_choice=true. "
-                     "For a specific target (such as nurses, software developers, construction, civil engineers) or a choice the user has selected, use that single exact target and "
+                     "saved model predicts vacancies instead of substituting a vacancy forecast. For a broad field "
+                     "such as IT or healthcare, offer up to six relevant targets and needs_choice=true. "
+                     "For a specific target or a choice the user has selected, use one target and "
                      "needs_choice=false. Never substitute total vacancies for an unknown specific target; "
                      "use an empty targets list if nothing fits. horizons is quarters ahead: next quarter=1, "
                      "six months=2, next year=4. Preserve unsupported horizons so the tool can explain its "
@@ -665,21 +595,13 @@ class ForecastService:
         if not question.strip():
             return {"status": "clarification", "answer": "Enter a question.", "request": None,
                     "context": dict(context or {}), "forecasts": [], "sources": [], "rag": None}
-        explicit_ids = re.findall(r"12[a-z0-9]+::[^\s?]+", question)
-        direct_selection = series_id is not None or (len(explicit_ids) == 1) or (
+        direct_selection = series_id is not None or (
             question.strip().isdecimal() and context and context.get("pending_choices"))
         decision = {"action": "forecast"} if direct_selection else self._decide_action(question, history, context)
         if decision["action"] == "reply":
-            q_norm = normalized(question)
-            has_forecast_intent = any(w in q_norm for w in ("forecast", "outlook", "trend", "vacanc"))
-            regs, _, _ = self.router._matches(q_norm, self.router.regions)
-            if has_forecast_intent and (regs or "helsinki" in q_norm.split()):
-                decision = {"action": "forecast", "forecast": {"region": regs[0] if regs else "Helsinki",
-                                                              "targets": [], "horizons": None, "needs_choice": False}}
-            else:
-                return {"status": "answered", "answer": decision["answer"].strip(),
-                        "request": {"action": "reply", "choices": []}, "context": dict(context or {}),
-                        "forecasts": [], "sources": [], "rag": None}
+            return {"status": "answered", "answer": decision["answer"].strip(),
+                    "request": {"action": "reply", "choices": []}, "context": dict(context or {}),
+                    "forecasts": [], "sources": [], "rag": None}
         if decision["action"] == "catalog":
             query = decision.get("query")
             answer, state = self._catalog_answer(query if isinstance(query, str) else question,
@@ -694,14 +616,14 @@ class ForecastService:
         if direct_selection:
             route = self.resolve_question(question, context, series_id=series_id, horizons=horizons)
         else:
-            request = dict(decision["forecast"])
+            request = {**decision["forecast"]}
             if horizons is not None:
                 request["horizons"] = horizons
             # Check the user's explicit city request independently of Qwen's proposed province.
             mentioned_regions, _, _ = self.router._matches(normalized(question), self.router.regions)
             if "helsinki" in normalized(question).split() and not mentioned_regions:
                 request["region"] = "Helsinki"
-            route = self._resolve_forecast_request(request, question=question)
+            route = self._resolve_forecast_request(request)
             route["interpreted_question"] = question
         result = {"status": route["status"], "answer": route["message"],
                   "request": route, "context": route["context"], "forecasts": [], "sources": [], "rag": None}

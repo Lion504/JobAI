@@ -528,9 +528,9 @@ with tab_chat:
                     "**Terve! I am JobAI.**\n\n"
                     "I forecast registered job vacancies in Finland and explain trends using official bulletins.\n"
                     "Try asking:\n"
-                    "- *'What is the vacancy outlook for nurses in Uusimaa?'*\n"
-                    "- *'How are software development jobs looking in Pirkanmaa for the next 2 quarters?'*\n"
-                    "- *'What is the trend for construction workers in North Ostrobothnia?'*"
+                    "- *'Forecast all occupations in Uusimaa next year.'*\n"
+                    "- *'Forecast civil engineers in Uusimaa next quarter.'*\n"
+                    "- *'Forecast software developers in Uusimaa in six months.'*"
                 ),
                 "forecasts": None,
                 "choices": None,
@@ -631,6 +631,13 @@ with tab_chat:
                                       if msg["role"] in ("user", "assistant")]
                             result = service.answer_question(prompt, context=st.session_state.chat_context,
                                                              history=recent)
+                            import inspect
+                            print("ROUTING DEBUG:", {
+                                "backend_file": inspect.getfile(type(service)),
+                                "resolver": str(inspect.signature(service._resolve_forecast_request)),
+                                "nurses_in_catalog": "12tu:3221" in service.forecast_targets,
+                                "request": result.get("request"),
+                            }, flush=True)
                             if result is None:
                                 raise ValueError("Service returned an empty result.")
                             st.session_state.chat_context = result.get("context")

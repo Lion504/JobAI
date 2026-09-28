@@ -24,7 +24,7 @@ FILLER = set("""a an the and or of for in on at to from with by about what how w
     there available provide summarize summary tell us use looking look expected
     rising falling increasing decreasing declining please horizon data information
     region province occupation industry sector professional group total all country
-    month quarter year h1 h2 h4 half ahead worker workers development""".split()) | set(NUMBER_WORDS)
+    month quarter year h1 h2 h4 half ahead""".split()) | set(NUMBER_WORDS)
 
 
 def normalized(text):

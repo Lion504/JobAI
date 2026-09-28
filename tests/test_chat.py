@@ -631,32 +631,81 @@ def test_embedding_cache_is_persistent_and_never_downloads_by_default(service, m
         ForecastService(service.repo).load_retriever()
 
 
-def test_sample_dashboard_questions_resolve_and_forecast(service, monkeypatch):
-    calls = []
-    def forecast(sid, hs):
-        calls.append((sid, hs))
-        return fake_predictions(service.prepare_inputs(sid, hs))
-    monkeypatch.setattr(service, "forecast", forecast)
+@pytest.mark.parametrize("target, question, expected", [
+    ("3221", "What is the vacancy outlook for nurses in Uusimaa?", "Ammattiryhmä=3221"),
+    ("Nurses", "What is the vacancy outlook for nurses in Uusimaa?", "Ammattiryhmä=3221"),
+    ("12tu:3221: Nurses", "What is the vacancy outlook for nurses in Uusimaa?", "Ammattiryhmä=3221"),
+    ("Software developers", "How are software development jobs looking in Uusimaa?", "Ammattiryhmä=2512"),
+    ("F", "What is the outlook for the construction industry in Uusimaa?", "Toimiala=F"),
+    ("12tw:F: Construction", "What is the outlook for the construction industry in Uusimaa?", "Toimiala=F"),
+])
+def test_unambiguous_target_codes_and_labels_still_forecast(service, monkeypatch, target, question, expected):
+    monkeypatch.setattr(service, "forecast", lambda sid, hs: fake_predictions(service.prepare_inputs(sid, hs)))
     monkeypatch.setattr(service, "explain", lambda *args: {"answer": "Forecast generated.", "sources": [], "rag": None})
-
-    # 1. Nurses in Uusimaa (specific target requested)
     monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
-        forecast_action(region="MK01", targets=["12tu:3221", "12tu:2221"], needs_choice=True)))
-    r1 = service.answer_question("What is the vacancy outlook for nurses in Uusimaa?")
-    assert r1["status"] == "answered"
-    assert "Ammattiryhmä=3221" in r1["request"]["series_id"]
+        forecast_action(targets=[target])))
+    result = service.answer_question(question)
+    assert result["status"] == "answered"
+    assert expected in result["request"]["series_id"]
 
-    # 2. Software development in Pirkanmaa for 2 quarters (natural language target)
-    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
-        {"action": "forecast", "forecast": {"region": "MK06", "targets": ["software development"], "horizons": [2], "needs_choice": False}}))
-    r2 = service.answer_question("How are software development jobs looking in Pirkanmaa for the next 2 quarters?")
-    assert r2["status"] == "answered"
-    assert r2["forecasts"][0]["horizon_q"] == 2
-    assert "Ammattiryhmä=2512" in r2["request"]["series_id"]
 
-    # 3. Construction workers in Uusimaa (natural language target with industry exact match)
+@pytest.mark.parametrize("question", [
+    "Explain why the forecast for nurses in Uusimaa is uncertain",
+    "Forecast nurses in Uusimaa in 9 months",
+])
+def test_reply_is_not_overridden_by_forecast_keywords(service, monkeypatch, question):
+    answer = "I can explain the forecast and its supported horizons."
     monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
-        {"action": "forecast", "forecast": {"region": "MK01", "targets": ["construction workers"], "horizons": [1, 2, 4], "needs_choice": False}}))
-    r3 = service.answer_question("What is the trend for construction workers in Uusimaa?")
-    assert r3["status"] == "answered"
-    assert "Toimiala=F" in r3["request"]["series_id"]
+        {"action": "reply", "answer": answer}))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("A reply must not trigger a forecast"))
+    result = service.answer_question(question)
+    assert result["answer"] == answer and result["forecasts"] == []
+
+
+def test_mentioning_series_id_in_explanation_does_not_run_forecast(service, monkeypatch):
+    sid = next(iter(service.router.series))
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs:
+                        '{"action":"reply","answer":"That is the saved forecast series."}')
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("A mentioned ID is not a tool request"))
+    result = service.answer_question(f"Explain the forecast for {sid}")
+    assert result["answer"] == "That is the saved forecast series." and result["forecasts"] == []
+
+
+@pytest.mark.parametrize("targets, question", [
+    (["12tu:1321"], "What is the outlook for managers in Uusimaa next year?"),
+    (["12tu:2142", "12tu:1321"], "What is the outlook for engineers in Uusimaa next year?"),
+])
+def test_target_choices_are_not_narrowed_by_question_words(service, monkeypatch, targets, question):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=targets, needs_choice=True)))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("The user must choose a target"))
+    result = service.answer_question(question)
+    assert result["status"] == "clarification" and result["forecasts"] == []
+    assert [f"{c['table_id']}:{c['target_code']}" for c in result["request"]["choices"]] == targets
+
+
+@pytest.mark.parametrize("targets, question", [
+    (["construction workers"], "What is the trend for construction workers in Uusimaa?"),
+    (["software development"], "How are software development jobs looking in Uusimaa?"),
+    (["12tu:9999"], "What is the vacancy outlook for nurses in Uusimaa?"),
+    (["12tu:3221", "12tu:9999"], "What is the vacancy outlook for nurses in Uusimaa?"),
+    (["12tu:3221: Software developers"], "What is the vacancy outlook for nurses in Uusimaa?"),
+    (["12tu:9999: Nurses"], "What is the vacancy outlook for nurses in Uusimaa?"),
+    ([], "What is the vacancy outlook for IT in Uusimaa?"),
+    (["SSS"], "What is the vacancy outlook in Uusimaa?"),
+])
+def test_unresolved_targets_are_not_replaced_with_other_series(service, monkeypatch, targets, question):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=targets)))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("An unresolved target must not run inference"))
+    result = service.answer_question(question)
+    assert result["status"] == "clarification" and result["forecasts"] == []
+    assert result["request"]["choices"] == []
+
+
+def test_unsupported_forecast_horizon_is_not_replaced_with_defaults(service, monkeypatch):
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(targets=["3221"], horizons=[3])))
+    monkeypatch.setattr(service, "forecast", lambda *args: pytest.fail("Nine months is unsupported"))
+    result = service.answer_question("Forecast nurses in Uusimaa in 9 months")
+    assert result["status"] == "unsupported" and result["forecasts"] == []
