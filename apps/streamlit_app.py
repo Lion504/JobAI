@@ -386,10 +386,13 @@ button[role="tab"]:hover * {{
     border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
     color: var(--chat-text) !important;
+    -webkit-text-fill-color: var(--chat-text) !important;
 }}
 
-[data-testid="stChatMessageContent"] {{
+[data-testid="stChatMessageContent"],
+[data-testid="stChatMessageContent"] * {{
     color: var(--chat-text) !important;
+    -webkit-text-fill-color: var(--chat-text) !important;
 }}
 
 [data-testid="stChatMessageContent"] p,
@@ -397,6 +400,7 @@ button[role="tab"]:hover * {{
 [data-testid="stChatMessageContent"] span,
 [data-testid="stChatMessageContent"] div {{
     color: var(--chat-text) !important;
+    -webkit-text-fill-color: var(--chat-text) !important;
     opacity: 1 !important;
     font-size: 0.96rem !important;
     line-height: 1.6 !important;
@@ -405,11 +409,14 @@ button[role="tab"]:hover * {{
 [data-testid="stChatMessageContent"] strong,
 [data-testid="stChatMessageContent"] b {{
     color: var(--text-color) !important;
+    -webkit-text-fill-color: var(--text-color) !important;
 }}
 
 /* Subtitles in Header Containers */
-.container-subtitle {{
+.container-subtitle,
+.container-subtitle * {{
     color: var(--subtext-color) !important;
+    -webkit-text-fill-color: var(--subtext-color) !important;
     font-size: 0.95rem !important;
     line-height: 1.55 !important;
     opacity: 1 !important;
@@ -444,6 +451,7 @@ button[role="tab"]:hover * {{
 
 .animated-main-container h2 {{
     color: var(--text-color) !important;
+    -webkit-text-fill-color: var(--text-color) !important;
 }}
 
 .metric-card {{
@@ -485,12 +493,16 @@ with tab_chat:
         unsafe_allow_html=True
     )
 
-    # Cached service loader to ensure GPU weights load once
-    @st.cache_resource(show_spinner="Connecting to AI Agent & Vector Index...")
+    # Cached service loader to ensure GPU weights load once during app startup
+    @st.cache_resource(show_spinner="Initializing Qwen3-4B on GPU & loading Vector Index (one-time setup)...")
     def load_forecast_service(repo_dir):
         try:
+            import torch
             from jobai.chat import ForecastService
             service = ForecastService(repo_dir, allow_embedding_download=True, allow_base_download=True)
+            if torch.cuda.is_available():
+                service.load_model()
+                service.load_retriever()
             return service, None
         except Exception as e:
             return None, str(e)
@@ -504,7 +516,8 @@ with tab_chat:
             "- Ensure the required packages are installed (`pip install -r requirements.txt`)."
         )
     else:
-        st.sidebar.success("Forecast service connected (lazy loading)")
+        status_text = "Forecast model loaded on GPU" if getattr(service, "model", None) is not None else "Forecast service connected"
+        st.sidebar.success(status_text)
 
     # Initialize chat session state
     if "messages" not in st.session_state:
@@ -562,11 +575,22 @@ with tab_chat:
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
-                if isinstance(msg.get("forecasts"), pd.DataFrame) and not msg["forecasts"].empty:
-                    st.dataframe(msg["forecasts"], use_container_width=True)
+                forecast_data = msg.get("forecasts")
+                if forecast_data is not None:
+                    if isinstance(forecast_data, pd.DataFrame) and not forecast_data.empty:
+                        st.dataframe(forecast_data, use_container_width=True)
+                    elif isinstance(forecast_data, list) and forecast_data:
+                        raw_df = pd.DataFrame(forecast_data)
+                        show_cols = [c for c in ["origin_quarter", "target_quarter", "horizon_q", "last_value", "y_pred"] if c in raw_df.columns]
+                        st.dataframe(raw_df[show_cols].round(2), use_container_width=True)
                 if msg.get("choices"):
                     st.caption("Reply with a listed number or name:")
-                    st.dataframe(pd.DataFrame(msg["choices"], index=range(1, len(msg["choices"]) + 1)), use_container_width=True)
+                    choices_df = pd.DataFrame(msg["choices"], index=range(1, len(msg["choices"]) + 1))
+                    if "label" in choices_df.columns:
+                        display_df = choices_df.rename(columns={"label": "Series / Occupation / Industry", "table_id": "Table", "target_code": "Code"})
+                        st.dataframe(display_df, use_container_width=True)
+                    else:
+                        st.dataframe(choices_df, use_container_width=True)
                 if (msg.get("rag") or {}).get("passages"):
                     passages = msg["rag"]["passages"]
                     with st.expander(f"View {len(passages)} retrieved bulletin passages"):
@@ -600,8 +624,7 @@ with tab_chat:
                     st.error(err_msg)
                     st.session_state.messages.append({"role": "assistant", "content": err_msg, "forecasts": None, "choices": None, "rag": None})
                 else:
-                    spinner_text = "Initializing Qwen3-4B on GPU (first-time only) & thinking..." if getattr(service, "model", None) is None else "JobAI is responding..."
-                    with st.spinner(spinner_text):
+                    with st.spinner("JobAI is computing forecasts & retrieving official bulletin evidence..."):
                         try:
                             recent = [{"role": msg["role"], "content": msg["content"]}
                                       for msg in st.session_state.messages[-7:-1]
@@ -624,7 +647,12 @@ with tab_chat:
                             choices = (result.get("request") or {}).get("choices")
                             if choices:
                                 st.caption("Reply with a listed number or name:")
-                                st.dataframe(pd.DataFrame(choices, index=range(1, len(choices) + 1)), use_container_width=True)
+                                choices_df = pd.DataFrame(choices, index=range(1, len(choices) + 1))
+                                if "label" in choices_df.columns:
+                                    display_df = choices_df.rename(columns={"label": "Series / Occupation / Industry", "table_id": "Table", "target_code": "Code"})
+                                    st.dataframe(display_df, use_container_width=True)
+                                else:
+                                    st.dataframe(choices_df, use_container_width=True)
 
                             rag_info = result.get("rag") or {}
                             if rag_info.get("passages"):

@@ -629,3 +629,34 @@ def test_embedding_cache_is_persistent_and_never_downloads_by_default(service, m
     Encoder.runtime_available = False
     with pytest.raises(FileNotFoundError, match="allow_embedding_download=True"):
         ForecastService(service.repo).load_retriever()
+
+
+def test_sample_dashboard_questions_resolve_and_forecast(service, monkeypatch):
+    calls = []
+    def forecast(sid, hs):
+        calls.append((sid, hs))
+        return fake_predictions(service.prepare_inputs(sid, hs))
+    monkeypatch.setattr(service, "forecast", forecast)
+    monkeypatch.setattr(service, "explain", lambda *args: {"answer": "Forecast generated.", "sources": [], "rag": None})
+
+    # 1. Nurses in Uusimaa (specific target requested)
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        forecast_action(region="MK01", targets=["12tu:3221", "12tu:2221"], needs_choice=True)))
+    r1 = service.answer_question("What is the vacancy outlook for nurses in Uusimaa?")
+    assert r1["status"] == "answered"
+    assert "Ammattiryhmä=3221" in r1["request"]["series_id"]
+
+    # 2. Software development in Pirkanmaa for 2 quarters (natural language target)
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        {"action": "forecast", "forecast": {"region": "MK06", "targets": ["software development"], "horizons": [2], "needs_choice": False}}))
+    r2 = service.answer_question("How are software development jobs looking in Pirkanmaa for the next 2 quarters?")
+    assert r2["status"] == "answered"
+    assert r2["forecasts"][0]["horizon_q"] == 2
+    assert "Ammattiryhmä=2512" in r2["request"]["series_id"]
+
+    # 3. Construction workers in Uusimaa (natural language target with industry exact match)
+    monkeypatch.setattr(service, "_generate_base_json", lambda *args, **kwargs: json.dumps(
+        {"action": "forecast", "forecast": {"region": "MK01", "targets": ["construction workers"], "horizons": [1, 2, 4], "needs_choice": False}}))
+    r3 = service.answer_question("What is the trend for construction workers in Uusimaa?")
+    assert r3["status"] == "answered"
+    assert "Toimiala=F" in r3["request"]["series_id"]
