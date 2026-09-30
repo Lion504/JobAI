@@ -86,6 +86,7 @@ class ForecastService:
             f"{row['table_id']}:{self.router.dimensions[sid][TARGET_DIMENSIONS[row['table_id']]]}":
             self.router.targets[row["table_id"]][self.router.dimensions[sid][TARGET_DIMENSIONS[row["table_id"]]]]
             for sid, row in self.router.series.items()}
+        self._catalog_prompt = "\n".join(f"{key}: {label}" for key, label in sorted(self.forecast_targets.items()))
         # Disabling the adapter for prose must never overlap another GPU request.
         self._lock = RLock()
 
@@ -109,7 +110,18 @@ class ForecastService:
         if isinstance(region, str):
             region = next((code for code, label in self.router.regions.items()
                            if normalized(region) in {normalized(code), normalized(label)}), region)
-        targets = list(dict.fromkeys(request["targets"]))
+        targets = []
+        for target in request["targets"]:
+            if target not in self.forecast_targets:
+                # Accept alternate representations only when exactly one catalog ID matches.
+                key = normalized(target)
+                matches = [code for code, label in self.forecast_targets.items()
+                           if key in {normalized(code), normalized(code.split(":", 1)[-1]), normalized(label),
+                                      normalized(f"{code}: {label}")}]
+                if len(matches) == 1:
+                    target = matches[0]
+            if target not in targets:
+                targets.append(target)
         if any(target not in self.forecast_targets for target in targets):
             return result("clarification", "I couldn't identify a supported forecast series for that request. Which occupation or industry do you mean?")
         if normalized(region) == "helsinki":
@@ -138,7 +150,7 @@ class ForecastService:
     def _decide_action(self, question, history=None, context=None):
         """One base-model call interprets the conversation and supplies tool arguments."""
         state = context or {}
-        catalog = "\n".join(f"{key}: {label}" for key, label in sorted(self.forecast_targets.items()))
+        catalog = self._catalog_prompt
         messages = [{"role": "system", "content":
                      "You are JobAI, a helpful conversational assistant. Understand the user's intent "
                      "from recent messages and saved state, including short replies and corrections. "
@@ -184,7 +196,7 @@ class ForecastService:
                     messages.append({"role": item["role"], "content": content[:600]})
         messages.append({"role": "user", "content": question})
         for attempt in range(2):
-            response = self._generate_base_json(messages, max_new_tokens=384, max_input_tokens=8192)
+            response = self._generate_base_json(messages, max_new_tokens=128, max_input_tokens=8192)
             decision = parse_object(response)
             if isinstance(decision, dict):
                 action = decision.get("action")
@@ -536,7 +548,7 @@ class ForecastService:
         ]
         attempts = []
         for attempt in range(2):
-            response = self._generate_base_json(messages, max_new_tokens=512)
+            response = self._generate_base_json(messages, max_new_tokens=256)
             attempts.append(response)
             parsed = parse_object(response)
             quote = verified_quote(parsed, passages)
